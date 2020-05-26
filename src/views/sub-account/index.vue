@@ -159,15 +159,15 @@ export default {
       }],
       subuser2List: [
         {
-          value: '1',
+          value: '被分账方1',
           label: '被分账方1'
         },
         {
-          value: '2',
+          value: '被分账方2',
           label: '被分账方2'
         },
         {
-          value: '3',
+          value: '被分账方3',
           label: '被分账方3'
         }
       ],
