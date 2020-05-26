@@ -83,21 +83,7 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/subaccount',
-    component: () => import('@/views/sub-account/index'),
-    hidden: true
-  },
-  {
-    path: '/subverify',
-    component: () => import('@/views/sub-verify/index'),
-    hidden: true
-  },
-  {
-    path: '/search',
-    component: () => import('@/views/search/index'),
-    hidden: true
-  },
+  //
   // {
   //   path: '/documentation',
   //   component: Layout,
@@ -110,6 +96,42 @@ export const constantRoutes = [
   //     }
   //   ]
   // },
+  {
+    path: '/subaccount',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/sub-account/index'),
+        name: '分账明细',
+        meta: { title: '分账明细', icon: 'edit', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/subverify',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/sub-verify/index'),
+        name: '分账复核',
+        meta: { title: '分账复核', icon: 'eye-open', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/search',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/search/index'),
+        meta: { title: '数据查询', icon: 'search', affix: true },
+        name: '数据查询'
+      }
+    ]
+  },
   // {
   //   path: '/guide',
   //   component: Layout,
@@ -144,6 +166,7 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
+
   // {
   //   path: '/permission',
   //   component: Layout,
@@ -186,18 +209,18 @@ export const asyncRoutes = [
   //   ]
   // },
 
-  // {
-  //   path: '/icon',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/icons/index'),
-  //       name: 'Icons',
-  //       meta: { title: 'Icons', icon: 'icon', noCache: true }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/icon',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/icons/index'),
+        name: 'Icons',
+        meta: { title: 'Icons', icon: 'icon', noCache: true }
+      }
+    ]
+  },
 
   /** when your routing map is too long, you can split it into small modules **/
   // componentsRouter,
