@@ -1,79 +1,273 @@
 <template>
   <div id="sub-account">
     <div id="searchBox">
-      <div v-show="showQuery">
-        <span style="margin-right:15px;margin-left:30px;">所属银行:</span>
-        <el-select v-model="query.bank_code" size="mini" filterable clearable placeholder="请选择">
-          <el-option
-            v-for="item in bankCodeOptions"
-            :key="item.key"
-            :label="item.value"
-            :value="item.key"
-          />
-        </el-select>
-        <span style="margin-right:15px;margin-left:30px;">银行卡号:</span><el-input v-model="query.account_no" size="mini" placeholder="银行卡号" style="width: 11vw;margin-right:15px" class="filter-item" />
-        <span style="margin-right:15px">持卡人姓名:</span><el-input v-model="query.account_name" size="mini" placeholder="持卡人姓名" style="width: 6vw;margin-right:15px;" class="filter-item" />
-        <span style="margin-right:15px">持卡人电话:</span><el-input v-model="query.tel" size="mini" placeholder="持卡人电话" style="width: 8vw;" class="filter-item" />
-        </p>
-        <span style="margin-left:30px;margin-right:15px; ">创建日期:</span>
-        <el-date-picker
-          v-model="query.startTime"
-          size="mini"
-          style="width:9vw"
-          type="date"
-          placeholder="选择日期"
-        />
-        <span style="margin-right:15px;margin-left:15px;">至</span>
-        <el-date-picker
-          v-model="query.endTime"
-          size="mini"
-          style="width:9vw"
-          type="date"
-          placeholder="选择日期"
-        />
-        <!-- <el-tooltip class="item" effect="dark" content="查询当天数据请多选一天!" placement="right">
-          <i class="el-icon-warning-outline"></i>
-        </el-tooltip> -->
-        <span style="margin-right:15px;margin-left:30px;">是否验证成功:</span>
-        <el-select v-model="query.state" size="mini"style="width:6vw" filterable clearable placeholder="请选择">
-          <el-option
-            v-for="item in isSuccess"
-            :key="item.key"
-            :label="item.value"
-            :value="item.key"
-          />
-        </el-select>
-        <el-tooltip style="margin-left:30px;" class="item" effect="dark" content="收起" placement="right">
-          <i class="el-icon-arrow-up" @click="showQuery=false" />
-        </el-tooltip>
-      </div>
-      <div id="buttonBox" style="margin-left:30px;">
-        <el-dropdown size="mini" split-button type="success" style="float:right;margin-right:15vw" @click="showCreateDialog()" @command="handleCommand">
-          新建
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item :command="{ cmd:'upload' }">
-              导入
-            </el-dropdown-item>
-            <el-dropdown-item :command="{ cmd:'downLoad' }">下载模板</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-        <el-dropdown split-button type="primary" size="mini" style="" @click="clickSearch()" @command="handleCommand">
-          查询
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item :command="{ cmd:'checkSuccess' }">高级查询</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+      <div id="buttonBox" style="margin:40px;">
+        <span style="margin-right:10px">单据流水号 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 15vw;margin-right:15px;" class="filter-item" />
 
-        <el-button v-if="showDelete" size="mini" class="filter-item" style="margin-left: 10px;" type="danger" @click="removeVerifyList()">
-          删除
+        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="clickSearch()">
+          查询
         </el-button>
       </div>
+    </div>
+
+    <div id="dataForm">
+      <el-table
+        :data="tableData"
+        size="mini"
+        stripe
+        border
+        style="margin:20px;margin-left:50px;margin-right:50px;"
+      >
+        <el-table-column
+          prop="id"
+          align="center"
+          width="120"
+          label="流水号"
+        />
+        <el-table-column
+          prop="createtime"
+          align="center"
+          width="170"
+          label="时间"
+        />
+        <el-table-column
+          prop="account"
+          align="center"
+          width="110"
+          label="金额(元)"
+        />
+        <el-table-column
+          prop="subuser1"
+          align="center"
+          width="120"
+          show-overflow-tooltip
+          label="分账方"
+        >
+        <template slot-scope="scope">
+          <el-select size="mini" v-model="scope.row.subuser1" filterable placeholder="请选择">
+            <el-option
+              v-for="item in subuser1List"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+          <el-divider></el-divider>
+          <span>{{scope.row.subuser1Account}}</span>
+        </template>
+      </el-table-column>
+        <el-table-column
+          prop="subuser2"
+          align="center"
+          width="170"
+          show-overflow-tooltip
+          label="被分账方"
+        >
+        <template slot-scope="scope">
+          <el-select size="mini" v-model="scope.row.subuser2" filterable placeholder="请选择">
+            <el-option
+              v-for="item in subuser2List"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+          <el-divider></el-divider>
+          <span>{{scope.row.subuser2Account}}</span>
+        </template>
+        </el-table-column>
+        <el-table-column
+        align="center"
+          prop="ratio"
+          width="150"
+          label="比例"
+        >
+        <template slot-scope="scope">
+          <el-select v-model="scope.row.ratio" size="mini" @change="changeRatio(scope.row)" filterable placeholder="请选择">
+            <el-option
+              v-for="item in ratios"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </template>
+        </el-table-column>
+        <el-table-column label="操作"  width="90"align="center">
+
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" content="提交" placement="top-end">
+              <!-- <el-button class="el-icon-edit" @click="modifyData(scope.row)"></el-button> -->
+              <el-button type="success" icon="el-icon-check" circle size="mini" @click="commit(scope.row)" />
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        :page-size="10"
+        :current-page="currentPage"
+        @prev-click="currentPage-=1"
+        @next-click="currentPage+=1"
+        @current-change="changePage"
+        layout="prev, pager, next"
+        :total="totalCount">
+      </el-pagination>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'subAccount',
+  data() {
+    return {
+        query: {
+          id: ''
+        },
+        alwaysFalse:false,
+        totalCount:0,
+        pageSize:10,
+        page:1,
+        tableData: [
+          {
+            id:"A100000001",
+            createtime:"2020-05-26 15:02:35",
+            account:"2000000",
+            subuser1:"朗杰",
+            subuser2:"被分账方1",
+            ratio:"10:0"
+          },
+          {
+            id:"A100000002",
+            createtime:"2020-05-26 17:32:10",
+            account:"50000",
+            subuser1:"朗杰",
+            subuser2:"被分账方3",
+            ratio:"10:0"
+          },
+        ],
+        currentPage: 1,
+        ratios:[{
+          value:"10:0",
+          label:"10:0"
+        },{
+          value:"5:5",
+          label:"5:5"
+        },{
+          value:"3:7",
+          label:"3:7"
+        }],
+        subuser2List:[
+          {
+            value:"1",
+            label:"被分账方1"
+          },
+          {
+            value:"2",
+            label:"被分账方2"
+          },
+          {
+            value:"3",
+            label:"被分账方3"
+          }
+        ],
+        subuser1List:[{
+          value:"1",
+          label:"朗杰"
+        },]
+    }
+  },
+  created(){
+    for(let i=0;i<this.tableData.length;i++){
+      let subuser1Ratio = this.tableData[i].ratio.split(":")[0]
+      let subuser2Ratio = this.tableData[i].ratio.split(":")[1]
+      this.tableData[i].subuser1Account = this.tableData[i].account*subuser1Ratio/10
+      this.tableData[i].subuser2Account = this.tableData[i].account*subuser2Ratio/10
+    }
+  },
+  methods:{
+    changeRatio(e){
+      console.log('changeRatio e---:',e);
+      let subuser1Ratio = e.ratio.split(":")[0]
+      let subuser2Ratio = e.ratio.split(":")[1]
+      e.subuser1Account = e.account*subuser1Ratio/10
+      e.subuser2Account = e.account*subuser2Ratio/10
+    },
+    commit(e){
+      // this.$confirm(
+      //   h('p', null, [
+      //       h('span', null, '内容可以是 '),
+      //       h('i', { style: 'color: teal' }, 'VNode')
+      //     ]),
+      //   // `将以${e.ratio}的比例分给${e.subuser1} ${e.subuser1Account}元<br>分给${e.subuser2} ${e.subuser2Account}元, 是否继续?`,
+      //   '提示', {
+      //   confirmButtonText: '确定',
+      //   cancelButtonText: '取消',
+      //   type: 'warning'
+      // }).then(() => {
+      //   console.log('========提交========')
+      //   this.$message({
+      //     type: 'success',
+      //     message: '提交成功!'
+      //   })
+      // }).catch(() => {
+      //   this.$message({
+      //     type: 'info',
+      //     message: '已取消删除'
+      //   })
+      // })
+
+      const h = this.$createElement;
+        this.$msgbox({
+          title: '信息确认',
+          message: h('p', null, [
+            h('span', { style: 'color: rgb(238,120,0)' }, `${e.account}`),
+            h('span', null, `元`),
+            h('br', null, ''),
+            h('span', null, `将以`),
+            h('span', { style: 'color: rgb(250,190,0)' }, `${e.ratio}`),
+            h('span', null, `的比例`),
+            h('br', null, ''),
+            h('span', null, `分给 `),
+            h('span',  { style: 'color: rgb(0,113,190)' }, `${e.subuser1} `),
+            h('span',  { style: 'color: rgb(238,120,0)' }, `${e.subuser1Account}`),
+            h('span', null, `元`),
+            h('br', null, ''),
+            h('span', null, `分给 `),
+            h('span',  { style: 'color: rgb(0,113,190)' }, `${e.subuser2} `),
+            h('span',  { style: 'color: rgb(238,120,0)' }, `${e.subuser2Account}`),
+            h('span', null, `元`),
+            h('span', null, `是否继续?`)
+          ]),
+          showCancelButton: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          beforeClose: (action, instance, done) => {
+            if (action === 'confirm') {
+              instance.confirmButtonLoading = true;
+              instance.confirmButtonText = '执行中...';
+              setTimeout(() => {
+                done();
+                setTimeout(() => {
+                  instance.confirmButtonLoading = false;
+                }, 300);
+              }, 3000);
+            } else {
+              done();
+            }
+          }
+        }).then(action => {
+          this.$message({
+            type: 'info',
+            message: 'action: ' + action
+          });
+        });
+    }
+  }
 }
 </script>
+<style>
+.el-divider--horizontal{
+  margin: 5px 0;
+}
+</style>
