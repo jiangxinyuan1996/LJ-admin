@@ -43,19 +43,19 @@
           show-overflow-tooltip
           label="分账方"
         >
-        <template slot-scope="scope">
-          <el-select size="mini" v-model="scope.row.subuser1" filterable placeholder="请选择">
-            <el-option
-              v-for="item in subuser1List"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-          <el-divider></el-divider>
-          <span>{{scope.row.subuser1Account}}</span>
-        </template>
-      </el-table-column>
+          <template slot-scope="scope">
+            <el-select v-model="scope.row.subuser1" size="mini" filterable placeholder="请选择">
+              <el-option
+                v-for="item in subuser1List"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+            <el-divider />
+            <span>{{ scope.row.subuser1Account }}</span>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="subuser2"
           align="center"
@@ -63,37 +63,37 @@
           show-overflow-tooltip
           label="被分账方"
         >
-        <template slot-scope="scope">
-          <el-select size="mini" v-model="scope.row.subuser2" filterable placeholder="请选择">
-            <el-option
-              v-for="item in subuser2List"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-          <el-divider></el-divider>
-          <span>{{scope.row.subuser2Account}}</span>
-        </template>
+          <template slot-scope="scope">
+            <el-select v-model="scope.row.subuser2" size="mini" filterable placeholder="请选择">
+              <el-option
+                v-for="item in subuser2List"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+            <el-divider />
+            <span>{{ scope.row.subuser2Account }}</span>
+          </template>
         </el-table-column>
         <el-table-column
-        align="center"
+          align="center"
           prop="ratio"
           width="150"
           label="比例"
         >
-        <template slot-scope="scope">
-          <el-select v-model="scope.row.ratio" size="mini" @change="changeRatio(scope.row)" filterable placeholder="请选择">
-            <el-option
-              v-for="item in ratios"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </template>
+          <template slot-scope="scope">
+            <el-select v-model="scope.row.ratio" size="mini" filterable placeholder="请选择" @change="changeRatio(scope.row)">
+              <el-option
+                v-for="item in ratios"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </template>
         </el-table-column>
-        <el-table-column label="操作"  width="90"align="center">
+        <el-table-column label="操作" width="90"align="center">
 
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" content="提交" placement="top-end">
@@ -106,94 +106,94 @@
       <el-pagination
         :page-size="10"
         :current-page="currentPage"
+        layout="prev, pager, next"
+        :total="totalCount"
         @prev-click="currentPage-=1"
         @next-click="currentPage+=1"
         @current-change="changePage"
-        layout="prev, pager, next"
-        :total="totalCount">
-      </el-pagination>
+      />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'subAccount',
+  name: 'SubAccount',
   data() {
     return {
-        query: {
-          id: ''
+      query: {
+        id: ''
+      },
+      alwaysFalse: false,
+      totalCount: 0,
+      pageSize: 10,
+      page: 1,
+      tableData: [
+        {
+          id: 'A100000001',
+          createtime: '2020-05-26 15:02:35',
+          account: '2000000',
+          subuser1: '朗杰',
+          subuser2: '被分账方1',
+          ratio: '10:0'
         },
-        alwaysFalse:false,
-        totalCount:0,
-        pageSize:10,
-        page:1,
-        tableData: [
-          {
-            id:"A100000001",
-            createtime:"2020-05-26 15:02:35",
-            account:"2000000",
-            subuser1:"朗杰",
-            subuser2:"被分账方1",
-            ratio:"10:0"
-          },
-          {
-            id:"A100000002",
-            createtime:"2020-05-26 17:32:10",
-            account:"50000",
-            subuser1:"朗杰",
-            subuser2:"被分账方3",
-            ratio:"10:0"
-          },
-        ],
-        currentPage: 1,
-        ratios:[{
-          value:"10:0",
-          label:"10:0"
-        },{
-          value:"5:5",
-          label:"5:5"
-        },{
-          value:"3:7",
-          label:"3:7"
-        }],
-        subuser2List:[
-          {
-            value:"1",
-            label:"被分账方1"
-          },
-          {
-            value:"2",
-            label:"被分账方2"
-          },
-          {
-            value:"3",
-            label:"被分账方3"
-          }
-        ],
-        subuser1List:[{
-          value:"1",
-          label:"朗杰"
-        },]
+        {
+          id: 'A100000002',
+          createtime: '2020-05-26 17:32:10',
+          account: '50000',
+          subuser1: '朗杰',
+          subuser2: '被分账方3',
+          ratio: '10:0'
+        }
+      ],
+      currentPage: 1,
+      ratios: [{
+        value: '10:0',
+        label: '10:0'
+      }, {
+        value: '5:5',
+        label: '5:5'
+      }, {
+        value: '3:7',
+        label: '3:7'
+      }],
+      subuser2List: [
+        {
+          value: '1',
+          label: '被分账方1'
+        },
+        {
+          value: '2',
+          label: '被分账方2'
+        },
+        {
+          value: '3',
+          label: '被分账方3'
+        }
+      ],
+      subuser1List: [{
+        value: '1',
+        label: '朗杰'
+      }]
     }
   },
-  created(){
-    for(let i=0;i<this.tableData.length;i++){
-      let subuser1Ratio = this.tableData[i].ratio.split(":")[0]
-      let subuser2Ratio = this.tableData[i].ratio.split(":")[1]
-      this.tableData[i].subuser1Account = this.tableData[i].account*subuser1Ratio/10
-      this.tableData[i].subuser2Account = this.tableData[i].account*subuser2Ratio/10
+  created() {
+    for (let i = 0; i < this.tableData.length; i++) {
+      const subuser1Ratio = this.tableData[i].ratio.split(':')[0]
+      const subuser2Ratio = this.tableData[i].ratio.split(':')[1]
+      this.tableData[i].subuser1Account = this.tableData[i].account * subuser1Ratio / 10
+      this.tableData[i].subuser2Account = this.tableData[i].account * subuser2Ratio / 10
     }
   },
-  methods:{
-    changeRatio(e){
-      console.log('changeRatio e---:',e);
-      let subuser1Ratio = e.ratio.split(":")[0]
-      let subuser2Ratio = e.ratio.split(":")[1]
-      e.subuser1Account = e.account*subuser1Ratio/10
-      e.subuser2Account = e.account*subuser2Ratio/10
+  methods: {
+    changeRatio(e) {
+      console.log('changeRatio e---:', e)
+      const subuser1Ratio = e.ratio.split(':')[0]
+      const subuser2Ratio = e.ratio.split(':')[1]
+      e.subuser1Account = e.account * subuser1Ratio / 10
+      e.subuser2Account = e.account * subuser2Ratio / 10
     },
-    commit(e){
+    commit(e) {
       // this.$confirm(
       //   h('p', null, [
       //       h('span', null, '内容可以是 '),
@@ -217,51 +217,51 @@ export default {
       //   })
       // })
 
-      const h = this.$createElement;
-        this.$msgbox({
-          title: '信息确认',
-          message: h('p', null, [
-            h('span', { style: 'color: rgb(238,120,0)' }, `${e.account}`),
-            h('span', null, `元`),
-            h('br', null, ''),
-            h('span', null, `将以`),
-            h('span', { style: 'color: rgb(250,190,0)' }, `${e.ratio}`),
-            h('span', null, `的比例`),
-            h('br', null, ''),
-            h('span', null, `分给 `),
-            h('span',  { style: 'color: rgb(0,113,190)' }, `${e.subuser1} `),
-            h('span',  { style: 'color: rgb(238,120,0)' }, `${e.subuser1Account}`),
-            h('span', null, `元`),
-            h('br', null, ''),
-            h('span', null, `分给 `),
-            h('span',  { style: 'color: rgb(0,113,190)' }, `${e.subuser2} `),
-            h('span',  { style: 'color: rgb(238,120,0)' }, `${e.subuser2Account}`),
-            h('span', null, `元`),
-            h('span', null, `是否继续?`)
-          ]),
-          showCancelButton: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          beforeClose: (action, instance, done) => {
-            if (action === 'confirm') {
-              instance.confirmButtonLoading = true;
-              instance.confirmButtonText = '执行中...';
+      const h = this.$createElement
+      this.$msgbox({
+        title: '信息确认',
+        message: h('p', null, [
+          h('span', { style: 'color: rgb(238,120,0)' }, `${e.account}`),
+          h('span', null, `元`),
+          h('br', null, ''),
+          h('span', null, `将以`),
+          h('span', { style: 'color: rgb(250,190,0)' }, `${e.ratio}`),
+          h('span', null, `的比例`),
+          h('br', null, ''),
+          h('span', null, `分给 `),
+          h('span', { style: 'color: rgb(0,113,190)' }, `${e.subuser1} `),
+          h('span', { style: 'color: rgb(238,120,0)' }, `${e.subuser1Account}`),
+          h('span', null, `元`),
+          h('br', null, ''),
+          h('span', null, `分给 `),
+          h('span', { style: 'color: rgb(0,113,190)' }, `${e.subuser2} `),
+          h('span', { style: 'color: rgb(238,120,0)' }, `${e.subuser2Account}`),
+          h('span', null, `元`),
+          h('span', null, `是否继续?`)
+        ]),
+        showCancelButton: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        beforeClose: (action, instance, done) => {
+          if (action === 'confirm') {
+            instance.confirmButtonLoading = true
+            instance.confirmButtonText = '执行中...'
+            setTimeout(() => {
+              done()
               setTimeout(() => {
-                done();
-                setTimeout(() => {
-                  instance.confirmButtonLoading = false;
-                }, 300);
-              }, 3000);
-            } else {
-              done();
-            }
+                instance.confirmButtonLoading = false
+              }, 300)
+            }, 3000)
+          } else {
+            done()
           }
-        }).then(action => {
-          this.$message({
-            type: 'info',
-            message: 'action: ' + action
-          });
-        });
+        }
+      }).then(action => {
+        this.$message({
+          type: 'info',
+          message: 'action: ' + action
+        })
+      })
     }
   }
 }
