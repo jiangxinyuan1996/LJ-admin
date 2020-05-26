@@ -9,7 +9,7 @@ import Layout from '@/layout'
 /* Router Modules */
 // import componentsRouter from './modules/components'
 // import chartsRouter from './modules/charts'
-import tableRouter from './modules/table'
+// import tableRouter from './modules/table'
 // import nestedRouter from './modules/nested'
 
 /**
@@ -121,7 +121,7 @@ export const constantRoutes = [
   },
   {
     path: '/withdrawal',
-    component:Layout,
+    component: Layout,
     redirect: '/withdrawal/index',
     name: 'accountwithdrawal',
     children: [
@@ -129,13 +129,13 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/account-withdrawal/index'),
         name: 'withdrawal',
-        meta: { title: '账户提现', icon: 'user'}
+        meta: { title: '账户提现', icon: 'user' }
       }
     ]
   },
   {
     path: '/transfer',
-    component:Layout,
+    component: Layout,
     redirect: '/transfer/index',
     name: 'accounttransfer',
     children: [
@@ -143,7 +143,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/account-transfer/index'),
         name: 'transfer',
-        meta: { title: '账户转账', icon: 'user'}
+        meta: { title: '账户转账', icon: 'user' }
       }
     ]
   },
@@ -194,11 +194,6 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
-<<<<<<< HEAD
-
-=======
-
->>>>>>> 8dea6fdad200c700df5fbd5ca54106740d53e573
   // {
   //   path: '/permission',
   //   component: Layout,
@@ -258,7 +253,7 @@ export const asyncRoutes = [
   // componentsRouter,
   // chartsRouter,
   // nestedRouter,
-  tableRouter,
+  // tableRouter,
 
   // {
   //   path: '/example',
