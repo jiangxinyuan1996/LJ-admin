@@ -15,18 +15,26 @@
             <el-menu-item index="4" >提现查询 </el-menu-item>
             <el-menu-item index="5" >操作日志 </el-menu-item>
         </el-menu>
-    <withdrawal v-if="activeIndex2==='4'"></withdrawal>
-    <transfer v-if="activeIndex2==='3'"></transfer>
+        <account v-if="activeIndex2==='1'"></account>
+        <verify v-if="activeIndex2==='2'"></verify>
+        <transfer v-if="activeIndex2==='3'"></transfer>
+        <withdrawal v-if="activeIndex2==='4'"></withdrawal>
+        <operationLog v-if="activeIndex2==='5'"></operationLog>
     </div>
 </template>
 <script>
+import account from './component/sub-account'
+import verify from './component/sub-verify'
+import operationLog from './component/operationLog'
 import withdrawal from './component/withdrawal'
 import transfer from './component/transfer'
-
   export default {
       components:{
           withdrawal,
-          transfer
+          transfer,
+          account,
+          verify,
+          operationLog
       },
     data() {
       return {
