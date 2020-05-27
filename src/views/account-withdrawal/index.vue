@@ -1,6 +1,30 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+      <el-dialog
+      title="提现信息确认"
+      :visible.sync="dialogVisible1"
+      width="30%"
+      :before-close="handleClose">
+      <el-form ref="form" :model="tableData" label-width="90px">
+        <el-form-item label="分账方姓名:">
+          <span>{{temp.account_name}}</span>
+        </el-form-item>
+        <el-form-item label="账号:">
+          <span>{{temp.account_no}}</span>
+        </el-form-item>
+        <el-form-item label="银行:">
+          <span>{{temp.bank_code}}</span>
+        </el-form-item>
+        <el-form-item label="金额:">
+          <span style="color: rgb(238, 120, 0);">{{temp.amount_show}}</span>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleClose">取 消</el-button>
+        <el-button type="primary" @click="submit">确 定</el-button>
+      </span>
+    </el-dialog>
       <!-- 搜索区 -->
       <div v-if="showSearch" id="searchBox" style="lineHeight:36px;">
         <span style="margin-right:15px">分账方姓名:</span>
@@ -53,7 +77,7 @@
       :data="tableData"
       border
       highlight-current-row
-      style="width: 60%"
+      style="width: 52%"
       @selection-change="handleSelectionChange"
     >
      <el-table-column
@@ -102,14 +126,14 @@
         fixed="right"
         label="操作"
         align="center"
-        width="160"
+        width="120"
       >
         <template slot-scope="{ $index,row }">
-          <el-tooltip   class="item" effect="dark" content="修改" placement="top">
-            <el-button type="primary" icon="el-icon-edit" round size="mini" @click="handleUpdate(row)" />
+          <el-tooltip   class="item" effect="dark" content="修改金额" placement="top">
+            <el-button type="primary" icon="el-icon-edit" circle size="mini" @click="handleUpdate(row)" />
           </el-tooltip>
-          <el-tooltip   class="item" effect="dark" content="提交" placement="top">
-            <el-button type="success" icon="el-icon-check" round size="mini" @click="handleCommitOne(row)" />
+          <el-tooltip   class="item" effect="dark" content="转账" placement="top">
+            <el-button type="success" icon="el-icon-check" circle size="mini" @click="open(row)" />
           </el-tooltip>
           <!-- <el-tooltip class="item" effect="dark" content="查看" placement="top">
             <el-button type="info" icon="el-icon-message" round size="mini" @click="handleCheck(row)" />
@@ -194,6 +218,7 @@ export default {
   },
   data() {
     return {
+      dialogVisible1:false,
       isShow: false,
       alwaysFalse:false,
       downLoadUrl:'',
@@ -223,9 +248,7 @@ export default {
         account_show:'',
       },
       // 修改列表参数
-      temp: {
-        status: ''
-      },
+      temp: {},
       tempData:[],
       rules: {
         business_code: [{ required: true, message: '必填项', trigger: 'blur' }],
@@ -333,10 +356,33 @@ export default {
     updataForm(data){
         this.tableData=[data]
         this.dialogFormVisible=false
+        this.$message({
+          message:'修改成功',
+          type:'success'
+        })
+    },
+    open(row) {
+      this.dialogVisible1=true
+      console.log(row)
+      this.temp={...row}
+    },
+    submit(){
+      this.$message({
+        message:'提现成功',
+        type:'success'
+      })
+      this.dialogVisible1=false
     },
     clearfzData() {
             this.dialogFormVisible = false
       // this.handleFilter()
+    },
+    handleClose(){
+      this.dialogVisible1=false
+      this.$message({
+        message:'提现已取消',
+        type:'info'
+      })
     }
   }
   }

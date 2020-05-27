@@ -7,7 +7,7 @@
       label-width="100px"
       class="demo-ruleForm"
     >
-      <el-form-item label="分账方姓名" prop="account_name">
+      <!-- <el-form-item label="分账方姓名" prop="account_name">
         <el-input v-model="ruleForm.account_name"></el-input>
       </el-form-item>
       <el-form-item label="账号" prop="account_no">
@@ -15,7 +15,7 @@
       </el-form-item>
       <el-form-item label="银行代码" prop="bank_code">
         <el-input v-model="ruleForm.bank_code"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="金额(元)" prop="amount_show">
         <el-input v-model="ruleForm.amount_show"></el-input>
       </el-form-item>

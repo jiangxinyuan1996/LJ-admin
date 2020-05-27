@@ -15,10 +15,19 @@
             <el-menu-item index="4" >提现查询 </el-menu-item>
             <el-menu-item index="5" >操作日志 </el-menu-item>
         </el-menu>
+    <withdrawal v-if="activeIndex2==='4'"></withdrawal>
+    <transfer v-if="activeIndex2==='3'"></transfer>
     </div>
 </template>
 <script>
+import withdrawal from './component/withdrawal'
+import transfer from './component/transfer'
+
   export default {
+      components:{
+          withdrawal,
+          transfer
+      },
     data() {
       return {
         activeIndex2: '1'
@@ -26,8 +35,7 @@
     },
     methods: {
       handleSelect(key, keyPath) {
-        console.log(key, keyPath);
-
+        this.activeIndex2=key
       }
     }
   }
