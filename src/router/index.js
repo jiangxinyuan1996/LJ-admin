@@ -79,7 +79,7 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        meta: { title: '首页', icon: 'dashboard', affix: true }
       }
     ]
   },
@@ -116,13 +116,15 @@ export const constantRoutes = [
   },
   {
     path: '/search',
-    component: Layout,
+    component:Layout,
+    redirect: '/search/index',
+    name:'search',
     children: [
       {
         path: 'index',
         component: () => import('@/views/search/index'),
-        meta: { title: '数据查询', icon: 'search', affix: true },
-        name: '数据查询'
+        name: 'index',
+        meta: { title: '数据查询', icon: 'search'}
       }
     ]
   },

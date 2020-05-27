@@ -3,27 +3,10 @@
     <div class="filter-container">
       <!-- 搜索区 -->
       <div v-if="showSearch" id="searchBox" style="lineHeight:36px;">
-        <span style="margin-right:15px">业务:</span>
-        <el-select size="mini" v-model="listQuery.business_code" filterable clearable placeholder="请选择" class="filter-item">
-          <el-option
-            v-for="item in businessCodeOptions"
-            :key="item.key"
-            :label="item.value"
-            :value="item.key"
-          />
-        </el-select>
+        <span style="margin-right:15px">分账方姓名:</span>
+        <el-input size="mini" v-model="listQuery.account_no" placeholder="账号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
 
-        <span style="margin:0 20px;padding-left:15px;">银行:</span>
-        <el-select size="mini" v-model="listQuery.bank_code" filterable clearable placeholder="请选择" class="filter-item">
-          <el-option
-            v-for="item in bankCodeOptions"
-            :key="item.key"
-            :label="item.value"
-            :value="item.key"
-          />
-        </el-select>
-
-        <span style="margin:0 18px;padding-left:5px;">创建日期:</span>
+        <span style="margin:0 18px;padding-left:5px;">日期:</span>
         <el-date-picker
           size="mini"
           v-model="listQuery.submit_time_start"
@@ -37,33 +20,16 @@
           type="date"
           placeholder="选择日期"
         /><br>
-
-        <span style="margin-right:15px">账号:</span>
-        <el-input size="mini" v-model="listQuery.account_no" placeholder="账号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-
-        <span style="margin-right:15px">持卡人姓名:</span>
-        <el-input size="mini" v-model="listQuery.account_name" placeholder="持卡人姓名" style="width: 220px;" class="filter-item" @keyup.enter.native="handleFilter" />
-
-        <span style="margin:0 15px 0 35px">状态:</span>
-        <el-select size="mini" clearable v-model="listQuery.state" placeholder="状态" class="filter-item" style="width: 130px" @keyup.enter.native="handleFilter">
-          <el-option v-for="item in states" :key="item.key" :label="item.value" :value="item.key" />
-        </el-select><br>
       </div>
-      <!-- <el-button v-waves class="filter-item funcbtn" type="success" icon="el-icon-plus" @click="handleAdd">
-        新建
-      </el-button> -->
       <el-dropdown split-button type="primary" @click="handleFilter" size="mini">
               查询
-        <!-- <el-button v-waves class="filter-item funcbtn" type="primary" icon="el-icon-search" @click="handleFilter">
-          查询<i class="el-icon-arrow-down el-icon--right"></i>
-        </el-button> -->
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
             <span @click="showSearch=!showSearch">高级查询</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-button size="mini" v-waves class="filter-item funcbtn" v-if="isShow" type="success" :disabled="disabled" @click="handleCommit">
+      <!-- <el-button size="mini" v-waves class="filter-item funcbtn" v-if="isShow" type="success" :disabled="disabled" @click="handleCommit">
         提交/复核
       </el-button>
       <el-button size="mini" v-if="isShow" v-waves class="filter-item funcbtn" type="danger" icon="el-icon-delete" @click="handleDeleteAll">
@@ -78,7 +44,7 @@
       </el-button>
       <el-button size="mini"  v-waves class="filter-item funcbtn" type="warning"  style="float:right" @click="handleExport">
         导出
-      </el-button>
+      </el-button> -->
     </div>
     <!-- 查询信息表格 -->
     <el-table
@@ -87,60 +53,14 @@
       :data="tableData"
       border
       highlight-current-row
-      style="width: 100%"
+      style="width: 60%"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column
-        type="selection"
-        align="center"
-        width="55"
-      />
-      <!-- <el-table-column
-        prop="req_sn"
-        label="请求流水号"
-        align="center"
-        width="160"
-      /> -->
-      <el-table-column
-        prop="state"
-        label="状态"
-        align="center"
-        width="120"
-      >
-      <template slot-scope="scope">
-        <el-popover
-        placement="top-start"
-        title="信息"
-        width="200"
-        trigger="hover"
-        :content="scope.row.errormsg">
-        <el-tag slot="reference" :type="scope.row.state==='待提交'?'info':scope.row.state==='交易成功'?'success':'danger'">{{scope.row.state}}</el-tag>
-      </el-popover>
-      </template>
-      </el-table-column>
-      <!-- <el-table-column
-        prop="errormsg"
-        label="备注"
-        align="center"
-        width="120"
-      /> -->
-      <el-table-column
-        prop="business_code"
-        label="业务代码"
+     <el-table-column
+        prop="account_name"
+        label="分账方姓名"
         align="center"
         width="100"
-      />
-      <el-table-column
-        prop="submit_time"
-        label="提交时间"
-        align="center"
-        width="160"
-      />
-      <el-table-column
-        prop="bank_code"
-        label="银行代码"
-        align="center"
-        width="160"
       />
       <el-table-column
         prop="account_no"
@@ -149,48 +69,54 @@
         width="180"
       />
       <el-table-column
-        prop="account_name"
-        label="持卡人姓名"
-        align="center"
-        width="100"
-      />
-      <el-table-column
-        prop="amount_show"
-        label="金额(元)"
+        prop="bank_code"
+        label="银行代码"
         align="center"
         width="160"
       />
-      <el-table-column
+       <el-table-column
+        prop="amount_show"
+        label="金额(元)"
+        align="center"
+        width="150"
+      />
+      <!-- <el-table-column
+        prop="business_code"
+        label="业务代码"
+        align="center"
+        width="100"
+      /> -->
+      <!-- <el-table-column
+        prop="submit_time"
+        label="日期"
+        align="center"
+        width="160"
+      />  -->
+      <!-- <el-table-column
         prop="currency"
         label="货币类型"
         align="center"
         width="80"
-      />
-      <el-table-column
-        prop="tel"
-        label="手机号/小灵通"
-        align="center"
-        width="160"
-      />
+      /> -->
       <el-table-column
         fixed="right"
         label="操作"
         align="center"
-        width="180"
+        width="160"
       >
         <template slot-scope="{ $index,row }">
-          <el-tooltip  v-if="(row.state==='待提交'||row.state==='待审核')?true:false" class="item" effect="dark" content="提交/复核" placement="top">
+          <el-tooltip   class="item" effect="dark" content="修改" placement="top">
+            <el-button type="primary" icon="el-icon-edit" round size="mini" @click="handleUpdate(row)" />
+          </el-tooltip>
+          <el-tooltip   class="item" effect="dark" content="提交" placement="top">
             <el-button type="success" icon="el-icon-check" round size="mini" @click="handleCommitOne(row)" />
           </el-tooltip>
-          <el-tooltip  v-if="(row.state==='待提交'||row.state==='异常')?true:false" class="item" effect="dark" content="修改" placement="top">
-            <el-button type="success" icon="el-icon-edit" round size="mini" @click="handleUpdate(row)" />
-          </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="查看" placement="top">
+          <!-- <el-tooltip class="item" effect="dark" content="查看" placement="top">
             <el-button type="info" icon="el-icon-message" round size="mini" @click="handleCheck(row)" />
           </el-tooltip>
           <el-tooltip v-if="(row.state==='待提交'||row.state==='异常')?true:false" class="item" effect="dark" content="删除" placement="top">
             <el-button type="danger" icon="el-icon-delete" round size="mini" @click="handleDel($index,row)" />
-          </el-tooltip>
+          </el-tooltip> -->
         </template>
       </el-table-column>
     </el-table>
@@ -206,8 +132,8 @@
       @current-change="handleCurrentChange"
     />
     <!-- 修改表单提交 -->
-    <el-dialog :close-on-click-modal="alwaysFalse" :title="dialogStatus==='update'?'订单修改':'订单新增'" :visible.sync="dialogFormVisible" @close="clearfzData" width="45%">
-      <EditForm ref="EditForm" :detail-to-update="detailToUpdate" :dialog-status="dialogStatus" @updateCommit="updateDetail" @createCommit="createDetail" @closeCommit="closeForm()" />
+    <el-dialog :close-on-click-modal="alwaysFalse" title="订单修改" :visible.sync="dialogFormVisible" @close="clearfzData" width="45%">
+        <Editform @closeForm="clearfzData" :detail="detailToUpdate" @updateCommit="updataForm"></Editform>
     </el-dialog>
     <!-- 表单信息查看 -->
     <el-dialog :close-on-click-modal="alwaysFalse" :title="'订单详情'" :visible.sync="formCheck">
@@ -260,8 +186,12 @@
 </template>
 <script>
 import waves from '@/directive/waves'
+import  Editform  from '@/components/accountForm'
 export default {
   directives: { waves },
+  components:{
+      Editform
+  },
   data() {
     return {
       isShow: false,
@@ -272,7 +202,7 @@ export default {
       disabled: false,
       list: null,
       total: 11,
-      listLoading: true,
+      listLoading: false,
       timeStr: [],
       dellist: [],
       // 查询及分页参数
@@ -289,22 +219,8 @@ export default {
       detailToUpdate: {
         account_name: '',
         account_no: '',
-        account_type: '',
-        amount: '',
         bank_code: '',
-        business_code: '',
-        city: '',
-        currency: '',
-        errormsg: '',
-        id: '',
-        id_type: '',
-        merchant_id: '',
-        province: '',
-        req_sn: '',
-        state: '',
-        sub_data: '',
-        submit_time: '',
-        tel: ''
+        account_show:'',
       },
       // 修改列表参数
       temp: {
@@ -356,7 +272,14 @@ export default {
       value1: '',
       value2: '',
       // mock数据
-      tableData: [],
+      tableData: [
+          {
+            account_name:'张三',
+            account_no:'6227336643994455',
+            bank_code:'大连银行',
+            amount_show:'100'
+          }
+      ],
       dialogFormVisible: false,
       formCheck: false,
       dialogStatus: '',
@@ -372,6 +295,48 @@ export default {
         '2': '交易成功',
         '3': '交易失败'
       }
+    }
+  },
+  methods:{
+      handleFilter(){
+          console.log('handlefilter')
+      },
+      handleUpdate(row) {
+      // 数据更新（修改按钮）
+      this.detailToUpdate = row
+      this.dialogStatus = 'update'
+      this.dialogFormVisible = true
+    },
+    handleCommitOne(){
+        console.log('handleCommitOne')
+    },
+    handleCurrentChange(val) {  
+      // console.log(`当前页: ${val}`)
+      this.listQuery.page=val
+      this.handleFilter()
+      // 页码切换分页调用请求传值
+    },
+     handleSizeChange(val) {
+      // console.log(`每页 ${val} 条`)
+      this.listQuery.limit=val
+      // console.log(this.listQuery.limit)
+      this.handleFilter()
+    },
+    handleSelectionChange(val) {
+      this.isShow = true
+    //   console.log(val)
+      this.multipleSelection = val
+      if (val.length === 0) {
+        this.isShow = false
+      }
+    },
+    updataForm(data){
+        this.tableData=[data]
+        this.dialogFormVisible=false
+    },
+    clearfzData() {
+            this.dialogFormVisible = false
+      // this.handleFilter()
     }
   }
   }
