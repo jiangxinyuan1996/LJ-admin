@@ -54,11 +54,11 @@
           v-model="listQuery.submit_time_end"
           type="date"
           placeholder="选择日期"
-        /><br>
-      </div>
-      <el-dropdown split-button type="primary" @click="handleFilter" size="mini">
+        />
+      <el-button type="primary" @click="handleFilter" size="mini" style="margin-left:15px;">
               查询
-      </el-dropdown>
+      </el-button>
+      </div>
       <!-- <el-button size="mini" v-waves class="filter-item funcbtn" v-if="isShow" type="success" :disabled="disabled" @click="handleCommit">
         提交/复核
       </el-button>
@@ -83,7 +83,7 @@
       :data="tableData"
       border
       highlight-current-row
-      style="width: 52%"
+      style="width: 100%"
       @selection-change="handleSelectionChange"
     >
      <el-table-column
@@ -129,7 +129,6 @@
         width="80"
       /> -->
       <el-table-column
-        fixed="right"
         label="操作"
         align="center"
         width="120"
