@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
       <!-- 搜索区 -->
-      <div v-if="showSearch" id="searchBox" style="lineHeight:36px;">
+      <div v-if="showSearch" id="searchBox" style="margin:40px">
         <span style="margin-right:15px">转出方:</span>
         <el-select
             v-model="listQuery.outputer"
@@ -75,7 +75,7 @@
       :data="tableData"
       border
       highlight-current-row
-      style="width: 46%"
+      style="width: 100%;margin-left:50px"
       @selection-change="handleSelectionChange"
     >
      <el-table-column
@@ -144,6 +144,7 @@
     </el-table>
     <!-- 分页 -->
     <el-pagination
+      style="margin-top:20px"
       :small="true"
       :current-page="listQuery.page"
       :page-sizes="[5,10]"
