@@ -28,7 +28,18 @@
       <!-- 搜索区 -->
       <div v-if="showSearch" id="searchBox" style="lineHeight:36px;">
         <span style="margin-right:15px">分账方姓名:</span>
-        <el-input size="mini" v-model="listQuery.account_no" placeholder="账号" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+        <el-select
+            v-model="listQuery.account_name"
+            filterable
+            placeholder="请输入关键词"
+            >
+            <el-option
+            v-for="item in list"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+            </el-option>
+        </el-select>
 
         <span style="margin:0 18px;padding-left:5px;">日期:</span>
         <el-date-picker
@@ -47,11 +58,6 @@
       </div>
       <el-dropdown split-button type="primary" @click="handleFilter" size="mini">
               查询
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>
-            <span @click="showSearch=!showSearch">高级查询</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
       </el-dropdown>
       <!-- <el-button size="mini" v-waves class="filter-item funcbtn" v-if="isShow" type="success" :disabled="disabled" @click="handleCommit">
         提交/复核
@@ -156,7 +162,7 @@
       @current-change="handleCurrentChange"
     />
     <!-- 修改表单提交 -->
-    <el-dialog :close-on-click-modal="alwaysFalse" title="订单修改" :visible.sync="dialogFormVisible" @close="clearfzData" width="45%">
+    <el-dialog :close-on-click-modal="alwaysFalse" title="" :visible.sync="dialogFormVisible" @close="clearfzData" width="45%">
         <Editform @closeForm="clearfzData" :detail="detailToUpdate" @updateCommit="updataForm"></Editform>
     </el-dialog>
     <!-- 表单信息查看 -->
@@ -222,7 +228,7 @@ export default {
       isShow: false,
       alwaysFalse:false,
       downLoadUrl:'',
-      showSearch: false,
+      showSearch: true,
       tableKey: 0,
       disabled: false,
       list: null,
@@ -230,6 +236,17 @@ export default {
       listLoading: false,
       timeStr: [],
       dellist: [],
+      list:[
+        {
+          value:'张三'
+        },
+        {
+          value:'李四'
+        },
+        {
+          value:'王五'
+        }
+      ],
       // 查询及分页参数
       listQuery: {
         page: 1,

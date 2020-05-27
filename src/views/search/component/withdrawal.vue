@@ -23,11 +23,6 @@
       </div>
       <el-dropdown split-button type="primary" @click="handleFilter" size="mini">
               查询
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>
-            <span @click="showSearch=!showSearch">高级查询</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
       </el-dropdown>
       <!-- <el-button size="mini" v-waves class="filter-item funcbtn" v-if="isShow" type="success" :disabled="disabled" @click="handleCommit">
         提交/复核
@@ -197,7 +192,7 @@ export default {
       isShow: false,
       alwaysFalse:false,
       downLoadUrl:'',
-      showSearch: false,
+      showSearch: true,
       tableKey: 0,
       disabled: false,
       list: null,
