@@ -1,15 +1,5 @@
 <template>
   <div id="sub-account">
-    <div id="searchBox">
-      <div id="buttonBox" style="margin:50px;">
-        <span style="margin-right:10px">单据流水号 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 15vw;margin-right:15px;" class="filter-item" />
-
-        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="clickSearch()">
-          查询
-        </el-button>
-      </div>
-    </div>
-
     <div id="dataForm">
       <el-table
         :data="tableData"
@@ -44,14 +34,7 @@
           label="分账方"
         >
           <template slot-scope="scope">
-            <el-select v-model="scope.row.subuser1" size="mini" filterable placeholder="请选择">
-              <el-option
-                v-for="item in subuser1List"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
+            <span>{{ scope.row.subuser1 }}</span>
             <el-divider />
             <span>{{ scope.row.subuser1Account }}</span>
           </template>
@@ -64,14 +47,7 @@
           label="被分账方"
         >
           <template slot-scope="scope">
-            <el-select v-model="scope.row.subuser2" size="mini" filterable placeholder="请选择">
-              <el-option
-                v-for="item in subuser2List"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
+            <span>{{ scope.row.subuser2 }}</span>
             <el-divider />
             <span>{{ scope.row.subuser2Account }}</span>
           </template>
@@ -81,27 +57,7 @@
           prop="ratio"
           width="150"
           label="比例"
-        >
-          <template slot-scope="scope">
-            <el-select v-model="scope.row.ratio" size="mini" filterable placeholder="请选择" @change="changeRatio(scope.row)">
-              <el-option
-                v-for="item in ratios"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="90"align="center">
-
-          <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" content="提交" placement="top-end">
-              <!-- <el-button class="el-icon-edit" @click="modifyData(scope.row)"></el-button> -->
-              <el-button type="success" icon="el-icon-check" circle size="mini" @click="commit(scope.row)" />
-            </el-tooltip>
-          </template>
-        </el-table-column>
+        />
       </el-table>
       <el-pagination
         :page-size="10"
@@ -135,15 +91,15 @@ export default {
           account: '2000000',
           subuser1: '朗杰',
           subuser2: '被分账方1',
-          ratio: '10:0'
+          ratio: '3:7'
         },
         {
           id: 'A100000002',
           createtime: '2020-05-26 17:32:10',
           account: '50000',
           subuser1: '朗杰',
-          subuser2: '被分账方3',
-          ratio: '10:0'
+          subuser2: '被分账方1',
+          ratio: '5:5'
         }
       ],
       currentPage: 1,

@@ -104,6 +104,13 @@ export const constantRoutes = [
         component: () => import('@/views/sub-verify/index'),
         name: '分账复核',
         meta: { title: '分账复核', icon: 'eye-open', affix: true }
+      },
+      {
+        path: 'detail',
+        component: () => import('@/views/sub-verify/detail'),
+        name: '分账复核明细',
+        hidden: true,
+        meta: { title: '分账复核明细', icon: 'eye-open', affix: true }
       }
     ]
   },
