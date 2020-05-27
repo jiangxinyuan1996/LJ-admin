@@ -9,7 +9,7 @@ import Layout from '@/layout'
 /* Router Modules */
 // import componentsRouter from './modules/components'
 // import chartsRouter from './modules/charts'
-import tableRouter from './modules/table'
+// import tableRouter from './modules/table'
 // import nestedRouter from './modules/nested'
 
 /**
@@ -85,13 +85,27 @@ export const constantRoutes = [
   },
   {
     path: '/subaccount',
-    component: () => import('@/views/sub-account/index'),
-    hidden: true
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/sub-account/index'),
+        name: '分账明细',
+        meta: { title: '分账明细', icon: 'edit', affix: true }
+      }
+    ]
   },
   {
     path: '/subverify',
-    component: () => import('@/views/sub-verify/index'),
-    hidden: true
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/sub-verify/index'),
+        name: '分账复核',
+        meta: { title: '分账复核', icon: 'eye-open', affix: true }
+      }
+    ]
   },
   {
     path: '/search',
@@ -109,7 +123,7 @@ export const constantRoutes = [
   },
   {
     path: '/withdrawal',
-    component:Layout,
+    component: Layout,
     redirect: '/withdrawal/index',
     name: 'accountwithdrawal',
     children: [
@@ -117,13 +131,13 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/account-withdrawal/index'),
         name: 'withdrawal',
-        meta: { title: '账户提现', icon: 'user'}
+        meta: { title: '账户提现', icon: 'user' }
       }
     ]
   },
   {
     path: '/transfer',
-    component:Layout,
+    component: Layout,
     redirect: '/transfer/index',
     name: 'accounttransfer',
     children: [
@@ -131,7 +145,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/account-transfer/index'),
         name: 'transfer',
-        meta: { title: '账户转账', icon: 'user'}
+        meta: { title: '账户转账', icon: 'user' }
       }
     ]
   },
@@ -147,6 +161,7 @@ export const constantRoutes = [
   //     }
   //   ]
   // },
+
   // {
   //   path: '/guide',
   //   component: Layout,
@@ -181,7 +196,6 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
-  
   // {
   //   path: '/permission',
   //   component: Layout,
@@ -224,24 +238,24 @@ export const asyncRoutes = [
   //   ]
   // },
 
-  // {
-  //   path: '/icon',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/icons/index'),
-  //       name: 'Icons',
-  //       meta: { title: 'Icons', icon: 'icon', noCache: true }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/icon',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/icons/index'),
+        name: 'Icons',
+        meta: { title: 'Icons', icon: 'icon', noCache: true }
+      }
+    ]
+  },
 
   /** when your routing map is too long, you can split it into small modules **/
   // componentsRouter,
   // chartsRouter,
   // nestedRouter,
-  tableRouter,
+  // tableRouter,
 
   // {
   //   path: '/example',
