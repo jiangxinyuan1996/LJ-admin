@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'Vue Element Admin',
+  title: '通商云分账系统',
 
   /**
    * @type {boolean} true | false
