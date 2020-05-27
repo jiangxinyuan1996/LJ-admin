@@ -4,17 +4,30 @@
       <!-- 搜索区 -->
       <div v-if="showSearch" id="searchBox" style="lineHeight:36px;">
         <span style="margin-right:15px">分账方姓名:</span>
-        <el-input size="mini" v-model="listQuery.account_no" placeholder="分账方姓名" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-
+        <el-select
+            v-model="listQuery.account_no"
+            filterable
+            placeholder="请输入关键词"
+            size="mini"
+            >
+            <el-option
+            v-for="item in list"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+            </el-option>
+        </el-select>
         <span style="margin:0 18px;padding-left:5px;">日期:</span>
         <el-date-picker
           size="mini"
+          style="width:13%"
           v-model="listQuery.submit_time_start"
           type="date"
           placeholder="选择日期"
         />
         <span style="margin-right:15px;margin-left:15px;">至</span>
         <el-date-picker
+          style="width:13%"
           size="mini"
           v-model="listQuery.submit_time_end"
           type="date"
@@ -200,6 +213,17 @@ export default {
       listLoading: false,
       timeStr: [],
       dellist: [],
+      list:[
+        {
+          value:'张三'
+        },
+        {
+          value:'李四'
+        },
+        {
+          value:'王五'
+        }
+      ],
       // 查询及分页参数
       listQuery: {
         page: 1,

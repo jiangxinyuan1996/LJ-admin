@@ -31,6 +31,7 @@
         <el-select
             v-model="listQuery.account_name"
             filterable
+            size="mini"
             placeholder="请输入关键词"
             >
             <el-option
@@ -44,6 +45,7 @@
         <span style="margin:0 18px;padding-left:5px;">日期:</span>
         <el-date-picker
           size="mini"
+          style="width:13%"
           v-model="listQuery.submit_time_start"
           type="date"
           placeholder="选择日期"
@@ -51,6 +53,7 @@
         <span style="margin-right:15px;margin-left:15px;">至</span>
         <el-date-picker
           size="mini"
+          style="width:13%"
           v-model="listQuery.submit_time_end"
           type="date"
           placeholder="选择日期"

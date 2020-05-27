@@ -8,6 +8,7 @@
             v-model="listQuery.outputer"
             filterable
             placeholder="请输入关键词"
+            size="mini"
             >
             <el-option
             v-for="item in list"
@@ -16,11 +17,12 @@
             :value="item.value">
             </el-option>
         </el-select>
-         <span style="margin-right:15px">转入方:</span>
+         <span style="margin:0 15px">转入方:</span>
         <el-select
             v-model="listQuery.inputer"
             filterable
             placeholder="请输入关键词"
+            size="mini"
             >
             <el-option
             v-for="item in list"
@@ -31,6 +33,7 @@
         </el-select>
         <span style="margin:0 18px;padding-left:5px;">日期:</span>
         <el-date-picker
+          style="width:13%"
           size="mini"
           v-model="listQuery.submit_time_start"
           type="date"
@@ -38,6 +41,7 @@
         />
         <span style="margin-right:15px;margin-left:15px;">至</span>
         <el-date-picker
+          style="width:13%"
           size="mini"
           v-model="listQuery.submit_time_end"
           type="date"
