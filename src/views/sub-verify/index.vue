@@ -159,7 +159,7 @@ export default {
           id: 'A100000001',
           createtime: '2020-05-26 15:02:35',
           account: '800000',
-          subuser1: '朗杰',
+          subuser1: '本公司',
           subuser1Account: '500000',
           subuser2: '被分账方1',
           subuser2Account: '300000',
@@ -169,7 +169,7 @@ export default {
           id: 'A100000002',
           createtime: '2020-05-26 17:32:10',
           account: '180000',
-          subuser1: '朗杰',
+          subuser1: '本公司',
           subuser1Account: '100000',
           subuser2: '被分账方3',
           subuser2Account: '80000',
@@ -203,7 +203,7 @@ export default {
       ],
       subuser1List: [{
         value: '1',
-        label: '朗杰'
+        label: '本公司'
       }]
     }
   },
@@ -240,7 +240,8 @@ export default {
           h('span', { style: 'color: rgb(0,113,190)' }, `${e.subuser2} `),
           h('span', { style: 'color: rgb(238,120,0)' }, `${e.subuser2Account}`),
           h('span', null, `元`),
-          h('span', null, `是否继续?`)
+          h('br', null, ''),
+          h('span', null, `是否确认复核?`)
         ]),
         showCancelButton: true,
         confirmButtonText: '确定',
@@ -266,8 +267,8 @@ export default {
         })
       })
     },
-    checkDetail(e){
-      let url = '/subverify/detail'
+    checkDetail(e) {
+      const url = '/subverify/detail'
       this.$router.push(url)
     }
   }
