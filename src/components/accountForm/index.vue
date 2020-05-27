@@ -17,7 +17,7 @@
         <el-input v-model="ruleForm.bank_code"></el-input>
       </el-form-item> -->
       <el-form-item label="金额(元)" prop="amount_show">
-        <el-input v-model="ruleForm.amount_show"></el-input>
+        <el-input v-model="ruleForm.amount_show" style="width:40%"></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">

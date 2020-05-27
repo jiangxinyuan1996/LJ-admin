@@ -4,9 +4,31 @@
       <!-- 搜索区 -->
       <div v-if="showSearch" id="searchBox" style="lineHeight:36px;">
         <span style="margin-right:15px">转出方:</span>
-        <el-input size="mini" v-model="listQuery.account_no" placeholder="转出方" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+        <el-select
+            v-model="listQuery.outputer"
+            filterable
+            placeholder="请输入关键词"
+            >
+            <el-option
+            v-for="item in list"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+            </el-option>
+        </el-select>
          <span style="margin-right:15px">转入方:</span>
-        <el-input size="mini" v-model="listQuery.account_no" placeholder="转入方" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+        <el-select
+            v-model="listQuery.inputer"
+            filterable
+            placeholder="请输入关键词"
+            >
+            <el-option
+            v-for="item in list"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+            </el-option>
+        </el-select>
         <span style="margin:0 18px;padding-left:5px;">日期:</span>
         <el-date-picker
           size="mini"
@@ -24,11 +46,11 @@
       </div>
       <el-dropdown split-button type="primary" @click="handleFilter" size="mini">
               查询
-        <el-dropdown-menu slot="dropdown">
+        <!-- <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
             <span @click="showSearch=!showSearch">高级查询</span>
           </el-dropdown-item>
-        </el-dropdown-menu>
+        </el-dropdown-menu> -->
       </el-dropdown>
       <!-- <el-button size="mini" v-waves class="filter-item funcbtn" v-if="isShow" type="success" :disabled="disabled" @click="handleCommit">
         提交/复核
@@ -61,19 +83,19 @@
         prop="account_name"
         label="转出方"
         align="center"
-        width="100"
+        width="120"
       />
       <el-table-column
         prop="account_no"
         label="转入方"
         align="center"
-        width="180"
+        width="120"
       />
       <el-table-column
         prop="bank_code"
         label="日期"
         align="center"
-        width="160"
+        width="200"
       />
        <el-table-column
         prop="amount_show"
@@ -198,7 +220,7 @@ export default {
       isShow: false,
       alwaysFalse:false,
       downLoadUrl:'',
-      showSearch: false,
+      showSearch: true,
       tableKey: 0,
       disabled: false,
       list: null,
@@ -207,9 +229,22 @@ export default {
       timeStr: [],
       dellist: [],
       // 查询及分页参数
+      list:[
+        {
+          value:'张三'
+        },
+        {
+          value:'李四'
+        },
+        {
+          value:'王五'
+        }
+      ],
       listQuery: {
         page: 1,
         limit: 10,
+        outputer:'',
+        inputer:'',
         business_code: '',
         submit_time_start: '',
         submit_time_end: '',
@@ -277,7 +312,7 @@ export default {
           {
             account_name:'张三',
             account_no:'李四',
-            bank_code:new Date().getFullYear(),
+            bank_code:'2020-05-26 15:02:35',
             amount_show:'100'
           }
       ],
