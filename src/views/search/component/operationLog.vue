@@ -285,7 +285,4 @@ export default {
 .el-divider--horizontal{
   margin: 5px 0;
 }
-#searchBox{
-  font-size: 13px;
-}
 </style>

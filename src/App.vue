@@ -9,3 +9,8 @@ export default {
   name: 'App'
 }
 </script>
+<style>
+#searchBox{
+  font-size: 13px;
+}
+</style>
