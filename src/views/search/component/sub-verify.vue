@@ -92,6 +92,14 @@
           width="150"
           label="总金额"
         />
+        <el-table-column label="操作" width="120"align="center">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" content="查看明细" placement="right">
+              <el-button type="primary" icon="el-icon-search" size="mini" circle @click="checkDetail(scope.row)" />
+            </el-tooltip>
+
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination
         :page-size="10"
