@@ -66,10 +66,16 @@
     >
      <el-table-column
         prop="account_name"
-        label="分账方姓名"
+        label="分账方名称"
         align="center"
         width="100"
       />
+      <el-table-column
+         prop="name"
+         label="提现账户名"
+         align="center"
+         width="100"
+       />
       <el-table-column
         prop="account_no"
         label="账号"
@@ -294,7 +300,15 @@ export default {
       // mock数据
       tableData: [
           {
-            account_name:'张三',
+            account_name:'本公司',
+            name:'张三',
+            account_no:'6227336643994455',
+            bank_code:'大连银行',
+            amount_show:'100'
+          },
+          {
+            account_name:'被分账方1',
+            name:'李四',
             account_no:'6227336643994455',
             bank_code:'大连银行',
             amount_show:'100'
@@ -330,7 +344,7 @@ export default {
     handleCommitOne(){
         console.log('handleCommitOne')
     },
-    handleCurrentChange(val) {  
+    handleCurrentChange(val) {
       // console.log(`当前页: ${val}`)
       this.listQuery.page=val
       this.handleFilter()

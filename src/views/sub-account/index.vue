@@ -135,6 +135,7 @@
 </template>
 
 <script>
+import {getFromSubUserList,getToSubUserList} from '@/api/tsyLj.js'
 export default {
   name: 'SubAccount',
   data() {
@@ -219,6 +220,9 @@ export default {
     }
   },
   created() {
+    getFromSubUserList().then(res=>{
+      console.log('getFromSubUserList---:',res);
+    })
     for (let i = 0; i < this.tableData.length; i++) {
       if(this.tableData[i].ratio!=''&&this.tableData[i].ratio!=null){
         const subuser1Ratio = this.tableData[i].ratio.split(':')[0]
