@@ -91,7 +91,7 @@
         width="120"
       />
       <el-table-column
-        prop="bank_code"
+        prop="createtime"
         label="日期"
         align="center"
         width="200"
@@ -312,7 +312,7 @@ export default {
           {
             account_name:'张三',
             account_no:'李四',
-            bank_code:'2020-05-26 15:02:35',
+            createtime:'2020-05-26 15:02:35',
             amount_show:'100'
           }
       ],

@@ -319,6 +319,10 @@ export default {
   },
   methods:{
       handleFilter(){
+        this.listLoading=true
+        setTimeout(()=>{
+          this.listLoading=false
+        },2000)
           console.log('handlefilter')
       },
       handleUpdate(row) {
