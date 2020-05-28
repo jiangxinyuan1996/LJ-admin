@@ -110,21 +110,21 @@ export const constantRoutes = [
         component: () => import('@/views/sub-verify/detail'),
         name: '账单明细',
         hidden: true,
-        meta: { title: '账单明细', icon: 'eye-open', affix: true }
+        meta: { title: '账单明细', icon: 'eye-open' }
       }
     ]
   },
   {
     path: '/search',
-    component:Layout,
+    component: Layout,
     redirect: '/search/index',
-    name:'search',
+    name: 'search',
     children: [
       {
         path: 'index',
         component: () => import('@/views/search/index'),
         name: 'index',
-        meta: { title: '数据查询', icon: 'search'}
+        meta: { title: '数据查询', icon: 'search' }
       }
     ]
   },

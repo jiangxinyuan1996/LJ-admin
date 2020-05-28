@@ -10,6 +10,12 @@
         <el-form-item label="分账方姓名:">
           <span>{{temp.account_name}}</span>
         </el-form-item>
+        <el-table-column
+           prop="name"
+           label="持卡人姓名"
+           align="center"
+           width="100"
+         />
         <el-form-item label="账号:">
           <span>{{temp.account_no}}</span>
         </el-form-item>
@@ -91,10 +97,16 @@
     >
      <el-table-column
         prop="account_name"
-        label="分账方姓名"
+        label="分账方名称"
         align="center"
         width="100"
       />
+      <el-table-column
+         prop="name"
+         label="提现账户名"
+         align="center"
+         width="100"
+       />
       <el-table-column
         prop="account_no"
         label="账号"
@@ -109,10 +121,16 @@
       />
        <el-table-column
         prop="amount_show"
-        label="金额(元)"
+        label="余额(元)"
         align="center"
         width="150"
       />
+      <el-table-column
+       prop="amount_show_2"
+       label="可提现金额(元)"
+       align="center"
+       width="150"
+     />
       <!-- <el-table-column
         prop="business_code"
         label="业务代码"
@@ -317,10 +335,20 @@ export default {
       // mock数据
       tableData: [
           {
-            account_name:'张三',
+            account_name:'本公司',
+            name:'张三',
             account_no:'6227336643994455',
             bank_code:'大连银行',
-            amount_show:'100'
+            amount_show:'100',
+            amount_show_2:'50'
+          },
+          {
+            account_name:'被分账方1',
+            name:'李四',
+            account_no:'6227336643994455',
+            bank_code:'大连银行',
+            amount_show:'100',
+            amount_show_2:'50'
           }
       ],
       dialogFormVisible: false,
@@ -353,7 +381,7 @@ export default {
     handleCommitOne(){
         console.log('handleCommitOne')
     },
-    handleCurrentChange(val) {  
+    handleCurrentChange(val) {
       // console.log(`当前页: ${val}`)
       this.listQuery.page=val
       this.handleFilter()

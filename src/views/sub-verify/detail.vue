@@ -58,6 +58,14 @@
           width="150"
           label="比例"
         />
+        <el-table-column label="操作" width="120"align="center">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" content="驳回" placement="left">
+              <!-- <el-button class="el-icon-edit" @click="modifyData(scope.row)"></el-button> -->
+              <el-button type="warning" icon="el-icon-refresh-left" circle size="mini" @click="commit(scope.row)" />
+            </el-tooltip>
+          </template>
+        </el-table-column>
       </el-table>
       <el-pagination
         :page-size="10"
