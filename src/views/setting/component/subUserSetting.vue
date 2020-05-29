@@ -4,8 +4,9 @@
       title="提示"
       :visible.sync="dialogVisible"
       width="30%"
-      :before-close="handleClose">
-      <subUserForm></subUserForm>
+      :before-close="handleClose"
+    >
+      <subUserForm />
     </el-dialog>
     <div id="searchBox">
       <div id="buttonBox" style="margin:50px;">
@@ -88,7 +89,7 @@ import { getFromSubUserList, getToSubUserList } from '@/api/tsyLj.js'
 import subUserForm from './form/subUserForm'
 export default {
   name: 'SubAccount',
-  components:{
+  components: {
     subUserForm
   },
   data() {
@@ -128,16 +129,16 @@ export default {
           name: '本公司',
           type: '分账方',
           bank_name: '张三',
-          bank_code:'建设银行',
+          bank_code: '建设银行',
           card_num: '6227008886669995555'
         },
         {
           name: '分账方1',
           type: '被分账方',
           bank_name: '李四',
-          bank_code:'工商银行',
+          bank_code: '工商银行',
           card_num: '6227008886669995555'
-        },
+        }
       ],
       currentPage: 1,
       ratios: [{
@@ -168,7 +169,7 @@ export default {
         value: '1',
         label: '本公司'
       }],
-      dialogVisible:false
+      dialogVisible: false
     }
   },
   created() {
@@ -195,7 +196,7 @@ export default {
     modify(e) {
       this.dialogVisible = true
     },
-    create(){
+    create() {
       this.dialogVisible = true
     }
   }

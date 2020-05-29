@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form :model="createForm" size="mini" :rules="rules" label-width="100px" >
+    <el-form :model="createForm" size="mini" :rules="rules" label-width="100px">
       <el-form-item label="分账方名称" prop="name" style="margin-top:0;display: inline-block;">
         <el-input v-model="createForm.account_name" />
       </el-form-item>
@@ -17,9 +17,9 @@
       <el-form-item label="提现账户名" prop="bank_name" style="margin-top:0;display: inline-block;">
         <el-input v-model="createForm.id" style="width:15vw;" />
       </el-form-item>
-    <el-form-item label="银行卡号" prop="card_num">
-      <el-input style="width:15vw;" v-model="createForm.account_no" @blur="getAccountInfo()"/>
-    </el-form-item>
+      <el-form-item label="银行卡号" prop="card_num">
+        <el-input v-model="createForm.account_no" style="width:15vw;" @blur="getAccountInfo()" />
+      </el-form-item>
       <el-form-item label="银行名称" prop="bank_code" style="margin-top:0;display: inline-block;">
         <el-select v-model="createForm.bank_code" filterable clearable placeholder="请选择">
           <el-option
@@ -103,12 +103,12 @@ export default {
         ]
       },
       bankCodeOptions: [],
-      typeOptions:[{
-        label:'分账方',
-        value:'分账方'
-      },{
-        label:'被分账方',
-        value:'被分账方'
+      typeOptions: [{
+        label: '分账方',
+        value: '分账方'
+      }, {
+        label: '被分账方',
+        value: '被分账方'
       }]
     }
   },
@@ -117,7 +117,7 @@ export default {
       // 外部触发游戏开始
       console.log('watch-command new: %s, old: %s', val, oldVal)
       if (val === 'update') {
-        this.createForm = Object.assign({},this.dataToModify)
+        this.createForm = Object.assign({}, this.dataToModify)
       } else if (val === 'create') {
         this.createForm = {
           bank_code: '',
@@ -135,10 +135,9 @@ export default {
   },
   created() {
     this.bankCodeOptions = bankCodeOptionsConstant
-    if( this.dataToModify ){
-      this.createForm = Object.assign({},this.dataToModify)
+    if (this.dataToModify) {
+      this.createForm = Object.assign({}, this.dataToModify)
     }
-
   },
   methods: {
   }

@@ -1,11 +1,11 @@
 <template>
   <div>
-    <el-form :model="createForm" size="mini" :rules="rules" label-width="100px" >
+    <el-form :model="createForm" size="mini" :rules="rules" label-width="100px">
       <el-form-item label="分账方比例" prop="name" style="margin-top:0;display: inline-block;">
-        <el-input-number v-model="num1" :precision="2" :step="0.01" :max="10"></el-input-number>
+        <el-input-number v-model="num1" :precision="2" :step="0.01" :max="10" />
       </el-form-item>
       <el-form-item label="被分账方比例" prop="name" style="margin-top:0;display: inline-block;">
-        <el-input-number v-model="num2" disabled :precision="2" :step="0.01" :max="10"></el-input-number>
+        <el-input-number v-model="num2" disabled :precision="2" :step="0.01" :max="10" />
       </el-form-item>
 
     </el-form>
@@ -41,8 +41,8 @@ export default {
         tel: '',
         merrem: ''
       },
-      num1:0,
-      num2:10,
+      num1: 0,
+      num2: 10,
       rules: {
         bank_code: [
           { required: true, message: '请输入银行代码', trigger: 'blur' }
@@ -82,12 +82,12 @@ export default {
         ]
       },
       bankCodeOptions: [],
-      typeOptions:[{
-        label:'分账方',
-        value:'分账方'
-      },{
-        label:'被分账方',
-        value:'被分账方'
+      typeOptions: [{
+        label: '分账方',
+        value: '分账方'
+      }, {
+        label: '被分账方',
+        value: '被分账方'
       }]
     }
   },
@@ -96,7 +96,7 @@ export default {
       // 外部触发游戏开始
       console.log('watch-command new: %s, old: %s', val, oldVal)
       if (val === 'update') {
-        this.createForm = Object.assign({},this.dataToModify)
+        this.createForm = Object.assign({}, this.dataToModify)
       } else if (val === 'create') {
         this.createForm = {
           bank_code: '',
@@ -112,19 +112,18 @@ export default {
       }
     }
   },
+  watch: {
+    num1: function(val, oldVal) {
+      this.num2 = 10 - val
+    }
+  },
   created() {
     this.bankCodeOptions = bankCodeOptionsConstant
-    if( this.dataToModify ){
-      this.createForm = Object.assign({},this.dataToModify)
+    if (this.dataToModify) {
+      this.createForm = Object.assign({}, this.dataToModify)
     }
-
   },
   methods: {
-  },
-  watch:{
-    num1: function (val, oldVal) {
-      this.num2 = 10-val
-    }
   }
 }
 </script>

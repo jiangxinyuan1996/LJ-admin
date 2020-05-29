@@ -4,8 +4,9 @@
       title="提示"
       :visible.sync="dialogVisible"
       width="30%"
-      :before-close="handleClose">
-      <subRatioForm></subRatioForm>
+      :before-close="handleClose"
+    >
+      <subRatioForm />
     </el-dialog>
     <div id="searchBox">
       <div id="buttonBox" style="margin:50px;">
@@ -70,7 +71,7 @@ import { getFromSubUserList, getToSubUserList } from '@/api/tsyLj.js'
 import subRatioForm from './form/subRatioForm'
 export default {
   name: 'SubAccount',
-  components:{
+  components: {
     subRatioForm
   },
   data() {
@@ -108,15 +109,15 @@ export default {
       tableData: [
         {
           ratio1: '3',
-          ratio2:'7'
+          ratio2: '7'
         },
         {
           ratio1: '5',
-          ratio2:'5'
+          ratio2: '5'
         },
         {
           ratio1: '10',
-          ratio2:'0'
+          ratio2: '0'
         }
       ],
       currentPage: 1,
@@ -148,7 +149,7 @@ export default {
         value: '1',
         label: '本公司'
       }],
-      dialogVisible:false
+      dialogVisible: false
     }
   },
   created() {
@@ -175,7 +176,7 @@ export default {
     modify(e) {
       this.dialogVisible = true
     },
-    create(){
+    create() {
       this.dialogVisible = true
     }
   }

@@ -331,11 +331,15 @@ export default {
       }
     }
   },
-  methods: {
-    handleFilter() {
-      console.log('handlefilter')
-    },
-    handleUpdate(row) {
+  methods:{
+      handleFilter(){
+        this.listLoading=true
+        setTimeout(()=>{
+          this.listLoading=false
+        },2000)
+          console.log('handlefilter')
+      },
+      handleUpdate(row) {
       // 数据更新（修改按钮）
       this.detailToUpdate = row
       this.dialogStatus = 'update'
