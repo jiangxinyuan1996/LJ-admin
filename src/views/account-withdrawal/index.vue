@@ -2,71 +2,72 @@
   <div class="app-container">
     <div class="filter-container">
       <el-dialog
-      title="提现信息确认"
-      :visible.sync="dialogVisible1"
-      width="30%"
-      :before-close="handleClose">
-      <el-form ref="form" :model="tableData" label-width="90px">
-        <el-form-item label="分账方姓名:">
-          <span>{{temp.account_name}}</span>
-        </el-form-item>
-        <el-table-column
-           prop="name"
-           label="持卡人姓名"
-           align="center"
-           width="100"
-         />
-        <el-form-item label="账号:">
-          <span>{{temp.account_no}}</span>
-        </el-form-item>
-        <el-form-item label="银行:">
-          <span>{{temp.bank_code}}</span>
-        </el-form-item>
-        <el-form-item label="金额:">
-          <span style="color: rgb(238, 120, 0);">{{temp.amount_show}}</span>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="handleClose">取 消</el-button>
-        <el-button type="primary" @click="submit">确 定</el-button>
-      </span>
-    </el-dialog>
+        title="提现信息确认"
+        :visible.sync="dialogVisible1"
+        width="30%"
+        :before-close="handleClose"
+      >
+        <el-form ref="form" :model="tableData" label-width="90px">
+          <el-form-item label="分账方姓名:">
+            <span>{{ temp.account_name }}</span>
+          </el-form-item>
+          <el-table-column
+            prop="name"
+            label="持卡人姓名"
+            align="center"
+            width="100"
+          />
+          <el-form-item label="账号:">
+            <span>{{ temp.account_no }}</span>
+          </el-form-item>
+          <el-form-item label="银行:">
+            <span>{{ temp.bank_code }}</span>
+          </el-form-item>
+          <el-form-item label="金额:">
+            <span style="color: rgb(238, 120, 0);">{{ temp.amount_show }}</span>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="handleClose">取 消</el-button>
+          <el-button type="primary" @click="submit">确 定</el-button>
+        </span>
+      </el-dialog>
       <!-- 搜索区 -->
       <div v-if="showSearch" id="searchBox" style="margin:40px">
         <span style="margin-right:15px">分账方姓名:</span>
         <el-select
-            v-model="listQuery.account_name"
-            filterable
-            size="mini"
-            placeholder="请输入关键词"
-            >
-            <el-option
+          v-model="listQuery.account_name"
+          filterable
+          size="mini"
+          placeholder="请输入关键词"
+        >
+          <el-option
             v-for="item in list"
             :key="item.value"
             :label="item.label"
-            :value="item.value">
-            </el-option>
+            :value="item.value"
+          />
         </el-select>
 
         <span style="margin:0 18px;padding-left:5px;">日期:</span>
         <el-date-picker
+          v-model="listQuery.submit_time_start"
           size="mini"
           style="width:13%"
-          v-model="listQuery.submit_time_start"
           type="date"
           placeholder="选择日期"
         />
         <span style="margin-right:15px;margin-left:15px;">至</span>
         <el-date-picker
+          v-model="listQuery.submit_time_end"
           size="mini"
           style="width:13%"
-          v-model="listQuery.submit_time_end"
           type="date"
           placeholder="选择日期"
         />
-      <el-button type="primary" @click="handleFilter" size="mini" style="margin-left:15px;">
-              查询
-      </el-button>
+        <el-button type="primary" size="mini" style="margin-left:15px;" @click="handleFilter">
+          查询
+        </el-button>
       </div>
       <!-- <el-button size="mini" v-waves class="filter-item funcbtn" v-if="isShow" type="success" :disabled="disabled" @click="handleCommit">
         提交/复核
@@ -87,26 +88,26 @@
     </div>
     <!-- 查询信息表格 -->
     <el-table
-      size="mini"
       v-loading="listLoading"
+      size="mini"
       :data="tableData"
       border
       highlight-current-row
       style="width: 100%;margin-left:40px"
       @selection-change="handleSelectionChange"
     >
-     <el-table-column
+      <el-table-column
         prop="account_name"
         label="分账方名称"
         align="center"
         width="100"
       />
       <el-table-column
-         prop="name"
-         label="提现账户名"
-         align="center"
-         width="100"
-       />
+        prop="name"
+        label="提现账户名"
+        align="center"
+        width="100"
+      />
       <el-table-column
         prop="account_no"
         label="账号"
@@ -119,18 +120,18 @@
         align="center"
         width="160"
       />
-       <el-table-column
+      <el-table-column
         prop="amount_show"
         label="余额(元)"
         align="center"
         width="150"
       />
       <el-table-column
-       prop="amount_show_2"
-       label="可提现金额(元)"
-       align="center"
-       width="150"
-     />
+        prop="amount_show_2"
+        label="可提现金额(元)"
+        align="center"
+        width="150"
+      />
       <!-- <el-table-column
         prop="business_code"
         label="业务代码"
@@ -155,10 +156,10 @@
         width="120"
       >
         <template slot-scope="{ $index,row }">
-          <el-tooltip   class="item" effect="dark" content="修改金额" placement="top">
+          <el-tooltip class="item" effect="dark" content="修改金额" placement="top">
             <el-button type="primary" icon="el-icon-edit" circle size="mini" @click="handleUpdate(row)" />
           </el-tooltip>
-          <el-tooltip   class="item" effect="dark" content="转账" placement="top">
+          <el-tooltip class="item" effect="dark" content="转账" placement="top">
             <el-button type="success" icon="el-icon-check" circle size="mini" @click="open(row)" />
           </el-tooltip>
           <!-- <el-tooltip class="item" effect="dark" content="查看" placement="top">
@@ -172,7 +173,7 @@
     </el-table>
     <!-- 分页 -->
     <el-pagination
-    style="margin-top:20px;"
+      style="margin-top:20px;"
       :small="true"
       :current-page="listQuery.page"
       :page-sizes="[5,10]"
@@ -183,8 +184,8 @@
       @current-change="handleCurrentChange"
     />
     <!-- 修改表单提交 -->
-    <el-dialog :close-on-click-modal="alwaysFalse" title="" :visible.sync="dialogFormVisible" @close="clearfzData" width="45%">
-        <Editform @closeForm="clearfzData" :detail="detailToUpdate" @updateCommit="updataForm"></Editform>
+    <el-dialog :close-on-click-modal="alwaysFalse" title="" :visible.sync="dialogFormVisible" width="45%" @close="clearfzData">
+      <Editform :detail="detailToUpdate" @closeForm="clearfzData" @updateCommit="updataForm" />
     </el-dialog>
     <!-- 表单信息查看 -->
     <el-dialog :close-on-click-modal="alwaysFalse" :title="'订单详情'" :visible.sync="formCheck">
@@ -222,7 +223,7 @@
         <el-form-item label="手机号/小灵通 :" prop="tel">
           <div>{{ temp.tel }}</div>
         </el-form-item>
-        <el-form-item  v-show="tempData[0].num" v-for="item in tempData" :key="item.num" label="分账商户信息">
+        <el-form-item v-for="item in tempData" v-show="tempData[0].num" :key="item.num" label="分账商户信息">
           <div>分账商户:{{ item.num }}</div>
           <div>分账金额:{{ item.amount }}</div>
         </el-form-item>
@@ -237,18 +238,18 @@
 </template>
 <script>
 import waves from '@/directive/waves'
-import  Editform  from '@/components/accountForm'
+import Editform from '@/components/accountForm'
 export default {
   directives: { waves },
-  components:{
-      Editform
+  components: {
+    Editform
   },
   data() {
     return {
-      dialogVisible1:false,
+      dialogVisible1: false,
       isShow: false,
-      alwaysFalse:false,
-      downLoadUrl:'',
+      alwaysFalse: false,
+      downLoadUrl: '',
       showSearch: true,
       tableKey: 0,
       disabled: false,
@@ -257,15 +258,15 @@ export default {
       listLoading: false,
       timeStr: [],
       dellist: [],
-      list:[
+      list: [
         {
-          value:'张三'
+          value: '张三'
         },
         {
-          value:'李四'
+          value: '李四'
         },
         {
-          value:'王五'
+          value: '王五'
         }
       ],
       // 查询及分页参数
@@ -283,11 +284,11 @@ export default {
         account_name: '',
         account_no: '',
         bank_code: '',
-        account_show:'',
+        account_show: ''
       },
       // 修改列表参数
       temp: {},
-      tempData:[],
+      tempData: [],
       rules: {
         business_code: [{ required: true, message: '必填项', trigger: 'blur' }],
         bank_code: [{ required: true, message: '必填项', trigger: 'blur' }],
@@ -334,22 +335,22 @@ export default {
       value2: '',
       // mock数据
       tableData: [
-          {
-            account_name:'本公司',
-            name:'张三',
-            account_no:'6227336643994455',
-            bank_code:'大连银行',
-            amount_show:'100',
-            amount_show_2:'50'
-          },
-          {
-            account_name:'被分账方1',
-            name:'李四',
-            account_no:'6227336643994455',
-            bank_code:'大连银行',
-            amount_show:'100',
-            amount_show_2:'50'
-          }
+        {
+          account_name: '本公司',
+          name: '张三',
+          account_no: '6227336643994455',
+          bank_code: '大连银行',
+          amount_show: '100',
+          amount_show_2: '50'
+        },
+        {
+          account_name: '被分账方1',
+          name: '李四',
+          account_no: '6227336643994455',
+          bank_code: '大连银行',
+          amount_show: '100',
+          amount_show_2: '50'
+        }
       ],
       dialogFormVisible: false,
       formCheck: false,
@@ -368,70 +369,70 @@ export default {
       }
     }
   },
-  methods:{
-      handleFilter(){
-          console.log('handlefilter')
-      },
-      handleUpdate(row) {
+  methods: {
+    handleFilter() {
+      console.log('handlefilter')
+    },
+    handleUpdate(row) {
       // 数据更新（修改按钮）
       this.detailToUpdate = row
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
     },
-    handleCommitOne(){
-        console.log('handleCommitOne')
+    handleCommitOne() {
+      console.log('handleCommitOne')
     },
     handleCurrentChange(val) {
       // console.log(`当前页: ${val}`)
-      this.listQuery.page=val
+      this.listQuery.page = val
       this.handleFilter()
       // 页码切换分页调用请求传值
     },
-     handleSizeChange(val) {
+    handleSizeChange(val) {
       // console.log(`每页 ${val} 条`)
-      this.listQuery.limit=val
+      this.listQuery.limit = val
       // console.log(this.listQuery.limit)
       this.handleFilter()
     },
     handleSelectionChange(val) {
       this.isShow = true
-    //   console.log(val)
+      //   console.log(val)
       this.multipleSelection = val
       if (val.length === 0) {
         this.isShow = false
       }
     },
-    updataForm(data){
-        this.tableData=[data]
-        this.dialogFormVisible=false
-        this.$message({
-          message:'修改成功',
-          type:'success'
-        })
+    updataForm(data) {
+      this.tableData = [data]
+      this.dialogFormVisible = false
+      this.$message({
+        message: '修改成功',
+        type: 'success'
+      })
     },
     open(row) {
-      this.dialogVisible1=true
+      this.dialogVisible1 = true
       console.log(row)
-      this.temp={...row}
+      this.temp = { ...row }
     },
-    submit(){
+    submit() {
       this.$message({
-        message:'提现成功',
-        type:'success'
+        message: '提现成功',
+        type: 'success'
       })
-      this.dialogVisible1=false
+      this.dialogVisible1 = false
     },
     clearfzData() {
-            this.dialogFormVisible = false
+      this.dialogFormVisible = false
       // this.handleFilter()
     },
-    handleClose(){
-      this.dialogVisible1=false
+    handleClose() {
+      this.dialogVisible1 = false
       this.$message({
-        message:'提现已取消',
-        type:'info'
+        message: '提现已取消',
+        type: 'info'
       })
     }
   }
-  }
-  </script>
+}
+</script>
