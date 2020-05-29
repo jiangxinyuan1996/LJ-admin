@@ -38,18 +38,21 @@
         style="margin:20px;margin-left:50px;margin-right:50px;"
       >
         <el-table-column
+          sortable
           prop="id"
           align="center"
           width="120"
           label="流水号"
         />
         <el-table-column
+          sortable
           prop="createtime"
           align="center"
           width="170"
           label="时间"
         />
         <el-table-column
+          sortable
           prop="account"
           align="center"
           width="110"
