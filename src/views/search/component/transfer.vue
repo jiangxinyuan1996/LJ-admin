@@ -81,24 +81,28 @@
      <el-table-column
         prop="account_name"
         label="转出方"
+        sortable
         align="center"
         width="120"
       />
       <el-table-column
         prop="account_no"
         label="转入方"
+        sortable
         align="center"
         width="120"
       />
       <el-table-column
         prop="createtime"
         label="日期"
+        sortable
         align="center"
         width="200"
       />
        <el-table-column
         prop="amount_show"
         label="金额(元)"
+        sortable
         align="center"
         width="150"
       />

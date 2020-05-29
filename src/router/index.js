@@ -138,7 +138,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/account-withdrawal/index'),
         name: 'withdrawal',
-        meta: { title: '账户提现', icon: 'user' }
+        meta: { title: '账户提现', icon: 'money' }
       }
     ]
   },
@@ -245,18 +245,18 @@ export const asyncRoutes = [
   //   ]
   // },
 
-  // {
-  //   path: '/icon',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/icons/index'),
-  //       name: 'Icons',
-  //       meta: { title: 'Icons', icon: 'icon', noCache: true }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/icon',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/icons/index'),
+        name: 'Icons',
+        meta: { title: 'Icons', icon: 'icon', noCache: true }
+      }
+    ]
+  },
 
   /** when your routing map is too long, you can split it into small modules **/
   // componentsRouter,

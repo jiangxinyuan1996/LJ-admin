@@ -98,39 +98,38 @@
      <el-table-column
         prop="account_name"
         label="分账方名称"
+        sortable
         align="center"
-        width="100"
+        width="110"
       />
       <el-table-column
          prop="name"
-         label="提现账户名"
+         label="银行户名"
+          sortable
          align="center"
          width="100"
        />
       <el-table-column
         prop="account_no"
         label="账号"
+        sortable
         align="center"
         width="180"
       />
       <el-table-column
         prop="bank_code"
-        label="银行代码"
+        label="开户行"
+        sortable
         align="center"
         width="160"
       />
        <el-table-column
         prop="amount_show"
-        label="余额(元)"
+        label="可提现金额(元)"
+        sortable
         align="center"
         width="150"
       />
-      <el-table-column
-       prop="amount_show_2"
-       label="可提现金额(元)"
-       align="center"
-       width="150"
-     />
       <!-- <el-table-column
         prop="business_code"
         label="业务代码"
@@ -158,7 +157,7 @@
           <el-tooltip   class="item" effect="dark" content="修改金额" placement="top">
             <el-button type="primary" icon="el-icon-edit" circle size="mini" @click="handleUpdate(row)" />
           </el-tooltip>
-          <el-tooltip   class="item" effect="dark" content="转账" placement="top">
+          <el-tooltip   class="item" effect="dark" content="提现" placement="top">
             <el-button type="success" icon="el-icon-check" circle size="mini" @click="open(row)" />
           </el-tooltip>
           <!-- <el-tooltip class="item" effect="dark" content="查看" placement="top">
