@@ -8,8 +8,16 @@
         border
         style="margin:20px;margin-left:50px;margin-right:50px;"
       >
+      <el-table-column
+        sortable
+        prop="machine_no"
+        align="center"
+        width="120"
+        label="机器号"
+      />
         <el-table-column
           prop="id"
+          sortable
           align="center"
           width="120"
           label="流水号"
@@ -18,17 +26,20 @@
           prop="createtime"
           align="center"
           width="170"
+          sortable
           label="时间"
         />
         <el-table-column
           prop="account"
           align="center"
-          width="110"
+          width="130"
+          sortable
           label="金额(元)"
         />
         <el-table-column
           prop="subuser1"
           align="center"
+          sortable
           width="120"
           show-overflow-tooltip
           label="分账方"
@@ -43,6 +54,7 @@
           prop="subuser2"
           align="center"
           width="170"
+          sortable
           show-overflow-tooltip
           label="被分账方"
         >
@@ -56,6 +68,7 @@
           align="center"
           prop="ratio"
           width="150"
+          sortable
           label="比例"
         />
         <el-table-column label="操作" width="120"align="center">
@@ -94,6 +107,7 @@ export default {
       page: 1,
       tableData: [
         {
+          machine_no:'POS001',
           id: 'A100000001',
           createtime: '2020-05-26 15:02:35',
           account: '2000000',
@@ -102,6 +116,7 @@ export default {
           ratio: '3:7'
         },
         {
+          machine_no:'POS002',
           id: 'A100000002',
           createtime: '2020-05-26 17:32:10',
           account: '50000',

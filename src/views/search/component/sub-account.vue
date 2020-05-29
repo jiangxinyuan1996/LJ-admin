@@ -46,6 +46,13 @@
         border
         style="margin:20px;margin-left:50px;margin-right:50px;"
       >
+      <el-table-column
+        sortable
+        prop="machine_no"
+        align="center"
+        width="120"
+        label="机器号"
+      />
         <el-table-column
           prop="id"
           align="center"
@@ -169,6 +176,7 @@ export default {
       page: 1,
       tableData: [
         {
+          machine_no:'POS001',
           id: 'A100000001',
           createtime: '2020-05-26 15:02:35',
           status:'未提交',
@@ -178,6 +186,7 @@ export default {
           ratio: ''
         },
         {
+          machine_no:'POS002',
           id: 'A100000002',
           createtime: '2020-05-26 17:32:10',
           status:'待审核',
