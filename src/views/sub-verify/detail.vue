@@ -6,15 +6,16 @@
         size="mini"
         stripe
         border
+        show-summary
         style="margin:20px;margin-left:50px;margin-right:50px;"
       >
-      <el-table-column
-        sortable
-        prop="machine_no"
-        align="center"
-        width="120"
-        label="机器号"
-      />
+        <el-table-column
+          sortable
+          prop="machine_no"
+          align="center"
+          width="120"
+          label="机器号"
+        />
         <el-table-column
           prop="id"
           sortable
@@ -25,14 +26,14 @@
         <el-table-column
           prop="createtime"
           align="center"
-          width="170"
+          width="150"
           sortable
           label="时间"
         />
         <el-table-column
           prop="account"
           align="center"
-          width="130"
+          width="100"
           sortable
           label="金额(元)"
         />
@@ -40,27 +41,47 @@
           prop="subuser1"
           align="center"
           sortable
-          width="120"
+          width="100"
           show-overflow-tooltip
           label="分账方"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.subuser1 }}</span>
-            <el-divider />
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="subuser1Account"
+          align="center"
+          sortable
+          width="120"
+          show-overflow-tooltip
+          label="分账方金额"
+        >
+          <template slot-scope="scope">
             <span>{{ scope.row.subuser1Account }}</span>
           </template>
         </el-table-column>
         <el-table-column
           prop="subuser2"
           align="center"
-          width="170"
+          width="100"
           sortable
           show-overflow-tooltip
           label="被分账方"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.subuser2 }}</span>
-            <el-divider />
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="subuser2Account"
+          align="center"
+          width="120"
+          sortable
+          show-overflow-tooltip
+          label="被分账方金额"
+        >
+          <template slot-scope="scope">
             <span>{{ scope.row.subuser2Account }}</span>
           </template>
         </el-table-column>
@@ -107,7 +128,7 @@ export default {
       page: 1,
       tableData: [
         {
-          machine_no:'POS001',
+          machine_no: 'POS001',
           id: 'A100000001',
           createtime: '2020-05-26 15:02:35',
           account: '2000000',
@@ -116,7 +137,7 @@ export default {
           ratio: '3:7'
         },
         {
-          machine_no:'POS002',
+          machine_no: 'POS002',
           id: 'A100000002',
           createtime: '2020-05-26 17:32:10',
           account: '50000',
