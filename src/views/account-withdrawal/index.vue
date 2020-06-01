@@ -91,6 +91,8 @@
       v-loading="listLoading"
       size="mini"
       :data="tableData"
+      show-summary
+      :summary-method="getSummaries"
       border
       highlight-current-row
       style="width: 100%;margin-left:40px"
@@ -431,7 +433,39 @@ export default {
         message: '提现已取消',
         type: 'info'
       })
-    }
+    },
+    getSummaries(param) {
+        const { columns, data } = param;
+        // console.log(columns)
+        console.log(data)
+
+        const sums = [];
+        columns.forEach((column, index) => {
+          console.log(index)
+          if (index === 0) {
+            sums[index] = '合计';
+            return;
+          }
+          if(index===4){
+            const values = data.map(item => Number(item[column.property]));
+            if (!values.every(value => isNaN(value))) {
+              sums[index] = values.reduce((prev, curr) => {
+                const value = Number(curr);
+                if (!isNaN(value)) {
+                  return prev + curr;
+                } else {
+                  return prev;
+                }
+              }, 0);
+              sums[index] += '';
+            } else {
+              sums[index] = 'N/A';
+            }
+          }
+        });
+
+        return sums;
+      }
   }
 }
 </script>

@@ -91,7 +91,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/sub-account/index'),
         name: '分账明细',
-        meta: { title: '分账明细', icon: 'edit', affix: true }
+        meta: { title: '分账明细', icon: 'edit', affix: true}
       }
     ]
   },
@@ -128,47 +128,7 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/withdrawal',
-    component: Layout,
-    redirect: '/withdrawal/index',
-    name: 'accountwithdrawal',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/account-withdrawal/index'),
-        name: 'withdrawal',
-        meta: { title: '账户提现', icon: 'money' }
-      }
-    ]
-  },
-  {
-    path: '/transfer',
-    component: Layout,
-    redirect: '/transfer/index',
-    name: 'accounttransfer',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/account-transfer/index'),
-        name: 'transfer',
-        meta: { title: '账户转账', icon: 'user' }
-      }
-    ]
-  },
-  {
-    path: '/setting',
-    component: Layout,
-    name: 'setting',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/setting/index'),
-        name: 'setting',
-        meta: { title: '参数配置', icon: 'list' }
-      }
-    ]
-  },
+  
   // {
   //   path: '/documentation',
   //   component: Layout,
@@ -216,6 +176,47 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
+  {
+    path: '/withdrawal',
+    component: Layout,
+    redirect: '/withdrawal/index',
+    name: 'accountwithdrawal',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/account-withdrawal/index'),
+        name: 'withdrawal',
+        meta: { title: '账户提现', icon: 'money' }
+      }
+    ]
+  },
+  {
+    path: '/transfer',
+    component: Layout,
+    redirect: '/transfer/index',
+    name: 'accounttransfer',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/account-transfer/index'),
+        name: 'transfer',
+        meta: { title: '账户转账', icon: 'user' ,roles:['机构管理员']}
+      }
+    ]
+  },
+  {
+    path: '/setting',
+    component: Layout,
+    name: 'setting',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/setting/index'),
+        name: 'setting',
+        meta: { title: '参数配置', icon: 'list' }
+      }
+    ]
+  },
   // {
   //   path: '/permission',
   //   component: Layout,

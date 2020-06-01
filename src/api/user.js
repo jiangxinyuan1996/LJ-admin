@@ -1,24 +1,24 @@
-import request from '@/utils/request'
+import fetch from '@/config/fetch'
+import request from '@/utils'
 
-export function login(data) {
-  return request({
-    url: '/vue-element-admin/user/login',
-    method: 'post',
-    data
-  })
-}
+export const login = (data) => fetch('/TSY/home/index/login', data,'POST')
+export const setRoles = (data) => fetch('/TSY/home/index/setRole', data,'POST')
 
-export function getInfo(token) {
-  return request({
-    url: '/vue-element-admin/user/info',
-    method: 'get',
-    params: { token }
-  })
-}
+export const getInfo = (data) => fetch('/TSY/home/index/getLoginStatus', data)
 
-export function logout() {
-  return request({
-    url: '/vue-element-admin/user/logout',
-    method: 'post'
-  })
-}
+export const logout = (data) => fetch('/TSY/home/index/getLoginStatus', data)
+
+// export function getInfo(token) {
+//   return request({
+//     url: '/vue-element-admin/user/info',
+//     method: 'get',
+//     params: { token }
+//   })
+// }
+
+// export function logout() {
+//   return request({
+//     url: '/TSY/home/index/getLoginStatus',
+//     method: 'post'
+//   })
+// }

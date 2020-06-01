@@ -45,8 +45,37 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
-
+      <el-button  type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="chooseRoles">登录</el-button>
+      <el-dialog :visible.sync="dialogFormVisible" style="width:80%;margin-left:150px;" :before-close="handleClose">
+        <el-form
+          ref="dataForm"
+          :rules="rolerules"
+          :model="temp"
+          label-position="left"
+          label-width="70px"
+          style="width: 100%; margin-left:50px;"
+        >
+        <el-form-item label="选择角色" prop="roles">
+            <el-select
+              v-model="temp.role_id"
+              class="filter-item"
+              placeholder="请选择"
+              style="width:90%"
+            >
+              <el-option
+                v-for="item in formData"
+                :key="item.role_id"
+                :label="item.remark"
+                :value="item.role_id"
+              ><i :class="item==='管理员'?'el-icon-user-solid':'el-icon-user'" style="fontSize:20px" />{{ item.remark }}</el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+          <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible=false">取消</el-button>
+          <el-button :loading="loading" type="primary" @click.native.prevent="handleLogin">确认</el-button>
+        </div>
+      </el-dialog>
       <!-- <div style="position:relative">
         <div class="tips">
           <span>Username : admin</span>
@@ -76,18 +105,18 @@
 <script>
 import { validUsername } from '@/utils/validate'
 import SocialSign from './components/SocialSignin'
-
+import { setRoles,login } from '@/api/user'
 export default {
   name: 'Login',
   components: { SocialSign },
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
-    }
+    // const validateUsername = (rule, value, callback) => {
+    //   if (!validUsername(value)) {
+    //     callback(new Error('Please enter the correct user name'))
+    //   } else {
+    //     callback()
+    //   }
+    // }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
         callback(new Error('The password can not be less than 6 digits'))
@@ -96,12 +125,20 @@ export default {
       }
     }
     return {
+      dialogFormVisible:false,
+      rolerules: {
+        roles: [{ required: true, message: '必填项', trigger: 'blur' }],
+      },
+      temp:{
+        role_id:''
+      },
+      formData:[],
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        username: 'dladmin',
+        password: '123456'
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        username: [{ required: true, trigger: 'blur', message:'请输入用户名' }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       passwordType: 'password',
@@ -138,6 +175,9 @@ export default {
     // window.removeEventListener('storage', this.afterQRScan)
   },
   methods: {
+    handleClose(){
+      this.dialogFormVisible=false
+    },
     checkCapslock(e) {
       const { key } = e
       this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
@@ -152,23 +192,43 @@ export default {
         this.$refs.password.focus()
       })
     },
+    chooseRoles(){
+      login({account:this.loginForm.username,password:this.loginForm.password}).then(res=>{
+      this.dialogFormVisible=true
+        console.log(res.data)
+
+        this.formData=res.data
+        console.log(this.formData)
+      })
+      //  this.loading = true
+
+          // this.$store.dispatch('user/login', this.loginForm)
+          //   .then(() => {
+          //     console.log('1')
+
+          //     this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+          //     this.loading = false
+          //   })
+          //   .catch(() => {
+          //     this.loading = false
+          //   })
+    },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
+      setRoles({role_id:this.temp.role_id}).then((res)=>{
+            if(res.success===1){
+               this.loading = true
+
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
+              console.log('login')
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               this.loading = false
             })
             .catch(() => {
               this.loading = false
             })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+            }
+          })
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
@@ -243,6 +303,20 @@ $cursor: #fff;
     background: rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     color: #454545;
+  }
+  .el-dialog__body {
+    width: 80%;
+    .el-form-item--medium {
+      background-color: white;
+      .el-input__inner {
+        color: black;
+      }
+      .el-form-item__label {
+        color: black;
+        line-height: 50px;
+        width:80px !important;
+      }
+    }
   }
 }
 </style>
