@@ -13,10 +13,10 @@ export const getRuleList = (data) => fetch('/TSY/home/index/getRuleList', data)
 export const submitSubResult = (data) => fetch('/TSY/home/result/submitSubResult', data, 'POST')
 
 // 获取待复核数据
-export const getCheckResult = (data) => fetch('/TSY/home/result/getCheckResult', data, 'POST')
+export const getCheckResult = (data) => fetch('/TSY/home/result/getCheckResult', data)
 
 // 获取待复核数据明细
 export const getCheckResultDetail = (data) => fetch('/TSY/home/result/getCheckResultDetail', data)
 
 // 待复核数据提交
-export const submitCheckResult = (data) => fetch('/TSY/home/result/submitCheckResult', data)
+export const submitCheckResult = (data) => fetch('/TSY/home/result/submitCheckResult', data,'POST')
