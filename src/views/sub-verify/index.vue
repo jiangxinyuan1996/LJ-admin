@@ -57,18 +57,21 @@
         <el-table-column
           prop="subuser1"
           align="center"
+          sortable
           width="170"
           label="分账方"
         />
         <el-table-column
           prop="subuser1Account"
           align="center"
-          width="110"
+          width="130"
+          sortable
           label="分账金额(元)"
         />
         <el-table-column
           prop="subuser2"
           align="center"
+          sortable
           width="120"
           show-overflow-tooltip
           label="被分账方"
@@ -76,6 +79,7 @@
         <el-table-column
           prop="subuser2Account"
           align="center"
+          sortable
           width="170"
           show-overflow-tooltip
           label="被分账金额(元)"
@@ -83,12 +87,14 @@
         <el-table-column
           align="center"
           prop="detailNum"
+          sortable
           width="150"
           label="明细总数"
         />
         <el-table-column
           align="center"
           prop="account"
+          sortable
           width="150"
           label="总金额"
         />

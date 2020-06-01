@@ -5,8 +5,8 @@
         <span style="margin-right:10px">单据流水号 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 15vw;margin-right:15px;" class="filter-item" />
         <span class="demonstration">单据时间 : </span>
         <el-date-picker
-        style="width: 12vw;"
           v-model="value2"
+          style="width: 12vw;"
           size="mini"
           type="datetime"
           placeholder="选择日期时间"
@@ -15,8 +15,8 @@
         />
         <span style="margin-right:10px;margin-left:10px;">至 </span>
         <el-date-picker
-        style="width: 12vw;"
           v-model="value3"
+          style="width: 12vw;"
           size="mini"
           type="datetime"
           placeholder="选择日期时间"
@@ -38,18 +38,21 @@
         style="margin:20px;margin-left:50px;margin-right:50px;"
       >
         <el-table-column
+          sortable
           prop="id"
           align="center"
           width="120"
           label="流水号"
         />
         <el-table-column
+          sortable
           prop="createtime"
           align="center"
           width="170"
           label="时间"
         />
         <el-table-column
+          sortable
           prop="account"
           align="center"
           width="110"
@@ -135,7 +138,7 @@
 </template>
 
 <script>
-import {getFromSubUserList,getToSubUserList} from '@/api/tsyLj.js'
+import { getFromSubUserList, getToSubUserList } from '@/api/tsyLj.js'
 export default {
   name: 'SubAccount',
   data() {
@@ -162,7 +165,7 @@ export default {
           }
         }]
       },
-      value2:'',
+      value2: '',
       query: {
         id: ''
       },
@@ -220,11 +223,11 @@ export default {
     }
   },
   created() {
-    getFromSubUserList().then(res=>{
-      console.log('getFromSubUserList---:',res);
+    getFromSubUserList().then(res => {
+      console.log('getFromSubUserList---:', res)
     })
     for (let i = 0; i < this.tableData.length; i++) {
-      if(this.tableData[i].ratio!=''&&this.tableData[i].ratio!=null){
+      if (this.tableData[i].ratio != '' && this.tableData[i].ratio != null) {
         const subuser1Ratio = this.tableData[i].ratio.split(':')[0]
         const subuser2Ratio = this.tableData[i].ratio.split(':')[1]
         this.tableData[i].subuser1Account = this.tableData[i].account * subuser1Ratio / 10

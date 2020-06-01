@@ -156,6 +156,19 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/setting',
+    component: Layout,
+    name: 'setting',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/setting/index'),
+        name: 'setting',
+        meta: { title: '参数配置', icon: 'list' }
+      }
+    ]
+  },
   // {
   //   path: '/documentation',
   //   component: Layout,

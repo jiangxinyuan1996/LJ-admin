@@ -50,18 +50,21 @@
           prop="id"
           align="center"
           width="120"
+          sortable
           label="流水号"
         />
         <el-table-column
           prop="createtime"
           align="center"
           width="170"
+          sortable
           label="时间"
         />
         <el-table-column
           prop="account"
           align="center"
           width="110"
+          sortable
           label="金额(元)"
         />
         <el-table-column
@@ -69,6 +72,7 @@
           align="center"
           width="110"
           label="状态"
+          sortable
         />
         <el-table-column
           prop="subuser1"
@@ -76,6 +80,7 @@
           width="120"
           show-overflow-tooltip
           label="分账方"
+          sortable
         >
           <template slot-scope="scope">
             <span>{{ scope.row.subuser1 }}</span>
@@ -87,6 +92,7 @@
           prop="subuser2"
           align="center"
           width="170"
+          sortable
           show-overflow-tooltip
           label="被分账方"
         >
@@ -99,6 +105,7 @@
         <el-table-column
           align="center"
           prop="ratio"
+          sortable
           width="150"
           label="比例"
         />
