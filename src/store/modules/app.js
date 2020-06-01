@@ -2,8 +2,8 @@ import Cookies from 'js-cookie'
 
 const state = {
   sidebar: {
-    opened:  true,
-    withoutAnimation: false
+    opened: true,
+    // withoutAnimation: false
   },
   device: 'desktop',
   size: Cookies.get('size') || 'medium'

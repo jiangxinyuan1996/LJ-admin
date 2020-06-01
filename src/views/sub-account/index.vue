@@ -145,7 +145,7 @@
 </template>
 
 <script>
-import { getFromSubUserList, getToSubUserList } from '@/api/tsyLj.js'
+import { getFromSubUserList, getToSubUserList,getRuleList,submitSubResult } from '@/api/tsyLj.js'
 export default {
   name: 'SubAccount',
   data() {
@@ -173,6 +173,7 @@ export default {
         }]
       },
       value2: '',
+      value3:'',
       query: {
         id: ''
       },
@@ -185,66 +186,59 @@ export default {
           machine_no:'POS001',
           id: 'A100000001',
           createtime: '2020-05-26 15:02:35',
-          account: '2000000',
-          subuser1: '本公司',
-          subuser2: '被分账方1',
-          ratio: '10:0'
+          account: '2000000'
         },
         {
           machine_no:'POS002',
           id: 'A100000002',
           createtime: '2020-05-26 17:32:10',
-          account: '50000',
-          subuser1: '本公司',
-          subuser2: '被分账方3',
-          ratio: '10:0'
+          account: '50000'
         }
       ],
       currentPage: 1,
-      ratios: [{
-        value: '10:0',
-        label: '10:0'
-      }, {
-        value: '5:5',
-        label: '5:5'
-      }, {
-        value: '3:7',
-        label: '3:7'
-      }],
-      subuser2List: [
-        {
-          value: '被分账方1',
-          label: '被分账方1'
-        },
-        {
-          value: '被分账方2',
-          label: '被分账方2'
-        },
-        {
-          value: '被分账方3',
-          label: '被分账方3'
-        }
-      ],
-      subuser1List: [{
-        value: '1',
-        label: '本公司'
-      }]
+      ratios: [],
+      subuser2List: [],
+      subuser1List: []
     }
   },
   created() {
-    getFromSubUserList().then(res => {
-      console.log('getFromSubUserList---:', res)
-    })
-    for (let i = 0; i < this.tableData.length; i++) {
-      if (this.tableData[i].ratio != '' && this.tableData[i].ratio != null) {
-        const subuser1Ratio = this.tableData[i].ratio.split(':')[0]
-        const subuser2Ratio = this.tableData[i].ratio.split(':')[1]
-        this.tableData[i].subuser1Account = this.tableData[i].account * subuser1Ratio / 10
-        this.tableData[i].subuser2Account = this.tableData[i].account * subuser2Ratio / 10
-      }
-    }
+    this.init()
   },
   methods: {
+    init(){
+      getFromSubUserList().then(res => {
+        console.log('getFromSubUserList---:', res)
+        for(let i=0;i<res.data.length;i++ ){
+          let subuser1 = {}
+          subuser1.value = res.data[i].user_id
+          subuser1.label = res.data[i].user_name
+          this.subuser1List.push(subuser1)
+        }
+      })
+
+      getToSubUserList().then(res => {
+        console.log('getToSubUserList---:', res)
+        for(let i=0;i<res.data.length;i++ ){
+          let subuser2 = {}
+          subuser2.value = res.data[i].user_id
+          subuser2.label = res.data[i].user_name
+          this.subuser2List.push(subuser2)
+        }
+      })
+
+      getRuleList().then(res => {
+        console.log('getRuleList---:', res)
+        for(let i=0;i<res.data.length;i++ ){
+          let ratio = {}
+          ratio.value = res.data[i].fromratio+":"+res.data[i].toratio
+          ratio.label = res.data[i].fromratio+":"+res.data[i].toratio
+          this.ratios.push(ratio)
+        }
+      })
+    },
+    changePage(){
+      console.log('changePage');
+    },
     changeRatio(e) {
       console.log('changeRatio e---:', e)
       const subuser1Ratio = e.ratio.split(':')[0]
@@ -253,28 +247,6 @@ export default {
       e.subuser2Account = e.account * subuser2Ratio / 10
     },
     commit(e) {
-      // this.$confirm(
-      //   h('p', null, [
-      //       h('span', null, '内容可以是 '),
-      //       h('i', { style: 'color: teal' }, 'VNode')
-      //     ]),
-      //   // `将以${e.ratio}的比例分给${e.subuser1} ${e.subuser1Account}元<br>分给${e.subuser2} ${e.subuser2Account}元, 是否继续?`,
-      //   '提示', {
-      //   confirmButtonText: '确定',
-      //   cancelButtonText: '取消',
-      //   type: 'warning'
-      // }).then(() => {
-      //   console.log('========提交========')
-      //   this.$message({
-      //     type: 'success',
-      //     message: '提交成功!'
-      //   })
-      // }).catch(() => {
-      //   this.$message({
-      //     type: 'info',
-      //     message: '已取消删除'
-      //   })
-      // })
 
       const h = this.$createElement
       this.$msgbox({
@@ -306,21 +278,21 @@ export default {
           if (action === 'confirm') {
             instance.confirmButtonLoading = true
             instance.confirmButtonText = '执行中...'
-            setTimeout(() => {
+            let param = e
+            console.log('param---',param);
+            submitSubResult(param).then(res=>{
+              console.log('submitSubResult res---:',res);
+              if(res.success == 1){
+                this.$message({
+                  type: 'success',
+                  message: res.message
+                })
+              }
+              instance.confirmButtonLoading = false
               done()
-              setTimeout(() => {
-                instance.confirmButtonLoading = false
-              }, 300)
-            }, 3000)
-          } else {
-            done()
+            })
           }
         }
-      }).then(action => {
-        this.$message({
-          type: 'info',
-          message: 'action: ' + action
-        })
       })
     }
   }

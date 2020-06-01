@@ -46,7 +46,7 @@
           label="分账方"
         >
           <template slot-scope="scope">
-            <span>{{ scope.row.subuser1 }}</span>
+            <span>{{ scope.row.fromsubuser }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -70,7 +70,7 @@
           label="被分账方"
         >
           <template slot-scope="scope">
-            <span>{{ scope.row.subuser2 }}</span>
+            <span>{{ scope.row.tosubuser }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -115,6 +115,7 @@
 </template>
 
 <script>
+import { getCheckResultDetail } from '@/api/tsyLj.js'
 export default {
   name: 'SubAccount',
   data() {
@@ -126,26 +127,7 @@ export default {
       totalCount: 0,
       pageSize: 10,
       page: 1,
-      tableData: [
-        {
-          machine_no: 'POS001',
-          id: 'A100000001',
-          createtime: '2020-05-26 15:02:35',
-          account: '2000000',
-          subuser1: '本公司',
-          subuser2: '被分账方1',
-          ratio: '3:7'
-        },
-        {
-          machine_no: 'POS002',
-          id: 'A100000002',
-          createtime: '2020-05-26 17:32:10',
-          account: '50000',
-          subuser1: '本公司',
-          subuser2: '被分账方1',
-          ratio: '5:5'
-        }
-      ],
+      tableData: [],
       currentPage: 1,
       ratios: [{
         value: '10:0',
@@ -178,44 +160,27 @@ export default {
     }
   },
   created() {
-    for (let i = 0; i < this.tableData.length; i++) {
-      const subuser1Ratio = this.tableData[i].ratio.split(':')[0]
-      const subuser2Ratio = this.tableData[i].ratio.split(':')[1]
-      this.tableData[i].subuser1Account = this.tableData[i].account * subuser1Ratio / 10
-      this.tableData[i].subuser2Account = this.tableData[i].account * subuser2Ratio / 10
-    }
+    this.init()
+
+    console.log(this.tableData);
   },
   methods: {
-    changeRatio(e) {
-      console.log('changeRatio e---:', e)
-      const subuser1Ratio = e.ratio.split(':')[0]
-      const subuser2Ratio = e.ratio.split(':')[1]
-      e.subuser1Account = e.account * subuser1Ratio / 10
-      e.subuser2Account = e.account * subuser2Ratio / 10
+    init(){
+      getCheckResultDetail().then(res=>{
+        console.log('getCheckResultDetail res--:',res);
+        this.tableData = res.data
+        for (let i = 0; i < this.tableData.length; i++) {
+          const subuser1Ratio = this.tableData[i].ratio.split(':')[0]
+          const subuser2Ratio = this.tableData[i].ratio.split(':')[1]
+          this.tableData[i].subuser1Account = this.tableData[i].account * subuser1Ratio / 10
+          this.tableData[i].subuser2Account = this.tableData[i].account * subuser2Ratio / 10
+        }
+      })
+    },
+    changePage(){
+      console.log('changePage');
     },
     commit(e) {
-      // this.$confirm(
-      //   h('p', null, [
-      //       h('span', null, '内容可以是 '),
-      //       h('i', { style: 'color: teal' }, 'VNode')
-      //     ]),
-      //   // `将以${e.ratio}的比例分给${e.subuser1} ${e.subuser1Account}元<br>分给${e.subuser2} ${e.subuser2Account}元, 是否继续?`,
-      //   '提示', {
-      //   confirmButtonText: '确定',
-      //   cancelButtonText: '取消',
-      //   type: 'warning'
-      // }).then(() => {
-      //   console.log('========提交========')
-      //   this.$message({
-      //     type: 'success',
-      //     message: '提交成功!'
-      //   })
-      // }).catch(() => {
-      //   this.$message({
-      //     type: 'info',
-      //     message: '已取消删除'
-      //   })
-      // })
 
       const h = this.$createElement
       this.$msgbox({
