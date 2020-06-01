@@ -441,7 +441,7 @@ export default {
 
         const sums = [];
         columns.forEach((column, index) => {
-          console.log(index)
+          console.log(column)
           if (index === 0) {
             sums[index] = '合计';
             return;
@@ -451,6 +451,7 @@ export default {
             if (!values.every(value => isNaN(value))) {
               sums[index] = values.reduce((prev, curr) => {
                 const value = Number(curr);
+                console.log(curr)
                 if (!isNaN(value)) {
                   return prev + curr;
                 } else {

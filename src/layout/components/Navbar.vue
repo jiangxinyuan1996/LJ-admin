@@ -20,14 +20,14 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <span style="fontSize:16px">欢迎 : 张三</span>
+          <span style="fontSize:16px">欢迎 : {{roles[0] }} 张三</span>
           <i class="el-icon-user-solid" style="fontSize:16px"/>
           <i class="el-icon-caret-bottom" />
         </div>
-        <div class="avatar-wrapper">
+        <!-- <div class="avatar-wrapper">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
           <i class="el-icon-caret-bottom" />
-        </div>
+        </div> -->
         <el-dropdown-menu slot="dropdown">
           <!-- <router-link to="/profile/index">
             <el-dropdown-item>Profile</el-dropdown-item>
@@ -71,8 +71,7 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar',
-      'device'
+      'roles'
     ])
   },
   methods: {

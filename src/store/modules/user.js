@@ -59,16 +59,27 @@ const actions = {
         }
 
         const { roles, name, avatar, introduction } = data
-
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
         }
-
-        commit('SET_ROLES', roles)
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        commit('SET_INTRODUCTION', introduction)
+        // console.log(roles,1212)
+        const maprole = roles.map(item => {
+          switch (item) {
+            case 'edit':
+              return '操作员'
+            case 'checker':
+              return '复核员'
+            case 'admin':
+              return '机构管理员'
+            case 'browser':
+              return '浏览员'
+          }
+        })
+        commit('SET_ROLES', maprole)
+        // commit('SET_NAME', name)
+        // commit('SET_AVATAR', avatar)
+        // commit('SET_INTRODUCTION', introduction)
         resolve(data)
       }).catch(error => {
         reject(error)
