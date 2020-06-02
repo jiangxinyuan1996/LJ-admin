@@ -56,21 +56,21 @@
         style="margin:20px;margin-left:50px;margin-right:50px;"
       >
         <el-table-column
-          prop="subuser1"
+          prop="fromsubuser"
           align="center"
           width="170"
           sortable
           label="分账方"
         />
         <el-table-column
-          prop="subuser1Account"
+          prop="fromaccount"
           align="center"
           sortable
           width="130"
           label="分账金额(元)"
         />
         <el-table-column
-          prop="subuser2"
+          prop="tosubuser"
           align="center"
           sortable
           width="120"
@@ -78,7 +78,7 @@
           label="被分账方"
         />
         <el-table-column
-          prop="subuser2Account"
+          prop="toamount"
           align="center"
           sortable
           width="170"
@@ -88,7 +88,7 @@
         <el-table-column
           align="center"
           sortable
-          prop="detailNum"
+          prop="count"
           width="150"
           label="明细总数"
         />
@@ -122,6 +122,7 @@
 </template>
 
 <script>
+import { getCheckResult } from '@/api/tsyLj.js'
 export default {
   name: 'SubVerify',
   data() {
@@ -156,117 +157,21 @@ export default {
       totalCount: 0,
       pageSize: 10,
       page: 1,
-      tableData: [
-        {
-          id: 'A100000001',
-          createtime: '2020-05-26 15:02:35',
-          account: '800000',
-          subuser1: '本公司',
-          subuser1Account: '500000',
-          subuser2: '被分账方1',
-          subuser2Account: '300000',
-          detailNum: '2'
-        },
-        {
-          id: 'A100000002',
-          createtime: '2020-05-26 17:32:10',
-          account: '180000',
-          subuser1: '本公司',
-          subuser1Account: '100000',
-          subuser2: '被分账方3',
-          subuser2Account: '80000',
-          detailNum: '3'
-        }
-      ],
+      tableData: [],
       currentPage: 1,
-      ratios: [{
-        value: '10:0',
-        label: '10:0'
-      }, {
-        value: '5:5',
-        label: '5:5'
-      }, {
-        value: '3:7',
-        label: '3:7'
-      }],
-      subuser2List: [
-        {
-          value: '1',
-          label: '被分账方1'
-        },
-        {
-          value: '2',
-          label: '被分账方2'
-        },
-        {
-          value: '3',
-          label: '被分账方3'
-        }
-      ],
-      subuser1List: [{
-        value: '1',
-        label: '本公司'
-      }]
+      ratios: [],
+      subuser2List: [],
+      subuser1List: []
     }
   },
   created() {
-    for (let i = 0; i < this.tableData.length; i++) {
-      const subuser1Ratio = this.tableData[i].ratio.split(':')[0]
-      const subuser2Ratio = this.tableData[i].ratio.split(':')[1]
-      this.tableData[i].subuser1Account = this.tableData[i].account * subuser1Ratio / 10
-      this.tableData[i].subuser2Account = this.tableData[i].account * subuser2Ratio / 10
-    }
+    this.init()
   },
   methods: {
-    changeRatio(e) {
-      console.log('changeRatio e---:', e)
-      const subuser1Ratio = e.ratio.split(':')[0]
-      const subuser2Ratio = e.ratio.split(':')[1]
-      e.subuser1Account = e.account * subuser1Ratio / 10
-      e.subuser2Account = e.account * subuser2Ratio / 10
-    },
-    commit(e) {
-      const h = this.$createElement
-      this.$msgbox({
-        title: '信息确认',
-        message: h('p', null, [
-          h('span', { style: 'color: rgb(238,120,0)' }, `${e.account}`),
-          h('span', null, `元`),
-          h('br', null, ''),
-          h('span', null, `分给 `),
-          h('span', { style: 'color: rgb(0,113,190)' }, `${e.subuser1} `),
-          h('span', { style: 'color: rgb(238,120,0)' }, `${e.subuser1Account}`),
-          h('span', null, `元`),
-          h('br', null, ''),
-          h('span', null, `分给 `),
-          h('span', { style: 'color: rgb(0,113,190)' }, `${e.subuser2} `),
-          h('span', { style: 'color: rgb(238,120,0)' }, `${e.subuser2Account}`),
-          h('span', null, `元`),
-          h('br', null, ''),
-          h('span', null, `是否确认复核?`)
-        ]),
-        showCancelButton: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        beforeClose: (action, instance, done) => {
-          if (action === 'confirm') {
-            instance.confirmButtonLoading = true
-            instance.confirmButtonText = '执行中...'
-            setTimeout(() => {
-              done()
-              setTimeout(() => {
-                instance.confirmButtonLoading = false
-              }, 300)
-            }, 3000)
-          } else {
-            done()
-          }
-        }
-      }).then(action => {
-        this.$message({
-          type: 'info',
-          message: 'action: ' + action
-        })
+    init() {
+      getCheckResult().then(res => {
+        console.log('getCheckResult res--:', res)
+        this.tableData = res.data
       })
     },
     checkDetail(e) {

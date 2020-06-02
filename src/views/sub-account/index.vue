@@ -2,6 +2,7 @@
   <div id="sub-account">
     <div id="searchBox">
       <div id="buttonBox" style="margin:50px;">
+        <span style="margin-right:10px">机器号 : </span><el-input v-model="query.id" size="mini" placeholder="机器号" style="width: 10vw;margin-right:15px;" class="filter-item" />
         <span style="margin-right:10px">单据流水号 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 15vw;margin-right:15px;" class="filter-item" />
         <span class="demonstration">单据时间 : </span>
         <el-date-picker
@@ -31,19 +32,20 @@
 
     <div id="dataForm">
       <el-table
+        show-summary
         :data="tableData"
         size="mini"
         stripe
         border
         style="margin:20px;margin-left:50px;margin-right:50px;"
       >
-      <el-table-column
-        sortable
-        prop="machine_no"
-        align="center"
-        width="120"
-        label="机器号"
-      />
+        <el-table-column
+          sortable
+          prop="machine_no"
+          align="center"
+          width="120"
+          label="机器号"
+        />
         <el-table-column
           sortable
           prop="id"
@@ -145,7 +147,7 @@
 </template>
 
 <script>
-import { getFromSubUserList, getToSubUserList,getRuleList,submitSubResult } from '@/api/tsyLj.js'
+import { getUserList, getRuleList, submitSubResult } from '@/api/tsyLj.js'
 export default {
   name: 'SubAccount',
   data() {
@@ -173,7 +175,7 @@ export default {
         }]
       },
       value2: '',
-      value3:'',
+      value3: '',
       query: {
         id: ''
       },
@@ -183,13 +185,13 @@ export default {
       page: 1,
       tableData: [
         {
-          machine_no:'POS001',
+          machine_no: 'POS001',
           id: 'A100000001',
           createtime: '2020-05-26 15:02:35',
           account: '2000000'
         },
         {
-          machine_no:'POS002',
+          machine_no: 'POS002',
           id: 'A100000002',
           createtime: '2020-05-26 17:32:10',
           account: '50000'
@@ -205,39 +207,38 @@ export default {
     this.init()
   },
   methods: {
-    init(){
-      getFromSubUserList().then(res => {
-        console.log('getFromSubUserList---:', res)
-        for(let i=0;i<res.data.length;i++ ){
-          let subuser1 = {}
-          subuser1.value = res.data[i].user_id
-          subuser1.label = res.data[i].user_name
+    init() {
+      getUserList().then(res => {
+        console.log('getUserList---:', res)
+        const fromList = res.data.fromList
+        const toList = res.data.toList
+        for (let i = 0; i < fromList.length; i++) {
+          const subuser1 = {}
+          subuser1.value = fromList[i].user_id
+          subuser1.label = fromList[i].user_name
           this.subuser1List.push(subuser1)
         }
-      })
 
-      getToSubUserList().then(res => {
-        console.log('getToSubUserList---:', res)
-        for(let i=0;i<res.data.length;i++ ){
-          let subuser2 = {}
-          subuser2.value = res.data[i].user_id
-          subuser2.label = res.data[i].user_name
+        for (let i = 0; i < toList.length; i++) {
+          const subuser2 = {}
+          subuser2.value = toList[i].user_id
+          subuser2.label = toList[i].user_name
           this.subuser2List.push(subuser2)
         }
       })
 
       getRuleList().then(res => {
         console.log('getRuleList---:', res)
-        for(let i=0;i<res.data.length;i++ ){
-          let ratio = {}
-          ratio.value = res.data[i].fromratio+":"+res.data[i].toratio
-          ratio.label = res.data[i].fromratio+":"+res.data[i].toratio
+        for (let i = 0; i < res.data.length; i++) {
+          const ratio = {}
+          ratio.value = res.data[i].content
+          ratio.label = res.data[i].content
           this.ratios.push(ratio)
         }
       })
     },
-    changePage(){
-      console.log('changePage');
+    changePage() {
+      console.log('changePage')
     },
     changeRatio(e) {
       console.log('changeRatio e---:', e)
@@ -247,7 +248,6 @@ export default {
       e.subuser2Account = e.account * subuser2Ratio / 10
     },
     commit(e) {
-
       const h = this.$createElement
       this.$msgbox({
         title: '信息确认',
@@ -278,11 +278,11 @@ export default {
           if (action === 'confirm') {
             instance.confirmButtonLoading = true
             instance.confirmButtonText = '执行中...'
-            let param = e
-            console.log('param---',param);
-            submitSubResult(param).then(res=>{
-              console.log('submitSubResult res---:',res);
-              if(res.success == 1){
+            const param = e
+            console.log('param---', param)
+            submitSubResult(param).then(res => {
+              console.log('submitSubResult res---:', res)
+              if (res.success == 1) {
                 this.$message({
                   type: 'success',
                   message: res.message
