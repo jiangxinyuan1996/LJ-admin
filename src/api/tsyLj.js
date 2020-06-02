@@ -23,3 +23,12 @@ export const addRule = (data) => fetch('/TSY/home/rule/addRule', data, 'POST')
 
 // 删除分账规则
 export const deleteRule = (data) => fetch('/TSY/home/rule/deleteRule', data, 'POST')
+
+//添加分账/被分账方商户
+export const addUser = (data) => fetch('/TSY/home/user/addUser', data, 'POST')
+
+//更新分账/被分账方商户
+export const updateUser = (data) => fetch('/TSY/home/user/updateUser', data, 'POST')
+
+//逻辑删除分账/被分账方商户
+export const deleteUser = (data) => fetch('/TSY/home/user/deleteUser', data, 'POST')

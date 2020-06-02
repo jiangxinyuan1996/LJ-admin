@@ -188,13 +188,17 @@ export default {
           machine_no: 'POS001',
           id: 'A100000001',
           createtime: '2020-05-26 15:02:35',
-          account: '2000000'
+          account: '2000000',
+          subuser1:'',
+          subuser2:''
         },
         {
           machine_no: 'POS002',
           id: 'A100000002',
           createtime: '2020-05-26 17:32:10',
-          account: '50000'
+          account: '50000',
+          subuser1:'',
+          subuser2:''
         }
       ],
       currentPage: 1,
@@ -214,15 +218,15 @@ export default {
         const toList = res.data.toList
         for (let i = 0; i < fromList.length; i++) {
           const subuser1 = {}
-          subuser1.value = fromList[i].user_id
-          subuser1.label = fromList[i].user_name
+          subuser1.value = fromList[i].id
+          subuser1.label = fromList[i].nickname
           this.subuser1List.push(subuser1)
         }
 
         for (let i = 0; i < toList.length; i++) {
           const subuser2 = {}
-          subuser2.value = toList[i].user_id
-          subuser2.label = toList[i].user_name
+          subuser2.value = toList[i].id
+          subuser2.label = toList[i].nickname
           this.subuser2List.push(subuser2)
         }
       })
