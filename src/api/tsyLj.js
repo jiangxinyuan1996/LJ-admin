@@ -17,3 +17,9 @@ export const getCheckResultDetail = (data) => fetch('/TSY/home/result/getCheckRe
 
 // 待复核数据提交
 export const submitCheckResult = (data) => fetch('/TSY/home/result/submitCheckResult', data, 'POST')
+
+// 添加分账规则
+export const addRule = (data) => fetch('/TSY/home/rule/addRule', data, 'POST')
+
+// 删除分账规则
+export const deleteRule = (data) => fetch('/TSY/home/rule/deleteRule', data, 'POST')

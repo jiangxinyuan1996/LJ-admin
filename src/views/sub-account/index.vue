@@ -291,6 +291,8 @@ export default {
               instance.confirmButtonLoading = false
               done()
             })
+          } else {
+            done()
           }
         }
       })

@@ -4,15 +4,13 @@
       title="提示"
       :visible.sync="dialogVisible"
       width="30%"
-      :before-close="handleClose"
     >
-      <subRatioForm />
+      <subRatioForm :data-to-modify="dataToModify" :state="state" @Commit="handleCommit" @Close="handleClose" />
     </el-dialog>
     <div id="searchBox">
       <div id="buttonBox" style="margin:50px;">
-        <span style="margin-right:10px">分账方名称 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 15vw;margin-right:15px;" class="filter-item" />
-
-        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="clickSearch()">
+        <!-- <span style="margin-right:10px">分账方名称 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 15vw;margin-right:15px;" class="filter-item" /> -->
+        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="init()">
           查询
         </el-button>
         <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="success" @click="create()">
@@ -30,13 +28,13 @@
         style="margin:20px;margin-left:50px;margin-right:50px;"
       >
         <el-table-column
-          prop="ratio1"
+          prop="fromratio"
           align="center"
           width="120"
           label="分账方比例"
         />
         <el-table-column
-          prop="ratio2"
+          prop="toratio"
           align="center"
           width="120"
           label="被分账方比例"
@@ -44,9 +42,9 @@
 
         <el-table-column label="操作" width="90"align="center">
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" content="编辑" placement="left">
+            <!-- <el-tooltip class="item" effect="dark" content="编辑" placement="left">
               <el-button type="primary" icon="el-icon-edit" circle size="mini" @click="modify(scope.row)" />
-            </el-tooltip>
+            </el-tooltip> -->
             <el-tooltip class="item" effect="dark" content="删除" placement="right">
               <el-button type="danger" icon="el-icon-delete" circle size="mini" @click="remove(scope.row)" />
             </el-tooltip>
@@ -65,9 +63,8 @@
     </div>
   </div>
 </template>
-
 <script>
-import { getFromSubUserList, getToSubUserList } from '@/api/tsyLj.js'
+import { getRuleList, addRule, deleteRule } from '@/api/tsyLj.js'
 import subRatioForm from './form/subRatioForm'
 export default {
   name: 'SubAccount',
@@ -106,78 +103,60 @@ export default {
       totalCount: 0,
       pageSize: 10,
       page: 1,
-      tableData: [
-        {
-          ratio1: '3',
-          ratio2: '7'
-        },
-        {
-          ratio1: '5',
-          ratio2: '5'
-        },
-        {
-          ratio1: '10',
-          ratio2: '0'
-        }
-      ],
+      tableData: [],
       currentPage: 1,
-      ratios: [{
-        value: '10:0',
-        label: '10:0'
-      }, {
-        value: '5:5',
-        label: '5:5'
-      }, {
-        value: '3:7',
-        label: '3:7'
-      }],
-      subuser2List: [
-        {
-          value: '被分账方1',
-          label: '被分账方1'
-        },
-        {
-          value: '被分账方2',
-          label: '被分账方2'
-        },
-        {
-          value: '被分账方3',
-          label: '被分账方3'
-        }
-      ],
-      subuser1List: [{
-        value: '1',
-        label: '本公司'
-      }],
-      dialogVisible: false
+      dialogVisible: false,
+      state: 'init',
+      dataToModify: null
     }
   },
   created() {
-    getFromSubUserList().then(res => {
-      console.log('getFromSubUserList---:', res)
-    })
-    for (let i = 0; i < this.tableData.length; i++) {
-      if (this.tableData[i].ratio != '' && this.tableData[i].ratio != null) {
-        const subuser1Ratio = this.tableData[i].ratio.split(':')[0]
-        const subuser2Ratio = this.tableData[i].ratio.split(':')[1]
-        this.tableData[i].subuser1Account = this.tableData[i].account * subuser1Ratio / 10
-        this.tableData[i].subuser2Account = this.tableData[i].account * subuser2Ratio / 10
-      }
-    }
+    this.init()
   },
   methods: {
-    changeRatio(e) {
-      console.log('changeRatio e---:', e)
-      const subuser1Ratio = e.ratio.split(':')[0]
-      const subuser2Ratio = e.ratio.split(':')[1]
-      e.subuser1Account = e.account * subuser1Ratio / 10
-      e.subuser2Account = e.account * subuser2Ratio / 10
-    },
-    modify(e) {
-      this.dialogVisible = true
+    init() {
+      getRuleList().then(res => {
+        console.log('getRuleList res---:', res)
+        this.tableData = res.data
+      })
     },
     create() {
       this.dialogVisible = true
+    },
+    handleCommit(e) {
+      addRule(e).then(res => {
+        console.log('addRule res----:', res)
+        this.init()
+      })
+      this.dialogVisible = false
+    },
+    handleClose() {
+      this.dialogVisible = false
+    },
+    remove(e) {
+      this.$confirm('确认删除该分账比例?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        console.log('========删除========')
+        deleteRule({ id: e.id }).then(res => {
+          console.log('deleteRule res---:', res)
+          this.init()
+        })
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    changePage() {
+      console.log('changePage')
     }
   }
 }

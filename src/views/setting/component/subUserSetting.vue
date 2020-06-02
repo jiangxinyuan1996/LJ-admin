@@ -4,7 +4,6 @@
       title="提示"
       :visible.sync="dialogVisible"
       width="30%"
-      :before-close="handleClose"
     >
       <subUserForm />
     </el-dialog>
@@ -85,7 +84,7 @@
 </template>
 
 <script>
-import { getFromSubUserList, getToSubUserList } from '@/api/tsyLj.js'
+import { getUserList } from '@/api/tsyLj.js'
 import subUserForm from './form/subUserForm'
 export default {
   name: 'SubAccount',
@@ -173,8 +172,8 @@ export default {
     }
   },
   created() {
-    getFromSubUserList().then(res => {
-      console.log('getFromSubUserList---:', res)
+    getUserList().then(res => {
+      console.log('getUserList---:', res)
     })
     for (let i = 0; i < this.tableData.length; i++) {
       if (this.tableData[i].ratio != '' && this.tableData[i].ratio != null) {
@@ -198,6 +197,9 @@ export default {
     },
     create() {
       this.dialogVisible = true
+    },
+    changePage() {
+      console.log('changePage')
     }
   }
 }
