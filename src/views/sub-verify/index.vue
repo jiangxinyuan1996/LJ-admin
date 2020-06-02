@@ -127,7 +127,7 @@
 </template>
 
 <script>
-import { getCheckResult,submitCheckResult } from '@/api/tsyLj.js'
+import { getCheckResult,submitCheckResult,getUserList } from '@/api/tsyLj.js'
 export default {
   name: 'SubVerify',
   data() {
@@ -201,6 +201,24 @@ export default {
   methods: {
     init(){
       this.loading = true
+      getUserList().then(res => {
+        console.log('getUserList---:', res)
+        const fromList = res.data.fromList
+        const toList = res.data.toList
+        for (let i = 0; i < fromList.length; i++) {
+          const subuser1 = {}
+          subuser1.value = fromList[i].id
+          subuser1.label = fromList[i].nickname
+          this.subuser1List.push(subuser1)
+        }
+
+        for (let i = 0; i < toList.length; i++) {
+          const subuser2 = {}
+          subuser2.value = toList[i].id
+          subuser2.label = toList[i].nickname
+          this.subuser2List.push(subuser2)
+        }
+      })
       getCheckResult().then(res=>{
         console.log('getCheckResult res--:',res);
         this.tableData = res.data
