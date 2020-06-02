@@ -24,7 +24,7 @@
           align="right"
           :picker-options="pickerOptions"
         />
-        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="clickSearch()">
+        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="init()">
           查询
         </el-button>
       </div>
@@ -32,6 +32,7 @@
 
     <div id="dataForm">
       <el-table
+        v-loading="loading"
         show-summary
         :data="tableData"
         size="mini"
@@ -204,7 +205,8 @@ export default {
       currentPage: 1,
       ratios: [],
       subuser2List: [],
-      subuser1List: []
+      subuser1List: [],
+      loading:true
     }
   },
   created() {
@@ -212,6 +214,7 @@ export default {
   },
   methods: {
     init() {
+      this.loading = true
       getUserList().then(res => {
         console.log('getUserList---:', res)
         const fromList = res.data.fromList
@@ -229,6 +232,9 @@ export default {
           subuser2.label = toList[i].nickname
           this.subuser2List.push(subuser2)
         }
+        setTimeout(function() {
+          this.loading = false  //改为self
+        }.bind(this), 600)
       })
 
       getRuleList().then(res => {

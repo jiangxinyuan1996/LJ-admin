@@ -23,6 +23,7 @@
     <div id="dataForm">
       <el-table
         :data="tableData"
+        v-loading="loading"
         size="mini"
         stripe
         border
@@ -133,7 +134,8 @@ export default {
       dataToModify: {},
       tableData: [],
       currentPage: 1,
-      dialogVisible: false
+      dialogVisible: false,
+      loading:true
     }
   },
   created() {
@@ -141,6 +143,7 @@ export default {
   },
   methods: {
     init(){
+      this.loading = true
       getUserList().then(res => {
         console.log('getUserList---:', res)
         this.tableData = res.data.fromList.concat(res.data.toList)
@@ -151,6 +154,9 @@ export default {
             this.tableData[i].default_status='分账方'
           }
         }
+        setTimeout(function() {
+          this.loading = false  //改为self
+        }.bind(this), 600)
       })
     },
     changeRatio(e) {

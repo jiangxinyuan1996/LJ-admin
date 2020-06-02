@@ -39,7 +39,7 @@
             :value="item.value"
           />
         </el-select>
-        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="clickSearch()">
+        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="init()">
           查询
         </el-button>
       </div>
@@ -47,6 +47,7 @@
 
     <div id="dataForm">
       <el-table
+        v-loading="loading"
         show-summary
         :data="tableData"
         size="mini"
@@ -190,7 +191,8 @@ export default {
       subuser1List: [{
         value: '1',
         label: '本公司'
-      }]
+      }],
+      loading:true
     }
   },
   created() {
@@ -198,9 +200,13 @@ export default {
   },
   methods: {
     init(){
+      this.loading = true
       getCheckResult().then(res=>{
         console.log('getCheckResult res--:',res);
         this.tableData = res.data
+        setTimeout(function() {
+          this.loading = false  //改为self
+        }.bind(this), 600)
       })
     },
     changeRatio(e) {

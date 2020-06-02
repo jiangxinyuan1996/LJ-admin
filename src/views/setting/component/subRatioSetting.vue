@@ -21,6 +21,7 @@
 
     <div id="dataForm">
       <el-table
+      v-loading="loading"
         :data="tableData"
         size="mini"
         stripe
@@ -107,7 +108,8 @@ export default {
       currentPage: 1,
       dialogVisible: false,
       state: 'init',
-      dataToModify: null
+      dataToModify: null,
+      loading:true
     }
   },
   created() {
@@ -115,9 +117,13 @@ export default {
   },
   methods: {
     init() {
+      this.loading = true
       getRuleList().then(res => {
         console.log('getRuleList res---:', res)
         this.tableData = res.data
+        setTimeout(function() {
+          this.loading = false  //改为self
+        }.bind(this), 600)
       })
     },
     create() {
