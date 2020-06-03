@@ -127,7 +127,7 @@
 </template>
 
 <script>
-import { getCheckResult,submitCheckResult,getUserList } from '@/api/tsyLj.js'
+import { getCheckResult, submitCheckResult, getUserList } from '@/api/tsyLj.js'
 export default {
   name: 'SubVerify',
   data() {
@@ -164,47 +164,24 @@ export default {
       page: 1,
       tableData: [],
       currentPage: 1,
-      ratios: [{
-        value: '10:0',
-        label: '10:0'
-      }, {
-        value: '5:5',
-        label: '5:5'
-      }, {
-        value: '3:7',
-        label: '3:7'
-      }],
-      subuser2List: [
-        {
-          value: '1',
-          label: '被分账方1'
-        },
-        {
-          value: '2',
-          label: '被分账方2'
-        },
-        {
-          value: '3',
-          label: '被分账方3'
-        }
-      ],
-      subuser1List: [{
-        value: '1',
-        label: '本公司'
-      }],
-      loading:true
+      ratios: [],
+      subuser2List: [],
+      subuser1List: [],
+      loading: true
     }
   },
   created() {
     this.init()
   },
   methods: {
-    init(){
+    init() {
       this.loading = true
       getUserList().then(res => {
         console.log('getUserList---:', res)
         const fromList = res.data.fromList
         const toList = res.data.toList
+        this.subuser1List = []
+        this.subuser2List = []
         for (let i = 0; i < fromList.length; i++) {
           const subuser1 = {}
           subuser1.value = fromList[i].id
@@ -219,11 +196,11 @@ export default {
           this.subuser2List.push(subuser2)
         }
       })
-      getCheckResult().then(res=>{
-        console.log('getCheckResult res--:',res);
+      getCheckResult().then(res => {
+        console.log('getCheckResult res--:', res)
         this.tableData = res.data
         setTimeout(function() {
-          this.loading = false  //改为self
+          this.loading = false // 改为self
         }.bind(this), 600)
       })
     },
@@ -261,11 +238,11 @@ export default {
           if (action === 'confirm') {
             instance.confirmButtonLoading = true
             instance.confirmButtonText = '执行中...'
-            let param = e
-            console.log('param---',param);
-            submitCheckResult(param).then(res=>{
-              console.log('submitSubResult res---:',res);
-              if(res.success == 1){
+            const param = e
+            console.log('param---', param)
+            submitCheckResult(param).then(res => {
+              console.log('submitSubResult res---:', res)
+              if (res.success === 1) {
                 this.$message({
                   type: 'success',
                   message: res.message
@@ -274,12 +251,14 @@ export default {
               instance.confirmButtonLoading = false
               done()
             })
+          } else {
+            done()
           }
         }
       })
     },
-    changePage(){
-      console.log('changePage');
+    changePage() {
+      console.log('changePage')
     },
     checkDetail(e) {
       const url = '/subverify/detail'

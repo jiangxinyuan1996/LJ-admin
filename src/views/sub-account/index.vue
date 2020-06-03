@@ -190,23 +190,23 @@ export default {
           id: 'A100000001',
           createtime: '2020-05-26 15:02:35',
           account: '2000000',
-          subuser1:'',
-          subuser2:''
+          subuser1: '',
+          subuser2: ''
         },
         {
           machine_no: 'POS002',
           id: 'A100000002',
           createtime: '2020-05-26 17:32:10',
           account: '50000',
-          subuser1:'',
-          subuser2:''
+          subuser1: '',
+          subuser2: ''
         }
       ],
       currentPage: 1,
       ratios: [],
       subuser2List: [],
       subuser1List: [],
-      loading:true
+      loading: true
     }
   },
   created() {
@@ -219,6 +219,8 @@ export default {
         console.log('getUserList---:', res)
         const fromList = res.data.fromList
         const toList = res.data.toList
+        this.subuser1List = []
+        this.subuser2List = []
         for (let i = 0; i < fromList.length; i++) {
           const subuser1 = {}
           subuser1.value = fromList[i].id
@@ -233,7 +235,7 @@ export default {
           this.subuser2List.push(subuser2)
         }
         setTimeout(function() {
-          this.loading = false  //改为self
+          this.loading = false // 改为self
         }.bind(this), 600)
       })
 
@@ -258,6 +260,46 @@ export default {
       e.subuser2Account = e.account * subuser2Ratio / 10
     },
     commit(e) {
+      if (!e.subuser1 && !e.subuser2) {
+        this.$alert('请选择分账方与被分账方', '标题名称', {
+          confirmButtonText: '确定',
+          callback: action => {
+
+          }
+        })
+        return
+      }
+
+      if (!e.ratio) {
+        this.$alert('请选择分账比例', '提示', {
+          confirmButtonText: '确定',
+          callback: action => {
+
+          }
+        })
+        return
+      }
+
+      let name1 = ''
+      let name2 = ''
+      console.log('e.subuser1', e.subuser1)
+      console.log('this.subuser1List', this.subuser1List)
+      for (let i = 0; i < this.subuser1List.length; i++) {
+        if (e.subuser1 === this.subuser1List[i].value) {
+          console.log('111111')
+          name1 = this.subuser1List[i].label
+          break
+        }
+      }
+
+      for (let i = 0; i < this.subuser2List.length; i++) {
+        if (e.subuser2 === this.subuser2List[i].value) {
+          console.log('222222')
+          name2 = this.subuser2List[i].label
+          break
+        }
+      }
+      console.log('name1', name1)
       const h = this.$createElement
       this.$msgbox({
         title: '信息确认',
@@ -270,12 +312,12 @@ export default {
           h('span', null, `的比例`),
           h('br', null, ''),
           h('span', null, `分给 `),
-          h('span', { style: 'color: rgb(0,113,190)' }, `${e.subuser1} `),
+          h('span', { style: 'color: rgb(0,113,190)' }, `${name1} `),
           h('span', { style: 'color: rgb(238,120,0)' }, `${e.subuser1Account}`),
           h('span', null, `元`),
           h('br', null, ''),
           h('span', null, `分给 `),
-          h('span', { style: 'color: rgb(0,113,190)' }, `${e.subuser2} `),
+          h('span', { style: 'color: rgb(0,113,190)' }, `${name2} `),
           h('span', { style: 'color: rgb(238,120,0)' }, `${e.subuser2Account}`),
           h('span', null, `元`),
           h('br', null, ''),
@@ -292,7 +334,7 @@ export default {
             console.log('param---', param)
             submitSubResult(param).then(res => {
               console.log('submitSubResult res---:', res)
-              if (res.success == 1) {
+              if (res.success === 1) {
                 this.$message({
                   type: 'success',
                   message: res.message
