@@ -122,6 +122,12 @@
                 :label="item.label"
                 :value="item.value"
               />
+              <el-divider />
+              <el-option
+                key="新建比例"
+                label="新建比例"
+                value="新建比例"
+              />
             </el-select>
           </template>
         </el-table-column>
@@ -254,6 +260,10 @@ export default {
     },
     changeRatio(e) {
       console.log('changeRatio e---:', e)
+      if (e.ratio === '新建比例') {
+        const url = '/setting/index/2'
+        this.$router.push(url)
+      }
       const subuser1Ratio = e.ratio.split(':')[0]
       const subuser2Ratio = e.ratio.split(':')[1]
       e.subuser1Account = e.account * subuser1Ratio / 10

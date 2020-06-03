@@ -33,6 +33,12 @@ export default {
       activeIndex2: '1'
     }
   },
+  created() {
+    console.log(this.$route.params.page)
+    if (this.$route.params.page && this.$route.params.page !== ':page') {
+      this.activeIndex2 = this.$route.params.page
+    }
+  },
   methods: {
     handleSelect(key, keyPath) {
       this.activeIndex2 = key
