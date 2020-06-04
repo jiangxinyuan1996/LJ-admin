@@ -1,11 +1,11 @@
 <template>
   <div>
-    <el-form :model="createForm" size="mini" :rules="rules" label-width="100px">
-      <el-form-item label="分账方比例" prop="name" style="margin-top:0;display: inline-block;">
-        <el-input-number v-model="num1" :precision="2" :step="0.01" :max="10" />
+    <el-form :model="createForm" size="mini" label-width="100px">
+      <el-form-item label="分账方比例" prop="fromratio" style="margin-top:0;display: inline-block;">
+        <el-input-number v-model="fromratio" :precision="0" :step="1" :min="0" :max="10" />
       </el-form-item>
-      <el-form-item label="被分账方比例" prop="name" style="margin-top:0;display: inline-block;">
-        <el-input-number v-model="num2" disabled :precision="2" :step="0.01" :max="10" />
+      <el-form-item label="被分账方比例" prop="toratio" style="margin-top:0;display: inline-block;">
+        <el-input-number v-model="toratio" disabled :precision="0" :step="1" :min="0" :max="10" />
       </el-form-item>
 
     </el-form>
@@ -16,114 +16,45 @@
   </div>
 </template>
 <script>
-import bankCodeOptionsConstant from '@/constant/bankCodeList.js'
 export default {
   props: {
-    dataToModify: {
-      type: Object,
-      default: {}
-    },
-    state: {
-      type: String,
-      default: ''
-    }
   },
   data() {
     return {
       createForm: {
-        bank_code: '',
-        account_type: '',
-        account_no: '',
-        account_name: '',
-        account_prop: '',
-        id_type: '',
-        id: '',
-        tel: '',
-        merrem: ''
+        fromratio: 10,
+        toratio: 0
       },
-      num1: 0,
-      num2: 10,
-      rules: {
-        bank_code: [
-          { required: true, message: '请输入银行代码', trigger: 'blur' }
-          // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ],
-        account_type: [
-          { required: true, message: '请输入账号类型', trigger: 'blur' }
-          // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ],
-        account_no: [
-          { required: true, message: '请输入账号', trigger: 'blur' }
-          // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ],
-        account_name: [
-          { required: true, message: '请输入账号名', trigger: 'blur' }
-          // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ],
-        account_prop: [
-          { required: true, message: '请输入账号属性', trigger: 'blur' }
-          // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ],
-        id_type: [
-          { required: true, message: '请输入开户证件类型', trigger: 'blur' }
-          // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ],
-        id: [
-          { required: true, message: '请输入证件号', trigger: 'blur' }
-          // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ],
-        tel: [
-          { required: true, message: '请输入手机号', trigger: 'blur' }
-          // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ],
-        merrem: [
-          { required: true, message: '请输入商户保留信息', trigger: 'blur' }
-          // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ]
-      },
-      bankCodeOptions: [],
-      typeOptions: [{
-        label: '分账方',
-        value: '分账方'
-      }, {
-        label: '被分账方',
-        value: '被分账方'
-      }]
+      fromratio: 5,
+      toratio: 5
     }
   },
   watch: {
-    state: function(val, oldVal) {
-      // 外部触发游戏开始
-      console.log('watch-command new: %s, old: %s', val, oldVal)
-      if (val === 'update') {
-        this.createForm = Object.assign({}, this.dataToModify)
-      } else if (val === 'create') {
-        this.createForm = {
-          bank_code: '',
-          account_type: '',
-          account_no: '',
-          account_name: '',
-          account_prop: '',
-          id_type: '',
-          id: '',
-          tel: '',
-          merrem: ''
-        }
-      }
-    }
-  },
-  watch: {
-    num1: function(val, oldVal) {
-      this.num2 = 10 - val
+    fromratio: function(val, oldVal) {
+      this.toratio = 10 - this.fromratio
     }
   },
   created() {
-    this.bankCodeOptions = bankCodeOptionsConstant
-    if (this.dataToModify) {
-      this.createForm = Object.assign({}, this.dataToModify)
-    }
   },
   methods: {
+    init() {
+      this.fromratio = 5,
+      this.toratio = 5
+    },
+    handleCommitDialog() {
+      console.log('Commit')
+      this.createForm = {
+        fromratio: this.fromratio,
+        toratio: this.toratio
+      }
+      this.init()
+      this.$emit('Commit', this.createForm)
+    },
+    handleCloseDialog() {
+      console.log('Close')
+      this.init()
+      this.$emit('Close')
+    }
   }
 }
 </script>

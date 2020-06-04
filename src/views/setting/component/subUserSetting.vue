@@ -4,15 +4,14 @@
       title="提示"
       :visible.sync="dialogVisible"
       width="30%"
-      :before-close="handleClose"
     >
-      <subUserForm />
+      <subUserForm :state="state" :data-to-modify="dataToModify" @createConfirm="createConfirm" @updateConfirm="updateConfirm" @close="closeDialog" @closeDialog="closeDialog"/>
     </el-dialog>
     <div id="searchBox">
       <div id="buttonBox" style="margin:50px;">
         <span style="margin-right:10px">分账方名称 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 15vw;margin-right:15px;" class="filter-item" />
 
-        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="clickSearch()">
+        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="init()">
           查询
         </el-button>
         <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="success" @click="create()">
@@ -24,37 +23,44 @@
     <div id="dataForm">
       <el-table
         :data="tableData"
+        v-loading="loading"
         size="mini"
         stripe
         border
         style="margin:20px;margin-left:50px;margin-right:50px;"
       >
         <el-table-column
-          prop="name"
+          prop="nickname"
           align="center"
           width="120"
           label="分账方名称"
         />
         <el-table-column
-          prop="type"
+          prop="default_status"
           align="center"
-          width="170"
+          width="120"
           label="分账方类型"
         />
         <el-table-column
-          prop="bank_name"
+          prop="name"
           align="center"
           width="110"
           label="提现账户名"
         />
         <el-table-column
-          prop="bank_code"
+          prop="phone"
+          align="center"
+          width="110"
+          label="联系方式"
+        />
+        <el-table-column
+          prop="bank"
           align="center"
           width="110"
           label="银行名称"
         />
         <el-table-column
-          prop="card_num"
+          prop="card_no"
           align="center"
           width="170"
           label="提现账号"
@@ -85,7 +91,7 @@
 </template>
 
 <script>
-import { getFromSubUserList, getToSubUserList } from '@/api/tsyLj.js'
+import { getUserList , addUser , updateUser , deleteUser} from '@/api/tsyLj.js'
 import subUserForm from './form/subUserForm'
 export default {
   name: 'SubAccount',
@@ -117,6 +123,7 @@ export default {
         }]
       },
       value2: '',
+      state: 'init',
       query: {
         id: ''
       },
@@ -124,68 +131,34 @@ export default {
       totalCount: 0,
       pageSize: 10,
       page: 1,
-      tableData: [
-        {
-          name: '本公司',
-          type: '分账方',
-          bank_name: '张三',
-          bank_code: '建设银行',
-          card_num: '6227008886669995555'
-        },
-        {
-          name: '分账方1',
-          type: '被分账方',
-          bank_name: '李四',
-          bank_code: '工商银行',
-          card_num: '6227008886669995555'
-        }
-      ],
+      dataToModify: {},
+      tableData: [],
       currentPage: 1,
-      ratios: [{
-        value: '10:0',
-        label: '10:0'
-      }, {
-        value: '5:5',
-        label: '5:5'
-      }, {
-        value: '3:7',
-        label: '3:7'
-      }],
-      subuser2List: [
-        {
-          value: '被分账方1',
-          label: '被分账方1'
-        },
-        {
-          value: '被分账方2',
-          label: '被分账方2'
-        },
-        {
-          value: '被分账方3',
-          label: '被分账方3'
-        }
-      ],
-      subuser1List: [{
-        value: '1',
-        label: '本公司'
-      }],
-      dialogVisible: false
+      dialogVisible: false,
+      loading:true
     }
   },
   created() {
-    getFromSubUserList().then(res => {
-      console.log('getFromSubUserList---:', res)
-    })
-    for (let i = 0; i < this.tableData.length; i++) {
-      if (this.tableData[i].ratio != '' && this.tableData[i].ratio != null) {
-        const subuser1Ratio = this.tableData[i].ratio.split(':')[0]
-        const subuser2Ratio = this.tableData[i].ratio.split(':')[1]
-        this.tableData[i].subuser1Account = this.tableData[i].account * subuser1Ratio / 10
-        this.tableData[i].subuser2Account = this.tableData[i].account * subuser2Ratio / 10
-      }
-    }
+    this.init()
   },
   methods: {
+    init(){
+      this.loading = true
+      getUserList().then(res => {
+        console.log('getUserList---:', res)
+        this.tableData = res.data.fromList.concat(res.data.toList)
+        for(let i=0;i<this.tableData.length;i++){
+          if(this.tableData[i].default_status==0){
+            this.tableData[i].default_status='被分账方'
+          }else if (this.tableData[i].default_status==1) {
+            this.tableData[i].default_status='分账方'
+          }
+        }
+        setTimeout(function() {
+          this.loading = false  //改为self
+        }.bind(this), 600)
+      })
+    },
     changeRatio(e) {
       console.log('changeRatio e---:', e)
       const subuser1Ratio = e.ratio.split(':')[0]
@@ -194,10 +167,68 @@ export default {
       e.subuser2Account = e.account * subuser2Ratio / 10
     },
     modify(e) {
+      console.log('edit')
+      console.log('e--:',e);
+      this.state = 'update'
+      this.dataToModify = e
       this.dialogVisible = true
     },
     create() {
+      this.state = 'create'
       this.dialogVisible = true
+    },
+    changePage() {
+      console.log('changePage')
+    },
+    createConfirm(e) {
+      console.log('==========createConfirm==========')
+      console.log('e----:', e)
+      addUser(e).then(res => {
+        console.log('createVerifyInfo res=======:', res)
+        this.dialogVisible = false
+        this.state = 'init'
+        this.dataToModify = null
+        this.init()
+      })
+    },
+    updateConfirm(e) {
+      console.log('==========updateConfirm==========')
+      delete e.submit_time
+      delete e.state
+      updateUser(e).then(res => {
+        console.log('updateUser res=======:', res)
+        this.dialogVisible = false
+        this.state = 'init'
+        this.dataToModify = null
+        this.init()
+      })
+    },
+    remove(e) {
+      this.$confirm('确认删除该分账方数据?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        console.log('========删除========')
+        deleteUser({ id: e.id }).then(res => {
+          console.log('deleteRule res---:', res)
+          this.init()
+        })
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    closeDialog() {
+      this.createDialogVisible = false
+      this.state = 'init'
+      this.dataToModify = null
     }
   }
 }

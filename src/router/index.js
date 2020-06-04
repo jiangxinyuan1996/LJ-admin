@@ -98,7 +98,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/sub-account/index'),
         name: '分账明细',
-        meta: { title: '分账明细', icon: 'edit', affix: true}
+        meta: { title: '分账明细', icon: 'edit', affix: true }
       }
     ]
   },
@@ -135,7 +135,7 @@ export const constantRoutes = [
       }
     ]
   },
-  
+
   // {
   //   path: '/documentation',
   //   component: Layout,
@@ -214,7 +214,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/account-transfer/index'),
         name: 'transfer',
-        meta: { title: '账户转账', icon: 'user' ,roles:['机构管理员']}
+        meta: { title: '账户转账', icon: 'user', roles: ['机构管理员'] }
       }
     ]
   },
@@ -224,7 +224,7 @@ export const asyncRoutes = [
     name: 'setting',
     children: [
       {
-        path: 'index',
+        path: 'index/:page',
         component: () => import('@/views/setting/index'),
         name: 'setting',
         meta: { title: '参数配置', icon: 'list' }

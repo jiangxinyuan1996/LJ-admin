@@ -2,6 +2,7 @@
   <div id="sub-account">
     <div id="searchBox">
       <div id="buttonBox" style="margin:50px;">
+        <span style="margin-right:10px">机器号 : </span><el-input v-model="query.id" size="mini" placeholder="机器号" style="width: 10vw;margin-right:15px;" class="filter-item" />
         <span style="margin-right:10px">单据流水号 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 15vw;margin-right:15px;" class="filter-item" />
         <span class="demonstration">单据时间 : </span>
         <el-date-picker
@@ -23,7 +24,7 @@
           align="right"
           :picker-options="pickerOptions"
         />
-        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="clickSearch()">
+        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="init()">
           查询
         </el-button>
       </div>
@@ -31,19 +32,21 @@
 
     <div id="dataForm">
       <el-table
+        v-loading="loading"
+        show-summary
         :data="tableData"
         size="mini"
         stripe
         border
         style="margin:20px;margin-left:50px;margin-right:50px;"
       >
-      <el-table-column
-        sortable
-        prop="machine_no"
-        align="center"
-        width="120"
-        label="机器号"
-      />
+        <el-table-column
+          sortable
+          prop="machine_no"
+          align="center"
+          width="120"
+          label="机器号"
+        />
         <el-table-column
           sortable
           prop="id"
@@ -119,6 +122,12 @@
                 :label="item.label"
                 :value="item.value"
               />
+              <el-divider />
+              <el-option
+                key="新建比例"
+                label="新建比例"
+                value="新建比例"
+              />
             </el-select>
           </template>
         </el-table-column>
@@ -145,7 +154,7 @@
 </template>
 
 <script>
-import { getFromSubUserList, getToSubUserList,getRuleList,submitSubResult } from '@/api/tsyLj.js'
+import { getUserList, getRuleList, submitSubResult } from '@/api/tsyLj.js'
 export default {
   name: 'SubAccount',
   data() {
@@ -173,7 +182,7 @@ export default {
         }]
       },
       value2: '',
-      value3:'',
+      value3: '',
       query: {
         id: ''
       },
@@ -183,71 +192,124 @@ export default {
       page: 1,
       tableData: [
         {
-          machine_no:'POS001',
+          machine_no: 'POS001',
           id: 'A100000001',
           createtime: '2020-05-26 15:02:35',
-          account: '2000000'
+          account: '2000000',
+          subuser1: '',
+          subuser2: ''
         },
         {
-          machine_no:'POS002',
+          machine_no: 'POS002',
           id: 'A100000002',
           createtime: '2020-05-26 17:32:10',
-          account: '50000'
+          account: '50000',
+          subuser1: '',
+          subuser2: ''
         }
       ],
       currentPage: 1,
       ratios: [],
       subuser2List: [],
-      subuser1List: []
+      subuser1List: [],
+      loading: true
     }
   },
   created() {
     this.init()
   },
   methods: {
-    init(){
-      getFromSubUserList().then(res => {
-        console.log('getFromSubUserList---:', res)
-        for(let i=0;i<res.data.length;i++ ){
-          let subuser1 = {}
-          subuser1.value = res.data[i].user_id
-          subuser1.label = res.data[i].user_name
+    init() {
+      this.loading = true
+      getUserList().then(res => {
+        console.log('getUserList---:', res)
+        const fromList = res.data.fromList
+        const toList = res.data.toList
+        this.subuser1List = []
+        this.subuser2List = []
+        for (let i = 0; i < fromList.length; i++) {
+          const subuser1 = {}
+          subuser1.value = fromList[i].id
+          subuser1.label = fromList[i].nickname
           this.subuser1List.push(subuser1)
         }
-      })
 
-      getToSubUserList().then(res => {
-        console.log('getToSubUserList---:', res)
-        for(let i=0;i<res.data.length;i++ ){
-          let subuser2 = {}
-          subuser2.value = res.data[i].user_id
-          subuser2.label = res.data[i].user_name
+        for (let i = 0; i < toList.length; i++) {
+          const subuser2 = {}
+          subuser2.value = toList[i].id
+          subuser2.label = toList[i].nickname
           this.subuser2List.push(subuser2)
         }
+        setTimeout(function() {
+          this.loading = false // 改为self
+        }.bind(this), 600)
       })
 
       getRuleList().then(res => {
         console.log('getRuleList---:', res)
-        for(let i=0;i<res.data.length;i++ ){
-          let ratio = {}
-          ratio.value = res.data[i].fromratio+":"+res.data[i].toratio
-          ratio.label = res.data[i].fromratio+":"+res.data[i].toratio
+        for (let i = 0; i < res.data.length; i++) {
+          const ratio = {}
+          ratio.value = res.data[i].content
+          ratio.label = res.data[i].content
           this.ratios.push(ratio)
         }
       })
     },
-    changePage(){
-      console.log('changePage');
+    changePage() {
+      console.log('changePage')
     },
     changeRatio(e) {
       console.log('changeRatio e---:', e)
+      if (e.ratio === '新建比例') {
+        const url = '/setting/index/2'
+        this.$router.push(url)
+      }
       const subuser1Ratio = e.ratio.split(':')[0]
       const subuser2Ratio = e.ratio.split(':')[1]
       e.subuser1Account = e.account * subuser1Ratio / 10
       e.subuser2Account = e.account * subuser2Ratio / 10
     },
     commit(e) {
+      if (!e.subuser1 && !e.subuser2) {
+        this.$alert('请选择分账方与被分账方', '标题名称', {
+          confirmButtonText: '确定',
+          callback: action => {
 
+          }
+        })
+        return
+      }
+
+      if (!e.ratio) {
+        this.$alert('请选择分账比例', '提示', {
+          confirmButtonText: '确定',
+          callback: action => {
+
+          }
+        })
+        return
+      }
+
+      let name1 = ''
+      let name2 = ''
+      console.log('e.subuser1', e.subuser1)
+      console.log('this.subuser1List', this.subuser1List)
+      for (let i = 0; i < this.subuser1List.length; i++) {
+        if (e.subuser1 === this.subuser1List[i].value) {
+          console.log('111111')
+          name1 = this.subuser1List[i].label
+          break
+        }
+      }
+
+      for (let i = 0; i < this.subuser2List.length; i++) {
+        if (e.subuser2 === this.subuser2List[i].value) {
+          console.log('222222')
+          name2 = this.subuser2List[i].label
+          break
+        }
+      }
+      console.log('name1', name1)
       const h = this.$createElement
       this.$msgbox({
         title: '信息确认',
@@ -260,12 +322,12 @@ export default {
           h('span', null, `的比例`),
           h('br', null, ''),
           h('span', null, `分给 `),
-          h('span', { style: 'color: rgb(0,113,190)' }, `${e.subuser1} `),
+          h('span', { style: 'color: rgb(0,113,190)' }, `${name1} `),
           h('span', { style: 'color: rgb(238,120,0)' }, `${e.subuser1Account}`),
           h('span', null, `元`),
           h('br', null, ''),
           h('span', null, `分给 `),
-          h('span', { style: 'color: rgb(0,113,190)' }, `${e.subuser2} `),
+          h('span', { style: 'color: rgb(0,113,190)' }, `${name2} `),
           h('span', { style: 'color: rgb(238,120,0)' }, `${e.subuser2Account}`),
           h('span', null, `元`),
           h('br', null, ''),
@@ -278,11 +340,11 @@ export default {
           if (action === 'confirm') {
             instance.confirmButtonLoading = true
             instance.confirmButtonText = '执行中...'
-            let param = e
-            console.log('param---',param);
-            submitSubResult(param).then(res=>{
-              console.log('submitSubResult res---:',res);
-              if(res.success == 1){
+            const param = e
+            console.log('param---', param)
+            submitSubResult(param).then(res => {
+              console.log('submitSubResult res---:', res)
+              if (res.success === 1) {
                 this.$message({
                   type: 'success',
                   message: res.message
@@ -291,6 +353,8 @@ export default {
               instance.confirmButtonLoading = false
               done()
             })
+          } else {
+            done()
           }
         }
       })
