@@ -80,7 +80,14 @@ export const constantRoutes = [
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
         meta: { title: '首页', icon: 'dashboard', affix: true }
-      }
+      },
+      {
+        path: '/updatePassword',
+        component: () => import('@/views/login/updatePassword'),
+        name: 'updatePassword',
+        meta: { title: '修改密码', icon: 'icon'},
+        hidden:true
+      },
     ]
   },
   {
@@ -181,12 +188,19 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/withdrawal/index',
     name: 'accountwithdrawal',
+    meta: { title: '账户提现', icon: 'money' },
     children: [
       {
         path: 'index',
         component: () => import('@/views/account-withdrawal/index'),
         name: 'withdrawal',
-        meta: { title: '账户提现', icon: 'money' }
+        meta: { title: '提现', icon: 'money' }
+      },
+      {
+        path: 'index1',
+        component: () => import('@/views/account-withdrawal/index'),
+        name: 'withdrawal',
+        meta: { title: '提现复核', icon: 'money' }
       }
     ]
   },
@@ -226,7 +240,7 @@ export const asyncRoutes = [
   //   meta: {
   //     title: 'Permission',
   //     icon: 'lock',
-  //     roles: ['admin', 'editor'] // you can set roles in root nav
+  //     roles: ['机构管理员', 'editor'] // you can set roles in root nav
   //   },
   //   children: [
   //     {
@@ -235,7 +249,7 @@ export const asyncRoutes = [
   //       name: 'PagePermission',
   //       meta: {
   //         title: 'Page Permission',
-  //         roles: ['admin'] // or you can only set roles in sub nav
+  //         roles: ['机构管理员'] // or you can only set roles in sub nav
   //       }
   //     },
   //     {
@@ -253,7 +267,7 @@ export const asyncRoutes = [
   //       name: 'RolePermission',
   //       meta: {
   //         title: 'Role Permission',
-  //         roles: ['admin']
+  //         roles: ['机构管理员']
   //       }
   //     }
   //   ]

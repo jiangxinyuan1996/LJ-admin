@@ -41,6 +41,9 @@
           <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
             <el-dropdown-item>Docs</el-dropdown-item>
           </a> -->
+          <el-dropdown-item  @click.native="resetPassword">
+            <span style="display:block;">修改密码</span>
+          </el-dropdown-item>
           <el-dropdown-item @click.native="logout">
             <span style="display:block;">退出登录</span>
           </el-dropdown-item>
@@ -75,6 +78,9 @@ export default {
     ])
   },
   methods: {
+     resetPassword(){
+      this.$router.push('/updatePassword')
+    },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },

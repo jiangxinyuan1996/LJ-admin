@@ -118,8 +118,11 @@ export default {
     //   }
     // }
     const validatePassword = (rule, value, callback) => {
+      if(value.length===0){
+        callback(new Error('请填写密码'))
+      }
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('密码至少六位'))
       } else {
         callback()
       }
@@ -193,13 +196,30 @@ export default {
       })
     },
     chooseRoles(){
+      if(this.loginForm.username!==''&&this.loginForm.password!==''){
       login({account:this.loginForm.username,password:this.loginForm.password}).then(res=>{
-      this.dialogFormVisible=true
-        console.log(res.data)
-
-        this.formData=res.data
-        console.log(this.formData)
+        if(res.success===1){
+          this.dialogFormVisible=true
+          this.formData=res.data
+        }
       })
+      }else{
+        
+        if(this.loginForm.username===''){
+          this.$message({
+                message:'请输入账号',
+                type:'warning'
+              })
+        }
+        else if(this.loginForm.password===''){
+          this.$message({
+                message:'请输入密码',
+                type:'warning'
+              })
+        }
+      }
+        
+
       //  this.loading = true
 
           // this.$store.dispatch('user/login', this.loginForm)
@@ -214,13 +234,19 @@ export default {
           //   })
     },
     handleLogin() {
+      console.log(this.temp.role_id)
+      if(this.temp.role_id!==''){
+
       setRoles({role_id:this.temp.role_id}).then((res)=>{
             if(res.success===1){
                this.loading = true
 
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
-              console.log('login')
+              this.$message({
+                message:'登录成功',
+                type:'success'
+              })
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               this.loading = false
             })
@@ -229,6 +255,12 @@ export default {
             })
             }
           })
+      }else{
+        this.$message({
+          message:'请选择角色信息',
+          type:'warning'
+        })
+      }
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {

@@ -80,6 +80,13 @@
          align="center"
          width="110"
        />
+       <el-table-column
+         prop="date"
+         label="日期"
+         sortable
+         align="center"
+         width="140"
+       />
       <el-table-column
         prop="account_no"
         label="账号"
@@ -309,6 +316,7 @@ export default {
         {
           account_name: '本公司',
           name: '张三',
+          date:'2020-5-20 13:25:10',
           account_no: '6227336643994455',
           bank_code: '大连银行',
           amount_show: '100'
@@ -316,6 +324,7 @@ export default {
         {
           account_name: '被分账方1',
           name: '李四',
+          date:'2020-5-22 13:25:10',
           account_no: '6227336643994455',
           bank_code: '大连银行',
           amount_show: '100'
@@ -395,7 +404,7 @@ export default {
             sums[index] = '合计';
             return;
           }
-          if(index===4){
+          if(index===5){
             const values = data.map(item => Number(item[column.property]));
             if (!values.every(value => isNaN(value))) {
               sums[index] = values.reduce((prev, curr) => {
