@@ -48,10 +48,10 @@
             :value="item.value"
           />
         </el-select>
-        <span style="margin:0 15px 0 35px">状态:</span>
+        <!-- <span style="margin:0 15px 0 35px">状态:</span>
         <el-select size="mini" clearable v-model="listQuery.state" placeholder="状态" style="width: 130px" @keyup.enter.native="handleFilter">
           <el-option v-for="item in states" :key="item.key" :label="item.value" :value="item.key" />
-        </el-select>
+        </el-select> -->
         <span style="margin:0 18px;padding-left:5px;">日期:</span>
         <el-date-picker
           v-model="listQuery.submit_time_start"
@@ -102,6 +102,13 @@
       style="width: 100%;margin-left:40px"
       @selection-change="handleSelectionChange"
     >
+    <el-table-column
+        prop="id"
+        label="流水号"
+        sortable
+        align="center"
+        width="120"
+      />
       <el-table-column
         prop="account_name"
         label="分账方名称"
@@ -116,7 +123,7 @@
          align="center"
          width="100"
        />
-       <el-table-column
+       <!-- <el-table-column
         prop="state"
         label="状态"
         align="center"
@@ -132,7 +139,7 @@
         <el-tag slot="reference" :type="scope.row.state==='待提交'?'info':scope.row.state==='交易成功'?'success':'danger'">{{scope.row.state}}</el-tag>
       </el-popover>
       </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column
         prop="account_no"
         label="账号"
@@ -178,14 +185,14 @@
         width="140"
       >
         <template slot-scope="{ $index,row }">
-          <el-tooltip class="item" effect="dark" content="修改金额" placement="top">
+          <!-- <el-tooltip class="item" effect="dark" content="修改金额" placement="top">
             <el-button type="primary" icon="el-icon-edit" circle size="mini" @click="handleUpdate(row)" />
           </el-tooltip>
           <el-tooltip  v-if="checkPermission(['机构管理员','操作员'])" class="item" effect="dark" content="提现申请" placement="top">
             <el-button type="warning" icon="el-icon-check" circle size="mini" @click="open(row)" />
-          </el-tooltip>
+          </el-tooltip> -->
           <el-tooltip  v-if="checkPermission(['机构管理员','复核员'])" class="item" effect="dark" content="提现审核" placement="top">
-            <el-button type="success" icon="el-icon-message" circle size="mini" @click="open(row)" />
+            <el-button type="success" icon="el-icon-check" circle size="mini" @click="open(row)" />
           </el-tooltip>
           <!-- <el-tooltip v-if="(row.state==='待提交'||row.state==='异常')?true:false" class="item" effect="dark" content="删除" placement="top">
             <el-button type="danger" icon="el-icon-delete" round size="mini" @click="handleDel($index,row)" />
