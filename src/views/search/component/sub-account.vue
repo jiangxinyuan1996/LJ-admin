@@ -2,6 +2,7 @@
   <div id="sub-account">
     <div id="searchBox">
       <div id="buttonBox" style="margin:50px;">
+        <span style="margin-right:10px">机器号 : </span><el-input v-model="query.machine_no" size="mini" placeholder="机器号" style="width: 8vw;margin-right:5px;" class="filter-item" />
         <span style="margin-right:10px">单据流水号 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 12vw;margin-right:15px;" class="filter-item" />
         <span class="demonstration">单据时间 : </span>
         <el-date-picker
@@ -168,7 +169,8 @@ export default {
         value:"待审核"
       }],
       query: {
-        id: ''
+        id: '',
+        machine_no:''
       },
       alwaysFalse: false,
       totalCount: 0,

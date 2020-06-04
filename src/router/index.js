@@ -199,15 +199,15 @@ export const asyncRoutes = [
     meta: { title: '提现', icon: 'money' },
     children: [
       {
-        path: 'index',
+        path: 'withdrawal_apply',
         component: () => import('@/views/account-withdrawal/apply'),
-        name: 'withdrawal',
+        name: 'withdrawal_apply',
         meta: { title: '提现申请', icon: 'money' }
       },
       {
-        path: 'index1',
+        path: 'withdrawal_check',
         component: () => import('@/views/account-withdrawal/check'),
-        name: 'withdrawal',
+        name: 'withdrawal_check',
         meta: { title: '提现复核', icon: 'money' }
       }
     ]
@@ -217,12 +217,19 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/transfer/index',
     name: 'accounttransfer',
+    meta: { title: '转账', icon: 'user', roles: ['机构管理员'] },
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/account-transfer/index'),
-        name: 'transfer',
-        meta: { title: '账户转账', icon: 'user', roles: ['机构管理员'] }
+        path: 'transfer_apply',
+        component: () => import('@/views/account-transfer/apply'),
+        name: 'transfer_apply',
+        meta: { title: '转账申请', icon: 'user', roles: ['机构管理员'] }
+      },
+      {
+        path: 'transfer_check',
+        component: () => import('@/views/account-transfer/check'),
+        name: 'transfer_check',
+        meta: { title: '转账复核', icon: 'user', roles: ['机构管理员'] }
       }
     ]
   },
