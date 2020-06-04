@@ -66,6 +66,13 @@
       style="width: 100%;margin-left:50px"
       @selection-change="handleSelectionChange"
     >
+    <el-table-column
+        prop="id"
+        label="流水号"
+        sortable
+        align="center"
+        width="120"
+      />
       <el-table-column
         prop="account_name"
         label="分账方名称"
@@ -404,7 +411,7 @@ export default {
             sums[index] = '合计';
             return;
           }
-          if(index===5){
+          if(index===6){
             const values = data.map(item => Number(item[column.property]));
             if (!values.every(value => isNaN(value))) {
               sums[index] = values.reduce((prev, curr) => {
