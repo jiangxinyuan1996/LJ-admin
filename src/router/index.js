@@ -85,9 +85,9 @@ export const constantRoutes = [
         path: '/updatePassword',
         component: () => import('@/views/login/updatePassword'),
         name: 'updatePassword',
-        meta: { title: '修改密码', icon: 'icon'},
-        hidden:true
-      },
+        meta: { title: '修改密码', icon: 'icon' },
+        hidden: true
+      }
     ]
   },
   {
@@ -105,12 +105,20 @@ export const constantRoutes = [
   {
     path: '/subverify',
     component: Layout,
+    name: '分账复核',
+    meta: { title: '分账复核', icon: 'eye-open', affix: true },
     children: [
       {
         path: 'index',
         component: () => import('@/views/sub-verify/index'),
-        name: '分账复核',
-        meta: { title: '分账复核', icon: 'eye-open', affix: true }
+        name: '复核汇总',
+        meta: { title: '复核汇总', affix: true }
+      },
+      {
+        path: 'list',
+        component: () => import('@/views/sub-verify/list'),
+        name: '复核明细',
+        meta: { title: '复核明细', affix: true }
       },
       {
         path: 'detail',
@@ -188,13 +196,13 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/withdrawal/index',
     name: 'accountwithdrawal',
-    meta: { title: '账户提现', icon: 'money' },
+    meta: { title: '提现', icon: 'money' },
     children: [
       {
         path: 'index',
         component: () => import('@/views/account-withdrawal/index'),
         name: 'withdrawal',
-        meta: { title: '提现', icon: 'money' }
+        meta: { title: '提现申请', icon: 'money' }
       },
       {
         path: 'index1',
