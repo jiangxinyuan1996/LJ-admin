@@ -200,13 +200,13 @@ export const asyncRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/account-withdrawal/index'),
+        component: () => import('@/views/account-withdrawal/apply'),
         name: 'withdrawal',
         meta: { title: '提现申请', icon: 'money' }
       },
       {
         path: 'index1',
-        component: () => import('@/views/account-withdrawal/index'),
+        component: () => import('@/views/account-withdrawal/check'),
         name: 'withdrawal',
         meta: { title: '提现复核', icon: 'money' }
       }
