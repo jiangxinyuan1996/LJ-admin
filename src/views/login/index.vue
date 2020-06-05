@@ -138,7 +138,7 @@ export default {
       formData:[],
       loginForm: {
         username: 'dladmin',
-        password: '123456'
+        password: '12345678'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', message:'请输入用户名' }],
@@ -201,6 +201,11 @@ export default {
         if(res.success===1){
           this.dialogFormVisible=true
           this.formData=res.data
+        }else{
+          this.$message({
+                message:res.message,
+                type:'error'
+              })
         }
       })
       }else{
@@ -253,6 +258,12 @@ export default {
             .catch(() => {
               this.loading = false
             })
+            }else{
+              console.log(1111)
+              this.$message({
+                message:res.message,
+                type:'error'
+              })
             }
           })
       }else{
