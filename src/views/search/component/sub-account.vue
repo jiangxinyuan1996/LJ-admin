@@ -2,57 +2,62 @@
   <div id="sub-account">
     <div id="searchBox">
       <div id="buttonBox" style="margin:50px;">
-        <span style="margin-right:10px">单据流水号 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 12vw;margin-right:15px;" class="filter-item" />
-        <span class="demonstration">单据时间 : </span>
+        <span style="margin-right:10px">机器号 : </span><el-input v-model="query.machine_no" size="mini" placeholder="机器号" style="width: 8vw;margin-right:5px;" class="filter-item" />
+        <span style="margin-right:10px">流水号 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 12vw;margin-right:15px;" class="filter-item" />
+        <span class="demonstration">时间 : </span>
         <el-date-picker
-        style="width: 12vw;"
           v-model="value2"
+          style="width: 12vw;"
           size="mini"
           type="datetime"
           placeholder="选择日期时间"
           align="right"
           :picker-options="pickerOptions"
         />
-        <span style="margin-right:10px;margin-left:10px;">至 </span>
+        <span >至 </span>
         <el-date-picker
-        style="width: 12vw;"
           v-model="value3"
+          style="width: 12vw;"
           size="mini"
           type="datetime"
           placeholder="选择日期时间"
           align="right"
           :picker-options="pickerOptions"
         />
-        <span style="margin-right:10px">单据状态 : </span>
-        <el-select size="mini" style="width: 8vw;" v-model="value" placeholder="请选择">
+        <span style="margin-right:10px">状态 : </span>
+        <el-select v-model="value" size="mini" style="width: 8vw;" placeholder="请选择">
           <el-option
             v-for="item in options"
             :key="item.value"
             :label="item.label"
-            :value="item.value">
-          </el-option>
+            :value="item.value"
+          />
         </el-select>
         <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="clickSearch()">
           查询
+        </el-button>
+        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="warning" @click="exportCheck()">
+          导出
         </el-button>
       </div>
     </div>
 
     <div id="dataForm">
       <el-table
+        show-summary
         :data="tableData"
         size="mini"
         stripe
         border
         style="margin:20px;margin-left:50px;margin-right:50px;"
       >
-      <el-table-column
-        sortable
-        prop="machine_no"
-        align="center"
-        width="120"
-        label="机器号"
-      />
+        <el-table-column
+          sortable
+          prop="machine_no"
+          align="center"
+          width="120"
+          label="机器号"
+        />
         <el-table-column
           prop="id"
           align="center"
@@ -157,18 +162,19 @@ export default {
           }
         }]
       },
-      value:'',
-      value2:'',
-      value3:'',
-      options:[{
-        label:"未提交",
-        value:"未提交"
-      },{
-        label:"待审核",
-        value:"待审核"
+      value: '',
+      value2: '',
+      value3: '',
+      options: [{
+        label: '未提交',
+        value: '未提交'
+      }, {
+        label: '待审核',
+        value: '待审核'
       }],
       query: {
-        id: ''
+        id: '',
+        machine_no: ''
       },
       alwaysFalse: false,
       totalCount: 0,
@@ -176,20 +182,20 @@ export default {
       page: 1,
       tableData: [
         {
-          machine_no:'POS001',
+          machine_no: 'POS001',
           id: 'A100000001',
           createtime: '2020-05-26 15:02:35',
-          status:'未提交',
+          status: '未提交',
           account: '2000000',
           subuser1: '',
           subuser2: '',
           ratio: ''
         },
         {
-          machine_no:'POS002',
+          machine_no: 'POS002',
           id: 'A100000002',
           createtime: '2020-05-26 17:32:10',
-          status:'待审核',
+          status: '待审核',
           account: '50000',
           subuser1: '本公司',
           subuser2: '被分账方3',
@@ -229,7 +235,7 @@ export default {
   },
   created() {
     for (let i = 0; i < this.tableData.length; i++) {
-      if(this.tableData[i].ratio!=''&&this.tableData[i].ratio!=null){
+      if (this.tableData[i].ratio != '' && this.tableData[i].ratio != null) {
         const subuser1Ratio = this.tableData[i].ratio.split(':')[0]
         const subuser2Ratio = this.tableData[i].ratio.split(':')[1]
         this.tableData[i].subuser1Account = this.tableData[i].account * subuser1Ratio / 10
@@ -244,6 +250,10 @@ export default {
       const subuser2Ratio = e.ratio.split(':')[1]
       e.subuser1Account = e.account * subuser1Ratio / 10
       e.subuser2Account = e.account * subuser2Ratio / 10
+    },
+    exportCheck() {
+      console.log('exportCheck')
+      window.location.href = '/mould/对账单导出模板.xlsx'
     },
     commit(e) {
       // this.$confirm(

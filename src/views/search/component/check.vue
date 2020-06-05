@@ -2,7 +2,7 @@
   <div id="sub-verify">
     <div id="searchBox">
       <div id="buttonBox" style="margin:50px;">
-        <span class="demonstration">单据时间 : </span>
+        <span class="demonstration">查询时间 : </span>
         <el-date-picker
           v-model="value2"
           size="mini"
@@ -11,7 +11,7 @@
           align="right"
           :picker-options="pickerOptions"
         />
-        <span class="demonstration">至</span>
+        <span style="margin-left:10px;margin-right:10px;" class="demonstration">至</span>
         <el-date-picker
           v-model="value3"
           size="mini"
@@ -20,25 +20,6 @@
           align="right"
           :picker-options="pickerOptions"
         />
-
-        <span style="margin-left:15px;" class="demonstration">分账方 : </span>
-        <el-select v-model="subuser1" size="mini" filterable placeholder="请选择">
-          <el-option
-            v-for="item in subuser1List"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-        <span style="margin-left:15px;" class="demonstration">被分账方 : </span>
-        <el-select v-model="subuser2" size="mini" filterable placeholder="请选择">
-          <el-option
-            v-for="item in subuser2List"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
         <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="clickSearch()">
           查询
         </el-button>
@@ -60,60 +41,52 @@
         style="margin:20px;margin-left:50px;margin-right:50px;"
       >
         <el-table-column
-          prop="fromsubuser"
+          prop="id"
           align="center"
           width="170"
           sortable
-          label="分账方"
+          label="流水号"
         />
         <el-table-column
-          prop="fromaccount"
+          prop="type"
           align="center"
           sortable
           width="130"
-          label="分账金额(元)"
+          label="业务类型"
         />
         <el-table-column
-          prop="tosubuser"
+          prop="createtime"
           align="center"
           sortable
           width="120"
           show-overflow-tooltip
-          label="被分账方"
+          label="时间"
         />
         <el-table-column
-          prop="toamount"
+          prop="account"
           align="center"
           sortable
           width="170"
           show-overflow-tooltip
-          label="被分账金额(元)"
+          label="金额(元)"
         />
         <el-table-column
           align="center"
           sortable
-          prop="count"
+          prop="payer"
           width="150"
-          label="明细总数"
+          label="支付方"
         />
         <el-table-column
           align="center"
-          prop="account"
+          prop="getter"
           sortable
           width="150"
-          label="总金额"
+          label="收款方"
         />
-        <el-table-column label="操作" width="120"align="center">
-          <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" content="查看明细" placement="right">
-              <el-button type="primary" icon="el-icon-search" size="mini" circle @click="checkDetail(scope.row)" />
-            </el-tooltip>
-
-          </template>
-        </el-table-column>
       </el-table>
       <el-pagination
-        :page-size="10"
+        :page-size="50"
         :current-page="currentPage"
         layout="prev, pager, next"
         :total="totalCount"
@@ -126,7 +99,7 @@
 </template>
 
 <script>
-import { getCheckResult , getUserList} from '@/api/tsyLj.js'
+// import { getCheckResult , getUserList} from '@/api/tsyLj.js'
 export default {
   name: 'SubVerify',
   data() {
@@ -166,7 +139,7 @@ export default {
       ratios: [],
       subuser2List: [],
       subuser1List: [],
-      loading:true
+      loading: true
     }
   },
   created() {
@@ -175,36 +148,43 @@ export default {
   methods: {
     init() {
       this.loading = true
-      getUserList().then(res => {
-        console.log('getUserList---:', res)
-        const fromList = res.data.fromList
-        const toList = res.data.toList
-        for (let i = 0; i < fromList.length; i++) {
-          const subuser1 = {}
-          subuser1.value = fromList[i].id
-          subuser1.label = fromList[i].nickname
-          this.subuser1List.push(subuser1)
-        }
-
-        for (let i = 0; i < toList.length; i++) {
-          const subuser2 = {}
-          subuser2.value = toList[i].id
-          subuser2.label = toList[i].nickname
-          this.subuser2List.push(subuser2)
-        }
-        setTimeout(function() {
-          this.loading = false  //改为self
-        }.bind(this), 600)
-      })
-      getCheckResult().then(res => {
-        console.log('getCheckResult res--:', res)
-        this.tableData = res.data
-      })
-
-    },
-    checkDetail(e) {
-      const url = '/subverify/detail'
-      this.$router.push(url)
+      this.tableData = [{
+        id: 'A000001',
+        type: '分账',
+        createtime: '2020/6/5  8:30:00',
+        account: '10000',
+        payer: '',
+        getter: '本公司'
+      },
+      {
+        id: 'A000002',
+        type: '转账',
+        createtime: '2020/6/5  8:30:00',
+        account: '-10000',
+        payer: '本公司',
+        getter: '被分账方1'
+      },
+      {
+        id: 'A000003',
+        type: '转账',
+        createtime: '2020/6/5  8:30:00',
+        account: '20000',
+        payer: '被分账方2',
+        getter: '本公司'
+      },
+      {
+        id: 'A000004',
+        type: '提现',
+        createtime: '2020/6/5  8:30:00',
+        account: '-10000',
+        payer: '',
+        getter: '本公司'
+      }]
+      this.value3 = new Date()
+      this.value2 = new Date() - (3 * 3600 * 24 * 1000)
+      setTimeout(function() {
+        this.loading = false // 改为self
+      }.bind(this), 600)
     },
     exportCheck() {
       console.log('exportCheck')

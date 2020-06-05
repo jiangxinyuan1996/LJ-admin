@@ -27,6 +27,9 @@
         <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="init()">
           查询
         </el-button>
+        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="warning" @click="exportCheck()">
+          导出
+        </el-button>
       </div>
     </div>
 
@@ -257,6 +260,10 @@ export default {
     },
     changePage() {
       console.log('changePage')
+    },
+    exportCheck(){
+      console.log('exportCheck')
+      window.location.href = '/mould/对账单导出模板.xlsx'
     },
     changeRatio(e) {
       console.log('changeRatio e---:', e)
