@@ -56,6 +56,30 @@
         </el-select>
         </el-form-item>
         <el-form-item>
+        <el-radio-group v-model="radio" v-if="createRoles.roles==='RI1005'">
+          <el-radio :label="1">分账方</el-radio>
+          <el-radio :label="2">被分账方</el-radio>
+        </el-radio-group>
+        </el-form-item>
+        <el-form-item v-if="createRoles.roles==='RI1005'">
+          <el-select v-if="radio===1" v-model="createRoles.userid" placeholder="请选择所属单位">
+            <el-option
+              v-for="item in fromList"
+              :key="item.id"
+              :label="item.nickname"
+              :value="item.id">
+            </el-option>
+          </el-select>
+          <el-select v-else v-model="createRoles.userid" placeholder="请选择所属被分账方">
+            <el-option
+              v-for="item in toList"
+              :key="item.id"
+              :label="item.nickname"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
           <el-button type="primary" @click="submitForm('createRoles')">{{ rolestatus==='create'?'提交':'修改' }}</el-button>
           <el-button @click="resetForm('createRoles')">重置</el-button>
         </el-form-item>
@@ -106,6 +130,8 @@
 </template>
 <script>
 import { addPeople,getPeopleList,getRoleList,updatePeople,delPeople} from '@/api/tsyaccount'
+import { getUserList } from '@/api/tsyLj'
+
 export default {
   data(){
      var validatePass = (rule, value, callback) => {
@@ -133,13 +159,17 @@ export default {
       admin_id:'',
       loading:false,
       rolestatus:'',
+      radio:1,
+      fromList:[],
+      toList:[],
        createRoles: {
         nickname: '',
         account: '',
         password: '',
         confirmPassword: '',
         roles:'',
-        role_arr: []
+        role_arr: [],
+        userid:''
       },
       query: {
         nickname: '',
@@ -164,6 +194,11 @@ export default {
     getRoleList().then(res=>{
       console.log(res)
       this.rolelist=res.data
+    })
+    getUserList().then(res=>{
+      this.fromList=res.data.fromList
+      this.toList=res.data.toList
+      console.log(this.fromList)
     })
   },
   methods:{
@@ -216,14 +251,15 @@ export default {
       window.location.href = '/mould/需求接口列表-0410.xlsx'
     },
     submitForm(formName) {
+      console.log(this.createRoles)
       this.$refs[formName].validate((valid) => {
-        console.log(valid)
         if (valid) {
           if(this.rolestatus==='create'){
             this.createRoles.role_arr.push(this.createRoles.roles)
-        console.log('表单提交',this.createRoles.role_arr)
+            if(this.createRoles.roles!=='RI1005'){
+              this.createRoles.userid=''
+            }
           addPeople(this.createRoles).then(res=>{
-            console.log('新增管理人员',res)
             if(res.success===1){
               this.getUser()
               this.createWorkerDialogVisible=false
@@ -232,7 +268,9 @@ export default {
                 account: '',
                 password: '',
                 confirmPassword: '',
-                role_arr: []
+                role_arr: [],
+                roles:'',
+                userid:''
               }
               this.$message({
                 message:res.message,
@@ -247,7 +285,10 @@ export default {
           })
         }else{
           this.createRoles.role_arr.push(this.createRoles.roles)
-          updatePeople({admin_id:this.admin_id,role_arr:this.createRoles.role_arr}).then(res=>{
+          if(this.createRoles.roles!=="RI1005"){
+            this.createRoles.userid=''
+          }
+          updatePeople({admin_id:this.admin_id,role_arr:this.createRoles.role_arr,userid:this.createRoles.userid}).then(res=>{
           console.log(res)
           if(res.success===1){
             this.$message({
