@@ -42,6 +42,9 @@
         <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="clickSearch()">
           查询
         </el-button>
+        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="warning" @click="exportCheck()">
+          导出
+        </el-button>
       </div>
     </div>
 
@@ -202,6 +205,10 @@ export default {
     checkDetail(e) {
       const url = '/subverify/detail'
       this.$router.push(url)
+    },
+    exportCheck() {
+      console.log('exportCheck')
+      window.location.href = '/mould/对账单导出模板.xlsx'
     }
   }
 }

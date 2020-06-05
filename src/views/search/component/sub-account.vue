@@ -3,8 +3,8 @@
     <div id="searchBox">
       <div id="buttonBox" style="margin:50px;">
         <span style="margin-right:10px">机器号 : </span><el-input v-model="query.machine_no" size="mini" placeholder="机器号" style="width: 8vw;margin-right:5px;" class="filter-item" />
-        <span style="margin-right:10px">单据流水号 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 12vw;margin-right:15px;" class="filter-item" />
-        <span class="demonstration">单据时间 : </span>
+        <span style="margin-right:10px">流水号 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 12vw;margin-right:15px;" class="filter-item" />
+        <span class="demonstration">时间 : </span>
         <el-date-picker
           v-model="value2"
           style="width: 12vw;"
@@ -14,7 +14,7 @@
           align="right"
           :picker-options="pickerOptions"
         />
-        <span style="margin-right:10px;margin-left:10px;">至 </span>
+        <span >至 </span>
         <el-date-picker
           v-model="value3"
           style="width: 12vw;"
@@ -24,7 +24,7 @@
           align="right"
           :picker-options="pickerOptions"
         />
-        <span style="margin-right:10px">单据状态 : </span>
+        <span style="margin-right:10px">状态 : </span>
         <el-select v-model="value" size="mini" style="width: 8vw;" placeholder="请选择">
           <el-option
             v-for="item in options"
@@ -35,6 +35,9 @@
         </el-select>
         <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="clickSearch()">
           查询
+        </el-button>
+        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="warning" @click="exportCheck()">
+          导出
         </el-button>
       </div>
     </div>
@@ -247,6 +250,10 @@ export default {
       const subuser2Ratio = e.ratio.split(':')[1]
       e.subuser1Account = e.account * subuser1Ratio / 10
       e.subuser2Account = e.account * subuser2Ratio / 10
+    },
+    exportCheck() {
+      console.log('exportCheck')
+      window.location.href = '/mould/对账单导出模板.xlsx'
     },
     commit(e) {
       // this.$confirm(

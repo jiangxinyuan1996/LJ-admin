@@ -46,6 +46,9 @@
         <el-button size="mini" class="filter-item" style="margin-left: 5px;margin-top:15px;" type="primary" @click="init()">
           查询
         </el-button>
+        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="warning" @click="exportCheck()">
+          导出
+        </el-button>
         <el-button v-show="selectionList.length>0" size="mini" class="filter-item" style="margin-left: 65vw;margin-top:15px;" type="warning" @click="init()">
           批量驳回
         </el-button>
@@ -264,6 +267,10 @@ export default {
           this.loading = false // 改为self
         }.bind(this), 600)
       })
+    },
+    exportCheck() {
+      console.log('exportCheck')
+      window.location.href = '/mould/对账单导出模板.xlsx'
     },
     handleSelectionChange(rows) {
       console.log('handleSelectionChange')
