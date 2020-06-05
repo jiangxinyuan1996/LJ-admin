@@ -41,6 +41,7 @@
 
     <div id="dataForm">
       <el-table
+      show-summary
         :data="tableData"
         size="mini"
         stripe
