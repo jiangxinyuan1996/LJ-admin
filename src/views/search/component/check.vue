@@ -139,7 +139,7 @@ export default {
       ratios: [],
       subuser2List: [],
       subuser1List: [],
-      loading:true
+      loading: true
     }
   },
   created() {
@@ -149,45 +149,45 @@ export default {
     init() {
       this.loading = true
       this.tableData = [{
-        id:'A000001',
-        type:'分账',
-        createtime:'2020/6/5  8:30:00',
-        account:'10000',
-        payer:'',
-        getter:'本公司'
+        id: 'A000001',
+        type: '分账',
+        createtime: '2020/6/5  8:30:00',
+        account: '10000',
+        payer: '',
+        getter: '本公司'
       },
       {
-        id:'A000002',
-        type:'转账',
-        createtime:'2020/6/5  8:30:00',
-        account:'-10000',
-        payer:'本公司',
-        getter:'被分账方1'
+        id: 'A000002',
+        type: '转账',
+        createtime: '2020/6/5  8:30:00',
+        account: '-10000',
+        payer: '本公司',
+        getter: '被分账方1'
       },
       {
-        id:'A000003',
-        type:'转账',
-        createtime:'2020/6/5  8:30:00',
-        account:'20000',
-        payer:'被分账方2',
-        getter:'本公司'
+        id: 'A000003',
+        type: '转账',
+        createtime: '2020/6/5  8:30:00',
+        account: '20000',
+        payer: '被分账方2',
+        getter: '本公司'
       },
       {
-        id:'A000004',
-        type:'提现',
-        createtime:'2020/6/5  8:30:00',
-        account:'-10000',
-        payer:'',
-        getter:'本公司'
+        id: 'A000004',
+        type: '提现',
+        createtime: '2020/6/5  8:30:00',
+        account: '-10000',
+        payer: '',
+        getter: '本公司'
       }]
       this.value3 = new Date()
       this.value2 = new Date() - (3 * 3600 * 24 * 1000)
       setTimeout(function() {
-        this.loading = false  //改为self
+        this.loading = false // 改为self
       }.bind(this), 600)
     },
-    exportCheck(){
-      console.log('exportCheck');
+    exportCheck() {
+      console.log('exportCheck')
       window.location.href = '/mould/对账单导出模板.xlsx'
     }
   }
