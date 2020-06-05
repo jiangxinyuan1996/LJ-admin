@@ -49,7 +49,7 @@
         <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="warning" @click="exportCheck()">
           导出
         </el-button>
-        <el-button v-show="selectionList.length>0" size="mini" class="filter-item" style="margin-left: 65vw;margin-top:15px;" type="warning" @click="init()">
+        <el-button v-show="selectionList.length>0" size="mini" class="filter-item" style="margin-left: 57vw;margin-top:15px;" type="warning" @click="init()">
           批量驳回
         </el-button>
         <el-button v-show="selectionList.length>0" size="mini" class="filter-item" style="margin-left: 5px;margin-top:15px;" type="success" @click="init()">
