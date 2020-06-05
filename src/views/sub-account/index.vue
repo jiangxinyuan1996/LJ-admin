@@ -263,7 +263,7 @@ export default {
     },
     exportCheck(){
       console.log('exportCheck')
-      window.location.href = '/mould/对账单导出模板.xlsx'
+      window.location.href = ''
     },
     changeRatio(e) {
       console.log('changeRatio e---:', e)
