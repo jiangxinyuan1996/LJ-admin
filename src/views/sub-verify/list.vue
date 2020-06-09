@@ -2,11 +2,11 @@
   <div id="sub-account">
     <div id="searchBox">
       <div id="buttonBox" style="margin-top:50px;margin-left:50px;">
-        <span style="margin-right:10px">机器号 : </span><el-input v-model="query.machine_no" size="mini" placeholder="机器号" style="width: 8vw;margin-right:5px;" class="filter-item" />
-        <span style="margin-right:10px">单据流水号 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 8vw;margin-right:5px;" class="filter-item" />
+        <span style="margin-right:10px">机器号 : </span><el-input v-model="query.termid" size="mini" placeholder="机器号" style="width: 8vw;margin-right:5px;" class="filter-item" />
+        <span style="margin-right:10px">单据流水号 : </span><el-input v-model="query.bizOrderNo" size="mini" placeholder="单据流水号" style="width: 8vw;margin-right:5px;" class="filter-item" />
         <span class="demonstration">单据时间 : </span>
         <el-date-picker
-          v-model="value2"
+          v-model="query.start_time"
           style="width: 8.5vw;"
           size="mini"
           type="datetime"
@@ -16,7 +16,7 @@
         />
         <span style="margin-left:5px;margin-right:5px;">至 </span>
         <el-date-picker
-          v-model="value3"
+          v-model="query.end_time"
           style="width: 8.5vw;"
           size="mini"
           type="datetime"
@@ -25,7 +25,7 @@
           :picker-options="pickerOptions"
         />
         <span style="margin-top:15px;margin-right:10px;margin-left:5px;" class="demonstration">分账方 : </span>
-        <el-select v-model="subuser1" style="margin-top:15px;width: 8vw;" size="mini" filterable placeholder="请选择">
+        <el-select v-model="query.sub1_user_id" style="margin-top:15px;width: 8vw;" size="mini" filterable placeholder="请选择">
           <el-option
             v-for="item in subuser1List"
             :key="item.value"
@@ -34,7 +34,7 @@
           />
         </el-select>
         <span style="margin-top:15px;margin-right:10px;margin-left:5px;" class="demonstration">被分账方 : </span>
-        <el-select v-model="subuser2" style="margin-top:15px;width: 8vw;" size="mini" filterable placeholder="请选择">
+        <el-select v-model="query.sub2_user_id" style="margin-top:15px;width: 8vw;" size="mini" filterable placeholder="请选择">
           <el-option
             v-for="item in subuser2List"
             :key="item.value"
@@ -49,10 +49,10 @@
         <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="warning" @click="exportCheck()">
           导出
         </el-button>
-        <el-button v-show="selectionList.length>0" size="mini" class="filter-item" style="margin-left: 57vw;margin-top:15px;" type="warning" >
+        <el-button v-show="selectionList.length>0" size="mini" class="filter-item" style="margin-left: 57vw;margin-top:15px;" type="warning">
           批量驳回
         </el-button>
-        <el-button v-show="selectionList.length>0" size="mini" class="filter-item" style="margin-left: 5px;margin-top:15px;" type="success" >
+        <el-button v-show="selectionList.length>0" size="mini" class="filter-item" style="margin-left: 5px;margin-top:15px;" type="success">
           批量复核
         </el-button>
       </div>
@@ -73,34 +73,34 @@
         />
         <el-table-column
           sortable
-          prop="machine_no"
+          prop="termid"
           align="center"
           width="120"
           label="机器号"
         />
         <el-table-column
-          prop="id"
+          prop="bizorderno"
           sortable
           align="center"
           width="120"
           label="流水号"
         />
         <el-table-column
-          prop="createtime"
+          prop="create_time"
           align="center"
           width="150"
           sortable
           label="时间"
         />
         <el-table-column
-          prop="account"
+          prop="amount"
           align="center"
           width="100"
           sortable
           label="金额(元)"
         />
         <el-table-column
-          prop="subuser1"
+          prop="sub1_user_name"
           align="center"
           sortable
           width="100"
@@ -108,11 +108,11 @@
           label="分账方"
         >
           <template slot-scope="scope">
-            <span>{{ scope.row.fromsubuser }}</span>
+            <span>{{ scope.row.sub1_user_name }}</span>
           </template>
         </el-table-column>
         <el-table-column
-          prop="subuser1Account"
+          prop="sub1_account"
           align="center"
           sortable
           width="120"
@@ -120,11 +120,11 @@
           label="分账方金额"
         >
           <template slot-scope="scope">
-            <span>{{ scope.row.subuser1Account }}</span>
+            <span>{{ scope.row.sub1_account }}</span>
           </template>
         </el-table-column>
         <el-table-column
-          prop="subuser2"
+          prop="sub2_user_name"
           align="center"
           width="100"
           sortable
@@ -132,11 +132,11 @@
           label="被分账方"
         >
           <template slot-scope="scope">
-            <span>{{ scope.row.tosubuser }}</span>
+            <span>{{ scope.row.sub2_user_name }}</span>
           </template>
         </el-table-column>
         <el-table-column
-          prop="subuser2Account"
+          prop="sub2_account"
           align="center"
           width="120"
           sortable
@@ -144,12 +144,12 @@
           label="被分账方金额"
         >
           <template slot-scope="scope">
-            <span>{{ scope.row.subuser2Account }}</span>
+            <span>{{ scope.row.sub2_account }}</span>
           </template>
         </el-table-column>
         <el-table-column
           align="center"
-          prop="ratio"
+          prop="rule"
           width="150"
           sortable
           label="比例"
@@ -158,7 +158,7 @@
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" content="驳回" placement="left">
               <!-- <el-button class="el-icon-edit" @click="modifyData(scope.row)"></el-button> -->
-              <el-button type="warning" icon="el-icon-refresh-left" circle size="mini" @click="commit(scope.row)" />
+              <el-button type="warning" icon="el-icon-refresh-left" circle size="mini" @click="refuse(scope.row)" />
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="复核" placement="right">
               <!-- <el-button class="el-icon-edit" @click="modifyData(scope.row)"></el-button> -->
@@ -181,19 +181,19 @@
 </template>
 
 <script>
-import { getCheckResultDetail, getUserList } from '@/api/tsyLj.js'
+import { getCheckResultDetail, getUserList, refusedCheckResult } from '@/api/tsyLj.js'
 export default {
   name: 'SubAccount',
   data() {
     return {
       query: {
-        id: '',
-        machine_no: ''
+        termid: '',
+        bizOrderNo: '',
+        start_time: '',
+        end_time: '',
+        sub1_user_id: '',
+        sub2_user_id: ''
       },
-      value2: '',
-      value3: '',
-      subuser1: '',
-      subuser2: '',
       alwaysFalse: false,
       totalCount: 0,
       pageSize: 10,
@@ -254,15 +254,11 @@ export default {
           this.subuser2List.push(subuser2)
         }
       })
-      getCheckResultDetail().then(res => {
+      this.query.start_time = this.query.start_time.valueOf()
+      this.query.end_time = this.query.end_time.valueOf()
+      getCheckResultDetail(this.query).then(res => {
         console.log('getCheckResultDetail res--:', res)
         this.tableData = res.data
-        for (let i = 0; i < this.tableData.length; i++) {
-          const subuser1Ratio = this.tableData[i].ratio.split(':')[0]
-          const subuser2Ratio = this.tableData[i].ratio.split(':')[1]
-          this.tableData[i].subuser1Account = this.tableData[i].account * subuser1Ratio / 10
-          this.tableData[i].subuser2Account = this.tableData[i].account * subuser2Ratio / 10
-        }
         setTimeout(function() {
           this.loading = false // 改为self
         }.bind(this), 600)
@@ -270,7 +266,7 @@ export default {
     },
     exportCheck() {
       console.log('exportCheck')
-      window.location.href = ''
+      window.location.href = 'mould/对账单导出模板.xlsx'
     },
     handleSelectionChange(rows) {
       console.log('handleSelectionChange')
@@ -279,6 +275,44 @@ export default {
     changePage() {
       console.log('changePage')
     },
+    refuse(e) {
+      console.log('==========refuse===========')
+      const h = this.$createElement
+      this.$msgbox({
+        title: '信息确认',
+        message: h('p', null, [
+          h('span', null, `是否确认驳回? `)
+        ]),
+        showCancelButton: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        beforeClose: (action, instance, done) => {
+          if (action === 'confirm') {
+            instance.confirmButtonLoading = true
+            instance.confirmButtonText = '执行中...'
+            const param = {
+              bizOrderNo: e.bizorderno,
+              message: ''
+            }
+            refusedCheckResult(param).then(res => {
+              console.log('refusedCheckResult res---:', res)
+            })
+            done()
+            setTimeout(() => {
+              instance.confirmButtonLoading = false
+            }, 300)
+          } else {
+            done()
+          }
+        }
+      }).then(action => {
+        this.$message({
+          type: 'info',
+          message: 'action: ' + action
+        })
+      })
+    },
+
     commit(e) {
       const h = this.$createElement
       this.$msgbox({

@@ -14,7 +14,7 @@
           align="right"
           :picker-options="pickerOptions"
         />
-        <span >至 </span>
+        <span>至 </span>
         <el-date-picker
           v-model="value3"
           style="width: 12vw;"
@@ -171,6 +171,9 @@ export default {
       }, {
         label: '待审核',
         value: '待审核'
+      }, {
+        label: '已完成',
+        value: '已完成'
       }],
       query: {
         id: '',
@@ -253,7 +256,7 @@ export default {
     },
     exportCheck() {
       console.log('exportCheck')
-      window.location.href = ''
+      window.location.href = 'mould/对账单导出模板.xlsx'
     },
     commit(e) {
       // this.$confirm(

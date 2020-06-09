@@ -126,7 +126,7 @@
 </template>
 
 <script>
-import { getCheckResult , getUserList} from '@/api/tsyLj.js'
+import { getCheckResult, getUserList } from '@/api/tsyLj.js'
 export default {
   name: 'SubVerify',
   data() {
@@ -166,7 +166,7 @@ export default {
       ratios: [],
       subuser2List: [],
       subuser1List: [],
-      loading:true
+      loading: true
     }
   },
   created() {
@@ -193,14 +193,13 @@ export default {
           this.subuser2List.push(subuser2)
         }
         setTimeout(function() {
-          this.loading = false  //改为self
+          this.loading = false // 改为self
         }.bind(this), 600)
       })
       getCheckResult().then(res => {
         console.log('getCheckResult res--:', res)
         this.tableData = res.data
       })
-
     },
     checkDetail(e) {
       const url = '/subverify/detail'
@@ -208,7 +207,7 @@ export default {
     },
     exportCheck() {
       console.log('exportCheck')
-      window.location.href = ''
+      window.location.href = 'mould/对账单导出模板.xlsx'
     }
   }
 }
