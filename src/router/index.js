@@ -202,13 +202,13 @@ export const asyncRoutes = [
         path: 'withdrawal_apply',
         component: () => import('@/views/account-withdrawal/apply'),
         name: 'withdrawal_apply',
-        meta: { title: '提现申请'}
+        meta: { title: '提现申请',roles:['机构管理员','操作员']}
       },
       {
         path: 'withdrawal_check',
         component: () => import('@/views/account-withdrawal/check'),
         name: 'withdrawal_check',
-        meta: { title: '提现复核' }
+        meta: { title: '提现复核' ,roles:['机构管理员','提现复核员']}
       }
     ]
   },
@@ -223,13 +223,13 @@ export const asyncRoutes = [
         path: 'transfer_apply',
         component: () => import('@/views/account-transfer/apply'),
         name: 'transfer_apply',
-        meta: { title: '转账申请', roles: ['机构管理员'] }
+        meta: { title: '转账申请', roles: ['机构管理员','操作员'] }
       },
       {
         path: 'transfer_check',
         component: () => import('@/views/account-transfer/check'),
         name: 'transfer_check',
-        meta: { title: '转账复核', roles: ['机构管理员'] }
+        meta: { title: '转账复核', roles: ['机构管理员','转账复核员'] }
       }
     ]
   },
@@ -242,7 +242,7 @@ export const asyncRoutes = [
         path: 'index/:page',
         component: () => import('@/views/setting/index'),
         name: 'setting',
-        meta: { title: '参数配置', icon: 'list' }
+        meta: { title: '参数配置', icon: 'list' ,roles:['机构管理员']}
       }
     ]
   },

@@ -4,14 +4,14 @@
       <el-form-item label="请输入登录密码" prop="passWord" style="width: 20vw;">
         <el-input v-model="passWord" />
       </el-form-item>
-      <el-form-item label="请输入旧密码">
-        <el-input v-model="formLabelAlign.oldPassWord" style="width: 20vw;" type="password" prop="oldPassWord" />
+      <el-form-item label="请输入旧密码" prop="oldPassWord">
+        <el-input v-model="oldPassWord" style="width: 20vw;" type="password"  />
       </el-form-item>
-      <el-form-item label="请输入新密码">
-        <el-input v-model="newPassWord" style="width: 20vw;" type="password" prop="newPassWord" />
+      <el-form-item label="请输入新密码" prop="newPassWord">
+        <el-input v-model="newPassWord" style="width: 20vw;" type="password"  />
       </el-form-item>
-      <el-form-item label="请确认新密码">
-        <el-input v-model="confirmPassword" style="width: 20vw;" type="password" prop="confirmPassword" />
+      <el-form-item label="请确认新密码" prop="confirmPassword">
+        <el-input v-model="confirmPassword" style="width: 20vw;" type="password"  />
       </el-form-item>
     </el-form>
     <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="success" @click="modify()">
