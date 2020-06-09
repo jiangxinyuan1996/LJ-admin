@@ -56,7 +56,7 @@
         </el-select>
         </el-form-item>
         <el-form-item>
-        <el-radio-group v-model="radio" v-if="createRoles.roles==='RI1005'">
+        <el-radio-group v-model="radio" v-if="createRoles.roles==='RI1005'" @change="changeClear">
           <el-radio :label="1">分账方</el-radio>
           <el-radio :label="2">被分账方</el-radio>
         </el-radio-group>
@@ -202,6 +202,9 @@ export default {
     })
   },
   methods:{
+    changeClear(){
+      this.createRoles.userid=''
+    },
     showCreateWorkerDialog() {
       this.rolestatus = 'create'
       this.createWorkerDialogVisible = true

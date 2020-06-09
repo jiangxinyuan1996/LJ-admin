@@ -103,18 +103,18 @@
       @selection-change="handleSelectionChange"
     >
     <el-table-column
-        prop="id"
+        prop="bizorderno"
         label="流水号"
         sortable
         align="center"
-        width="120"
+        width="220"
       />
       <el-table-column
-        prop="account_name"
+        prop="nickname"
         label="分账方名称"
         sortable
         align="center"
-        width="110"
+        width="160"
       />
       <el-table-column
          prop="name"
@@ -141,21 +141,21 @@
       </template>
       </el-table-column> -->
       <el-table-column
-        prop="account_no"
+        prop="card_no"
         label="账号"
         sortable
         align="center"
         width="180"
       />
       <el-table-column
-        prop="bank_code"
+        prop="bank"
         label="开户行"
         sortable
         align="center"
         width="160"
       />
       <el-table-column
-        prop="amount_show"
+        prop="amount"
         label="可提现金额(元)"
         sortable
         align="center"
@@ -270,8 +270,8 @@ import waves from '@/directive/waves'
 import permission from '@/directive/permission/index.js'
 import Editform from '@/components/accountForm'
 import checkPermission from '@/utils/permission'
+import { getReviewList,getTrancpwd } from '@/api/tsyaccount'
 export default {
-  
   directives: { waves,permission },
   components: {
     Editform
@@ -359,26 +359,7 @@ export default {
       value1: '',
       value2: '',
       // mock数据
-      tableData: [
-        {
-          account_name: '本公司',
-          state:'待提交',
-          name: '张三',
-          account_no: '6227336643994455',
-          bank_code: '大连银行',
-          amount_show: '100',
-          amount_show_2: '50'
-        },
-        {
-          account_name: '被分账方1',
-          state:'待审核',
-          name: '李四',
-          account_no: '6227336643994455',
-          bank_code: '大连银行',
-          amount_show: '100',
-          amount_show_2: '50'
-        }
-      ],
+      tableData: [],
       dialogFormVisible: false,
       formCheck: false,
       dialogStatus: '',
@@ -396,10 +377,31 @@ export default {
       }
     }
   },
+  mounted(){
+    getTrancpwd().then(res=>{
+      if(res.success===1){
+        this.handleFilter()
+      }else{
+        this.$router.push('/')
+      }
+    })
+  },
   methods: {
     checkPermission,
     handleFilter() {
-      console.log('handlefilter')
+      this.listLoading=true
+      getReviewList().then(res=>{
+        if(res.success===1){
+          this.tableData=res.data
+          this.listLoading=false
+        }else{
+          this.listLoading=false
+          this.$message({
+            message:res.message,
+            type:'error'
+          })
+        }
+      })
     },
     handleUpdate(row) {
       // 数据更新（修改按钮）
