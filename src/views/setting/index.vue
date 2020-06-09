@@ -24,7 +24,7 @@
 import SubUser from './component/subUserSetting'
 import subRatio from './component/subRatioSetting'
 import role from './component/roleSetting'
-import transpwd from './component/transpwd'
+import transpwd from './component/password'
 
 export default {
   components: {

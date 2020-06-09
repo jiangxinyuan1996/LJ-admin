@@ -1,12 +1,12 @@
 <template>
-  <div id="sub-account">
+  <div id="sub-amount">
     <div id="searchBox">
       <div id="buttonBox" style="margin:50px;">
-        <span style="margin-right:10px">机器号 : </span><el-input v-model="query.id" size="mini" placeholder="机器号" style="width: 10vw;margin-right:15px;" class="filter-item" />
-        <span style="margin-right:10px">单据流水号 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 15vw;margin-right:15px;" class="filter-item" />
+        <span style="margin-right:10px">机器号 : </span><el-input v-model="query.termid" size="mini" placeholder="机器号" style="width: 10vw;margin-right:15px;" class="filter-item" />
+        <span style="margin-right:10px">单据流水号 : </span><el-input v-model="query.trxid" size="mini" placeholder="单据流水号" style="width: 15vw;margin-right:15px;" class="filter-item" />
         <span class="demonstration">单据时间 : </span>
         <el-date-picker
-          v-model="value2"
+          v-model="query.start_time"
           style="width: 12vw;"
           size="mini"
           type="datetime"
@@ -16,7 +16,7 @@
         />
         <span style="margin-right:10px;margin-left:10px;">至 </span>
         <el-date-picker
-          v-model="value3"
+          v-model="query.end_time"
           style="width: 12vw;"
           size="mini"
           type="datetime"
@@ -45,28 +45,28 @@
       >
         <el-table-column
           sortable
-          prop="machine_no"
+          prop="termid"
           align="center"
           width="120"
           label="机器号"
         />
         <el-table-column
           sortable
-          prop="id"
+          prop="trxid"
           align="center"
           width="120"
           label="流水号"
         />
         <el-table-column
           sortable
-          prop="createtime"
+          prop="paytime"
           align="center"
           width="170"
           label="时间"
         />
         <el-table-column
           sortable
-          prop="account"
+          prop="amount"
           align="center"
           width="110"
           label="金额(元)"
@@ -121,7 +121,7 @@
             <el-select v-model="scope.row.ratio" size="mini" filterable placeholder="请选择" @change="changeRatio(scope.row)">
               <el-option
                 v-for="item in ratios"
-                :key="item.value"
+                :key="item.key"
                 :label="item.label"
                 :value="item.value"
               />
@@ -157,7 +157,7 @@
 </template>
 
 <script>
-import { getUserList, getRuleList, submitSubResult } from '@/api/tsyLj.js'
+import { getUserList, getRuleList, submitSubResult, getPayResult } from '@/api/tsyLj.js'
 export default {
   name: 'SubAccount',
   data() {
@@ -184,33 +184,17 @@ export default {
           }
         }]
       },
-      value2: '',
-      value3: '',
       query: {
-        id: ''
+        trxid: '',
+        termid: '',
+        start_time: '',
+        end_time: ''
       },
       alwaysFalse: false,
       totalCount: 0,
       pageSize: 10,
       page: 1,
-      tableData: [
-        {
-          machine_no: 'POS001',
-          id: 'A100000001',
-          createtime: '2020-05-26 15:02:35',
-          account: '2000000',
-          subuser1: '',
-          subuser2: ''
-        },
-        {
-          machine_no: 'POS002',
-          id: 'A100000002',
-          createtime: '2020-05-26 17:32:10',
-          account: '50000',
-          subuser1: '',
-          subuser2: ''
-        }
-      ],
+      tableData: [],
       currentPage: 1,
       ratios: [],
       subuser2List: [],
@@ -224,6 +208,12 @@ export default {
   methods: {
     init() {
       this.loading = true
+      this.query.start_time = this.query.start_time.valueOf()
+      this.query.end_time = this.query.end_time.valueOf()
+      getPayResult(this.query).then(res => {
+        console.log('getPayResult res---:', res)
+        this.tableData = res.data
+      })
       getUserList().then(res => {
         console.log('getUserList---:', res)
         const fromList = res.data.fromList
@@ -261,9 +251,9 @@ export default {
     changePage() {
       console.log('changePage')
     },
-    exportCheck(){
+    exportCheck() {
       console.log('exportCheck')
-      window.location.href = '/mould/对账单导出模板.xlsx'
+      window.location.href = 'mould/对账单导出模板.xlsx'
     },
     changeRatio(e) {
       console.log('changeRatio e---:', e)
@@ -273,8 +263,8 @@ export default {
       }
       const subuser1Ratio = e.ratio.split(':')[0]
       const subuser2Ratio = e.ratio.split(':')[1]
-      e.subuser1Account = e.account * subuser1Ratio / 10
-      e.subuser2Account = e.account * subuser2Ratio / 10
+      e.subuser1Account = e.amount * subuser1Ratio / 10
+      e.subuser2Account = e.amount * subuser2Ratio / 10
     },
     commit(e) {
       if (!e.subuser1 && !e.subuser2) {
@@ -299,6 +289,7 @@ export default {
 
       let name1 = ''
       let name2 = ''
+      console.log('value2---:', this.value2)
       console.log('e.subuser1', e.subuser1)
       console.log('this.subuser1List', this.subuser1List)
       for (let i = 0; i < this.subuser1List.length; i++) {
@@ -321,7 +312,7 @@ export default {
       this.$msgbox({
         title: '信息确认',
         message: h('p', null, [
-          h('span', { style: 'color: rgb(238,120,0)' }, `${e.account}`),
+          h('span', { style: 'color: rgb(238,120,0)' }, `${e.amount}`),
           h('span', null, `元`),
           h('br', null, ''),
           h('span', null, `将以`),
@@ -352,6 +343,7 @@ export default {
             submitSubResult(param).then(res => {
               console.log('submitSubResult res---:', res)
               if (res.success === 1) {
+                this.init()
                 this.$message({
                   type: 'success',
                   message: res.message

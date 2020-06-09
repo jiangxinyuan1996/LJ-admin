@@ -4,7 +4,7 @@
       <div id="buttonBox" style="margin:50px;">
         <span class="demonstration">单据时间 : </span>
         <el-date-picker
-          v-model="value2"
+          v-model="query.start_time"
           size="mini"
           type="datetime"
           placeholder="选择日期时间"
@@ -13,7 +13,7 @@
         />
         <span class="demonstration">至</span>
         <el-date-picker
-          v-model="value3"
+          v-model="query.end_time"
           size="mini"
           type="datetime"
           placeholder="选择日期时间"
@@ -22,7 +22,7 @@
         />
 
         <span style="margin-left:15px;" class="demonstration">分账方 : </span>
-        <el-select v-model="subuser1" size="mini" filterable placeholder="请选择">
+        <el-select v-model="query.subuser1" size="mini" filterable placeholder="请选择">
           <el-option
             v-for="item in subuser1List"
             :key="item.value"
@@ -31,7 +31,7 @@
           />
         </el-select>
         <span style="margin-left:15px;" class="demonstration">被分账方 : </span>
-        <el-select v-model="subuser2" size="mini" filterable placeholder="请选择">
+        <el-select v-model="query.subuser2" size="mini" filterable placeholder="请选择">
           <el-option
             v-for="item in subuser2List"
             :key="item.value"
@@ -59,21 +59,21 @@
         style="margin:20px;margin-left:50px;margin-right:50px;"
       >
         <el-table-column
-          prop="fromsubuser"
+          prop="sub1_user_name"
           align="center"
           sortable
           width="170"
           label="分账方"
         />
         <el-table-column
-          prop="fromaccount"
+          prop="sub1_account"
           align="center"
           width="130"
           sortable
           label="分账金额(元)"
         />
         <el-table-column
-          prop="tosubuser"
+          prop="sub2_user_name"
           align="center"
           sortable
           width="120"
@@ -81,7 +81,7 @@
           label="被分账方"
         />
         <el-table-column
-          prop="toamount"
+          prop="sub2_account"
           align="center"
           sortable
           width="170"
@@ -97,7 +97,7 @@
         />
         <el-table-column
           align="center"
-          prop="account"
+          prop="total"
           sortable
           width="150"
           label="总金额"
@@ -130,7 +130,7 @@
 </template>
 
 <script>
-import { getCheckResult, submitCheckResult, getUserList } from '@/api/tsyLj.js'
+import { getCheckResult, batchCheckResult, getUserList } from '@/api/tsyLj.js'
 export default {
   name: 'SubVerify',
   data() {
@@ -157,10 +157,12 @@ export default {
           }
         }]
       },
-      value2: '',
-      value3: '',
-      subuser1: '',
-      subuser2: '',
+      query: {
+        start_time: '',
+        end_timeL: '',
+        sub1_user_id: '',
+        sub2_user_id: ''
+      },
       alwaysFalse: false,
       totalCount: 0,
       pageSize: 10,
@@ -209,7 +211,7 @@ export default {
     },
     exportCheck() {
       console.log('exportCheck')
-      window.location.href = '/mould/对账单导出模板.xlsx'
+      window.location.href = 'mould/对账单导出模板.xlsx'
     },
     changeRatio(e) {
       console.log('changeRatio e---:', e)
@@ -223,17 +225,17 @@ export default {
       this.$msgbox({
         title: '信息确认',
         message: h('p', null, [
-          h('span', { style: 'color: rgb(238,120,0)' }, `${e.account}`),
+          h('span', { style: 'color: rgb(238,120,0)' }, `${e.total}`),
           h('span', null, `元`),
           h('br', null, ''),
           h('span', null, `分给 `),
-          h('span', { style: 'color: rgb(0,113,190)' }, `${e.fromsubuser} `),
-          h('span', { style: 'color: rgb(238,120,0)' }, `${e.fromaccount}`),
+          h('span', { style: 'color: rgb(0,113,190)' }, `${e.sub1_user_name} `),
+          h('span', { style: 'color: rgb(238,120,0)' }, `${e.sub1_account}`),
           h('span', null, `元`),
           h('br', null, ''),
           h('span', null, `分给 `),
-          h('span', { style: 'color: rgb(0,113,190)' }, `${e.tosubuser} `),
-          h('span', { style: 'color: rgb(238,120,0)' }, `${e.toamount}`),
+          h('span', { style: 'color: rgb(0,113,190)' }, `${e.sub2_user_name} `),
+          h('span', { style: 'color: rgb(238,120,0)' }, `${e.sub2_account}`),
           h('span', null, `元`),
           h('br', null, ''),
           h('span', null, `是否确认复核?`)
@@ -245,9 +247,13 @@ export default {
           if (action === 'confirm') {
             instance.confirmButtonLoading = true
             instance.confirmButtonText = '执行中...'
-            const param = e
+            const param = {}
+            param.start_time = this.value2
+            param.end_time = this.value3
+            param.sub1_user_id = e.sub1_user_id
+            param.sub2_user_id = e.sub2_user_id
             console.log('param---', param)
-            submitCheckResult(param).then(res => {
+            batchCheckResult(param).then(res => {
               console.log('submitSubResult res---:', res)
               if (res.success === 1) {
                 this.$message({
