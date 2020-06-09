@@ -41,3 +41,6 @@ export const updateUser = (data) => fetch('/TSY/home/user/updateUser', data, 'PO
 
 // 逻辑删除分账/被分账方商户
 export const deleteUser = (data) => fetch('/TSY/home/user/deleteUser', data, 'POST')
+
+//数据查询-->明细查询
+export const getSubResult = (data) => fetch('/TSY/home/result/getSubResult', data)

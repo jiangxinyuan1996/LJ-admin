@@ -2,11 +2,11 @@
   <div id="sub-account">
     <div id="searchBox">
       <div id="buttonBox" style="margin:50px;">
-        <span style="margin-right:10px">机器号 : </span><el-input v-model="query.machine_no" size="mini" placeholder="机器号" style="width: 8vw;margin-right:5px;" class="filter-item" />
-        <span style="margin-right:10px">流水号 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 12vw;margin-right:15px;" class="filter-item" />
+        <span style="margin-right:10px">机器号 : </span><el-input v-model="query.termid" size="mini" placeholder="机器号" style="width: 8vw;margin-right:5px;" class="filter-item" />
+        <span style="margin-right:10px">流水号 : </span><el-input v-model="query.trxid" size="mini" placeholder="单据流水号" style="width: 12vw;margin-right:15px;" class="filter-item" />
         <span class="demonstration">时间 : </span>
         <el-date-picker
-          v-model="value2"
+          v-model="query.start_time"
           style="width: 12vw;"
           size="mini"
           type="datetime"
@@ -16,7 +16,7 @@
         />
         <span>至 </span>
         <el-date-picker
-          v-model="value3"
+          v-model="query.end_time"
           style="width: 12vw;"
           size="mini"
           type="datetime"
@@ -25,7 +25,7 @@
           :picker-options="pickerOptions"
         />
         <span style="margin-right:10px">状态 : </span>
-        <el-select v-model="value" size="mini" style="width: 8vw;" placeholder="请选择">
+        <el-select v-model="query.status" size="mini" clearable style="width: 8vw;" placeholder="请选择">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -33,7 +33,7 @@
             :value="item.value"
           />
         </el-select>
-        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="clickSearch()">
+        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="init()">
           查询
         </el-button>
         <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="warning" @click="exportCheck()">
@@ -53,27 +53,27 @@
       >
         <el-table-column
           sortable
-          prop="machine_no"
+          prop="termid"
           align="center"
           width="120"
           label="机器号"
         />
         <el-table-column
-          prop="id"
+          prop="trxid"
           align="center"
           width="120"
           sortable
           label="流水号"
         />
         <el-table-column
-          prop="createtime"
+          prop="paytime"
           align="center"
           width="170"
           sortable
           label="时间"
         />
         <el-table-column
-          prop="account"
+          prop="amount"
           align="center"
           width="110"
           sortable
@@ -87,7 +87,7 @@
           sortable
         />
         <el-table-column
-          prop="subuser1"
+          prop="sub1_user_name"
           align="center"
           width="120"
           show-overflow-tooltip
@@ -95,13 +95,13 @@
           sortable
         >
           <template slot-scope="scope">
-            <span>{{ scope.row.subuser1 }}</span>
+            <span>{{ scope.row.sub1_user_name }}</span>
             <el-divider />
-            <span>{{ scope.row.subuser1Account }}</span>
+            <span>{{ scope.row.sub1_account }}</span>
           </template>
         </el-table-column>
         <el-table-column
-          prop="subuser2"
+          prop="sub2_user_name"
           align="center"
           width="170"
           sortable
@@ -109,14 +109,14 @@
           label="被分账方"
         >
           <template slot-scope="scope">
-            <span>{{ scope.row.subuser2 }}</span>
+            <span>{{ scope.row.sub2_user_name }}</span>
             <el-divider />
-            <span>{{ scope.row.subuser2Account }}</span>
+            <span>{{ scope.row.sub2_account }}</span>
           </template>
         </el-table-column>
         <el-table-column
           align="center"
-          prop="ratio"
+          prop="rule"
           sortable
           width="150"
           label="比例"
@@ -136,6 +136,7 @@
 </template>
 
 <script>
+import {getSubResult} from '@/api/tsyLj.js'
 export default {
   name: 'SubAccount',
   data() {
@@ -162,74 +163,34 @@ export default {
           }
         }]
       },
-      value: '',
-      value2: '',
-      value3: '',
       options: [{
-        label: '未提交',
-        value: '未提交'
+        label: '未分账',
+        value: '0'
       }, {
         label: '待审核',
-        value: '待审核'
+        value: '1'
+      }, {
+        label: '处理中',
+        value: '2'
       }, {
         label: '已完成',
-        value: '已完成'
+        value: '3'
       }],
       query: {
-        id: '',
-        machine_no: ''
+        termid:'',
+        trxid:'',
+        start_time:'',
+        end_time:'',
+        status:''
       },
       alwaysFalse: false,
       totalCount: 0,
       pageSize: 10,
       page: 1,
-      tableData: [
-        {
-          machine_no: 'POS001',
-          id: 'A100000001',
-          createtime: '2020-05-26 15:02:35',
-          status: '未提交',
-          account: '2000000',
-          subuser1: '',
-          subuser2: '',
-          ratio: ''
-        },
-        {
-          machine_no: 'POS002',
-          id: 'A100000002',
-          createtime: '2020-05-26 17:32:10',
-          status: '待审核',
-          account: '50000',
-          subuser1: '本公司',
-          subuser2: '被分账方3',
-          ratio: '3:5'
-        }
-      ],
+      tableData: [],
       currentPage: 1,
-      ratios: [{
-        value: '10:0',
-        label: '10:0'
-      }, {
-        value: '5:5',
-        label: '5:5'
-      }, {
-        value: '3:7',
-        label: '3:7'
-      }],
-      subuser2List: [
-        {
-          value: '被分账方1',
-          label: '被分账方1'
-        },
-        {
-          value: '被分账方2',
-          label: '被分账方2'
-        },
-        {
-          value: '被分账方3',
-          label: '被分账方3'
-        }
-      ],
+      ratios: [],
+      subuser2List: [],
       subuser1List: [{
         value: '1',
         label: '本公司'
@@ -237,97 +198,23 @@ export default {
     }
   },
   created() {
-    for (let i = 0; i < this.tableData.length; i++) {
-      if (this.tableData[i].ratio != '' && this.tableData[i].ratio != null) {
-        const subuser1Ratio = this.tableData[i].ratio.split(':')[0]
-        const subuser2Ratio = this.tableData[i].ratio.split(':')[1]
-        this.tableData[i].subuser1Account = this.tableData[i].account * subuser1Ratio / 10
-        this.tableData[i].subuser2Account = this.tableData[i].account * subuser2Ratio / 10
-      }
-    }
+    this.init()
   },
   methods: {
-    changeRatio(e) {
-      console.log('changeRatio e---:', e)
-      const subuser1Ratio = e.ratio.split(':')[0]
-      const subuser2Ratio = e.ratio.split(':')[1]
-      e.subuser1Account = e.account * subuser1Ratio / 10
-      e.subuser2Account = e.account * subuser2Ratio / 10
+    init(){
+      this.query.start_time = this.query.start_time.valueOf()
+      this.query.end_time = this.query.end_time.valueOf()
+      getSubResult(this.query).then(res=>{
+        console.log('getSubResult res--:',res);
+        this.tableData = res.data
+      })
     },
     exportCheck() {
       console.log('exportCheck')
       window.location.href = 'mould/对账单导出模板.xlsx'
     },
-    commit(e) {
-      // this.$confirm(
-      //   h('p', null, [
-      //       h('span', null, '内容可以是 '),
-      //       h('i', { style: 'color: teal' }, 'VNode')
-      //     ]),
-      //   // `将以${e.ratio}的比例分给${e.subuser1} ${e.subuser1Account}元<br>分给${e.subuser2} ${e.subuser2Account}元, 是否继续?`,
-      //   '提示', {
-      //   confirmButtonText: '确定',
-      //   cancelButtonText: '取消',
-      //   type: 'warning'
-      // }).then(() => {
-      //   console.log('========提交========')
-      //   this.$message({
-      //     type: 'success',
-      //     message: '提交成功!'
-      //   })
-      // }).catch(() => {
-      //   this.$message({
-      //     type: 'info',
-      //     message: '已取消删除'
-      //   })
-      // })
-
-      const h = this.$createElement
-      this.$msgbox({
-        title: '信息确认',
-        message: h('p', null, [
-          h('span', { style: 'color: rgb(238,120,0)' }, `${e.account}`),
-          h('span', null, `元`),
-          h('br', null, ''),
-          h('span', null, `将以`),
-          h('span', { style: 'color: rgb(250,190,0)' }, `${e.ratio}`),
-          h('span', null, `的比例`),
-          h('br', null, ''),
-          h('span', null, `分给 `),
-          h('span', { style: 'color: rgb(0,113,190)' }, `${e.subuser1} `),
-          h('span', { style: 'color: rgb(238,120,0)' }, `${e.subuser1Account}`),
-          h('span', null, `元`),
-          h('br', null, ''),
-          h('span', null, `分给 `),
-          h('span', { style: 'color: rgb(0,113,190)' }, `${e.subuser2} `),
-          h('span', { style: 'color: rgb(238,120,0)' }, `${e.subuser2Account}`),
-          h('span', null, `元`),
-          h('br', null, ''),
-          h('span', null, `是否提交?`)
-        ]),
-        showCancelButton: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        beforeClose: (action, instance, done) => {
-          if (action === 'confirm') {
-            instance.confirmButtonLoading = true
-            instance.confirmButtonText = '执行中...'
-            setTimeout(() => {
-              done()
-              setTimeout(() => {
-                instance.confirmButtonLoading = false
-              }, 300)
-            }, 3000)
-          } else {
-            done()
-          }
-        }
-      }).then(action => {
-        this.$message({
-          type: 'info',
-          message: 'action: ' + action
-        })
-      })
+    changePage(){
+      console.log(changePage);
     }
   }
 }

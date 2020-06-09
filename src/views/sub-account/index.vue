@@ -143,6 +143,14 @@
           </template>
         </el-table-column>
       </el-table>
+      <form v-show="alwaysFalse" name="gatewayForm" action="http://116.228.64.55:6900/yungateway/pwd/payOrder.html" method='GET'>
+         <input type="hidden" name="sysid" id="sysid" v-model="jumpForm.sysid" >
+         <input type="hidden" name="v" id="v" v-model="2.0" >
+         <input type="hidden" name="timestamp" id="timestamp" v-model="jumpForm.timestamp" >
+         <input type="hidden" name="sign" id="sign" v-model="jumpForm.sign">
+         <input type="hidden" name="req" id="req" v-model="jumpForm.req">
+         <input ref="confirm" type="submit" id="confirm"  value="确认支付" >
+      </form>
       <el-pagination
         :page-size="10"
         :current-page="currentPage"
@@ -199,7 +207,13 @@ export default {
       ratios: [],
       subuser2List: [],
       subuser1List: [],
-      loading: true
+      loading: true,
+      jumpForm:{
+        sysid:'',
+        timestamp:'',
+        sign:'',
+        req:''
+      }
     }
   },
   created() {
@@ -340,17 +354,23 @@ export default {
             instance.confirmButtonText = '执行中...'
             const param = e
             console.log('param---', param)
+
             submitSubResult(param).then(res => {
               console.log('submitSubResult res---:', res)
               if (res.success === 1) {
-                this.init()
+                this.jumpForm = res.data
+                let url = 'http://116.228.64.55:6900/yungateway/pwd/payOrder.html?sysid='+this.jumpForm.sysid+'&v=2&timestamp='+this.jumpForm.timestamp+'&sign='+this.jumpForm.sign+'&req='+this.jumpForm.req
+                window.location.href =url
+                // console.log('this.jumpForm---:',this.jumpForm);
+                // document.gatewayForm.submit()
+                // this.init()
                 this.$message({
                   type: 'success',
                   message: res.message
                 })
               }
               instance.confirmButtonLoading = false
-              done()
+              // done()
             })
           } else {
             done()
