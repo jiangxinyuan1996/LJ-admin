@@ -24,6 +24,9 @@ export const applyWithdrawal = (data) => fetch('/TSY/home/result/withdrawApply',
 export const getReviewList = (data) => fetch('/TSY/home/result/getCheckWithdrawResult ', data)
 //获取交易密码
 export const getTrancpwd = (data) => fetch('/TSY/home/admin/getPayStatus', data)
+//提现复核提交
+export const transactionReview = (data) => fetch('/TSY/home/tsy/withdrawApply ', data,'POST')
+
 
 
 

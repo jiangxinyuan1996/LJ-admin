@@ -21,10 +21,13 @@
             <span>{{ temp.account_no }}</span>
           </el-form-item>
           <el-form-item label="银行:">
-            <span>{{ temp.bank_code }}</span>
+            <span>{{ temp.bank }}</span>
           </el-form-item>
           <el-form-item label="金额:">
-            <span style="color: rgb(238, 120, 0);">{{ temp.amount_show }}</span>
+            <span>{{ temp.amount }}</span>
+          </el-form-item>
+          <el-form-item label="交易密码:">
+            <span style="color: rgb(238, 120, 0);">{{ temp.payPwd }}</span>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
