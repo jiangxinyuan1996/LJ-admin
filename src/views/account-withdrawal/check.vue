@@ -85,6 +85,12 @@
         <el-button type="primary" size="mini" style="margin-left:15px;" @click="handleFilter">
           查询
         </el-button>
+        <el-button v-show="isShow" size="mini" style="margin-left: 5px;" type="warning" @click="refuseList">
+          批量驳回
+        </el-button>
+        <el-button v-show="isShow" size="mini" style="margin-left: 5px;" type="success" @click="checkList">
+          批量复核
+        </el-button>
       </div>
     </div>
     <!-- 查询信息表格 -->
@@ -99,6 +105,11 @@
       style="width: 100%;margin-left:40px"
       @selection-change="handleSelectionChange"
     >
+    <el-table-column
+      type="selection"
+      align="center"
+      width="50">
+    </el-table-column>
       <el-table-column
         prop="bizorderno"
         label="流水号"
@@ -154,6 +165,9 @@
         width="140"
       >
         <template slot-scope="{ $index,row }">
+          <el-tooltip  v-if="checkPermission(['机构管理员','复核员'])" class="item" effect="dark" content="提现驳回" placement="top">
+            <el-button type="warning" icon="el-icon-refresh-left" circle size="mini" @click="refuse(row)" />
+          </el-tooltip>
           <el-tooltip  v-if="checkPermission(['机构管理员','复核员'])" class="item" effect="dark" content="提现审核" placement="top">
             <el-button type="success" icon="el-icon-check" circle size="mini" @click="open(row)" />
           </el-tooltip>
@@ -187,6 +201,7 @@ export default {
     return {
       dialogVisible1: false,
       dialogVisible2: false,
+      isShow:false,
       alwaysFalse: false,
       showSearch: true,
       start_time:'',
@@ -215,6 +230,7 @@ export default {
       },
       // mock数据
       tableData: [],
+      multipleSelection:[],
       dialogFormVisible: false,
     }
   },
@@ -278,7 +294,7 @@ export default {
     },
     handleSelectionChange(val) {
       this.isShow = true
-      //   console.log(val)
+        console.log(val)
       this.multipleSelection = val
       if (val.length === 0) {
         this.isShow = false
@@ -353,7 +369,7 @@ export default {
             sums[index] = '合计';
             return;
           }
-          if(index===6){
+          if(index===7){
             const values = data.map(item => Number(item[column.property]));
             if (!values.every(value => isNaN(value))) {
               sums[index] = values.reduce((prev, curr) => {

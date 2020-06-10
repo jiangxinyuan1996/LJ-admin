@@ -109,7 +109,8 @@
     >
     <el-table-column
       type="selection"
-      width="55"
+      align="center"
+      width="50"
     />
     <el-table-column
         prop="bizorderno"
@@ -347,6 +348,9 @@ export default {
         if(res.success===1){
           this.listLoading=false
           this.tableData=res.data
+          for(let i=0;i<this.tableData.length;i++){
+              this.tableData[i].amount=Number(this.tableData[i].amount)
+            }
         }else{
           this.$message({
             message:res.message,
@@ -425,7 +429,7 @@ export default {
             sums[index] = '合计';
             return;
           }
-          if(index===4){
+          if(index===5){
             const values = data.map(item => Number(item[column.property]));
             if (!values.every(value => isNaN(value))) {
               sums[index] = values.reduce((prev, curr) => {
