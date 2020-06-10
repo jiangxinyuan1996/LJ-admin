@@ -320,6 +320,56 @@ export default {
         }
         })
     },
+    refuse(row){
+      this.$confirm('是否确认驳回这条数据?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '驳回成功'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消驳回'
+          });          
+        });
+    },
+    refuseList(){
+      const h = this.$createElement;
+        this.$msgbox({
+          title: '消息',
+         message: h('p', null, [
+          h('span', null, `是否确认驳回这`),
+          h('span', { style: 'color: rgb(250,190,0)' }, `${this.multipleSelection.length}`),
+          h('span', null, `条数据?`)
+        ]),
+          showCancelButton: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          beforeClose: (action, instance, done) => {
+            if (action === 'confirm') {
+              instance.confirmButtonLoading = true;
+              instance.confirmButtonText = '执行中...';
+              setTimeout(() => {
+                done();
+                setTimeout(() => {
+                  instance.confirmButtonLoading = false;
+                }, 300);
+              }, 3000);
+            } else {
+              done();
+            }
+          }
+        }).then(action => {
+          this.$message({
+            type: 'success',
+            message: 'action: ' + action
+          });
+        });
+    },
     handleDump(){
       this.$router.push({
             name:'setting',

@@ -253,6 +253,23 @@ export default {
   },
   methods: {
     checkPermission,
+    refuse(row){
+      this.$confirm('是否确认驳回这条数据?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '驳回成功'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消驳回'
+          });          
+        });
+    },
     refuseList(){
       console.log('==========refuse===========')
       const h = this.$createElement
@@ -327,9 +344,6 @@ export default {
       if(e==null){
         this.end_time=''
       }
-    },
-    refuse(e){
-      console.log('refuse');
     },
     handleFilter() {
       this.listLoading=true
