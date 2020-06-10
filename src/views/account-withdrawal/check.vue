@@ -251,6 +251,9 @@ export default {
       getReviewList({...this.listQuery,status:'1'}).then(res=>{
         if(res.success===1){
           this.tableData=res.data
+          for(let i=0;i<this.tableData.length;i++){
+              this.tableData[i].amount=Number(this.tableData[i].amount)
+            }
           this.listLoading=false
         }else{
           this.listLoading=false

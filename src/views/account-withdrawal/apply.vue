@@ -10,16 +10,8 @@
         <el-form ref="form" :model="temp" label-width="120px" :rules="formRules">
           <el-form-item
             label="提现账户名"
-            prop="userid"
           >
-            <el-select v-model="temp.userid" placeholder="请选择提现账户">
-              <el-option
-                v-for="item in createlist"
-                :key="item.id"
-                :label="item.nickname"
-                :value="item.id"
-              />
-            </el-select>
+            <span>{{temp.nickname}}</span>
           </el-form-item>
           <el-form-item label="金额:" prop="amount">
             <!-- <span style="color: rgb(238, 120, 0);">{{ temp.amount_show }}</span> -->
@@ -156,7 +148,6 @@ export default {
         account_name: ''
       },
       temp: {
-        userid: '',
         amount: ''
       },
       maxAmount: null,
@@ -249,9 +240,9 @@ export default {
     },
     open(row) {
       this.dialogVisible1 = true
+      this.temp=Object.assign(this.temp,row)
       this.temp.amount = row.balance.allAmount
       this.maxAmount = row.balance.allAmount
-      console.log(this.maxAmount)
     },
     clearfzData() {
       this.dialogFormVisible = false

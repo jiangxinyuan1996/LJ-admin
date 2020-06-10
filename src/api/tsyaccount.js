@@ -1,5 +1,6 @@
 import fetch from '@/config/fetch'
-
+//首页
+export const getHomeList = (data) => fetch('/TSY/home/result/getMonthResult', data)
 //获取提现列表
 export const getList = (data) => fetch('/TSY/home/user/getList', data)
 //获取角色列表

@@ -37,26 +37,27 @@
           @change="endchange"
           placeholder="选择日期"
         />
+
+        <span style="margin:0 15px">状态:</span>
+        <el-select
+          v-model="listQuery.status"
+          filterable
+          style="width:10%"
+          placeholder="请输入关键词"
+          size="mini"
+        >
+          <el-option
+            v-for="item in states"
+            :key="item.key"
+            :label="item.value"
+            :value="item.key"
+          />
+        </el-select>
+
         <el-button type="primary" size="mini" style="margin-left:15px;" @click="handleFilter">
           查询
         </el-button>
       </div>
-      <!-- <el-button size="mini" v-waves class="filter-item funcbtn" v-if="isShow" type="success" :disabled="disabled" @click="handleCommit">
-        提交/复核
-      </el-button>
-      <el-button size="mini" v-if="isShow" v-waves class="filter-item funcbtn" type="danger" icon="el-icon-delete" @click="handleDeleteAll">
-        批量删除
-      </el-button>
-      <el-button size="mini" v-if="isShow" v-waves class="filter-item funcbtn" type="primary" @click="handleCheckVerify">
-        校验四要素
-      </el-button>
-
-      <el-button size="mini"  v-waves class="filter-item funcbtn" type="primary"  style="float:right;margin-left:15px;" @click="handleCommitAll">
-        全部提交
-      </el-button>
-      <el-button size="mini"  v-waves class="filter-item funcbtn" type="warning"  style="float:right" @click="handleExport">
-        导出
-      </el-button> -->
     </div>
     <!-- 查询信息表格 -->
     <el-table
@@ -76,6 +77,13 @@
         sortable
         align="center"
         width="220"
+      />
+      <el-table-column
+        prop="status"
+        label="状态"
+        sortable
+        align="center"
+        width="120"
       />
       <el-table-column
         prop="nickname"
@@ -157,7 +165,8 @@ export default {
         limit: 10,
         userid:'',
         start_time: '',
-        end_time: ''
+        end_time: '',
+        status:''
       },
       temp: {
         status: ''
@@ -178,24 +187,16 @@ export default {
       // 状态选项
       states: [
         {
-          key: '0',
-          value: '待提交'
-        },
-        {
           key: '1',
           value: '待审核'
         },
         {
-          key: '-1',
-          value: '异常'
-        },
-        {
           key: '2',
-          value: '交易成功'
+          value: '复核成功'
         },
         {
-          key: '3',
-          value: '交易失败'
+          key: '-1',
+          value: '复核失败'
         }
       ],
       // mock数据
@@ -211,6 +212,7 @@ export default {
     getUserList().then(res=>{
       this.list=[...res.data.fromList,...res.data.toList]
     })
+    this.handleFilter()
   },
   methods:{
      startchange(e){
@@ -236,10 +238,12 @@ export default {
           this.listQuery.end_time=''
         }
         getReviewList(this.listQuery).then(res=>{
-          console.log(res.data)
           if(res.success===1){
             this.listLoading=false
             this.tableData=res.data
+            for(let i=0;i<this.tableData.length;i++){
+              this.tableData[i].amount=Number(this.tableData[i].amount)
+            }
           }else{
             this.listLoading=false
             this.$message({
@@ -283,7 +287,7 @@ export default {
             sums[index] = '合计';
             return;
           }
-          if(index===6){
+          if(index===7){
             const values = data.map(item => Number(item[column.property]));
             if (!values.every(value => isNaN(value))) {
               sums[index] = values.reduce((prev, curr) => {
