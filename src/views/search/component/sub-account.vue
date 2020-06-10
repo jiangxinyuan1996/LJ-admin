@@ -91,7 +91,7 @@
           align="center"
           width="120"
           show-overflow-tooltip
-          label="分账方"
+          label="服务商"
           sortable
         >
           <template slot-scope="scope">
@@ -106,7 +106,7 @@
           width="170"
           sortable
           show-overflow-tooltip
-          label="被分账方"
+          label="合作伙伴"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.sub2_user_name }}</span>
@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import {getSubResult} from '@/api/tsyLj.js'
+import { getSubResult } from '@/api/tsyLj.js'
 export default {
   name: 'SubAccount',
   data() {
@@ -177,11 +177,11 @@ export default {
         value: '3'
       }],
       query: {
-        termid:'',
-        trxid:'',
-        start_time:'',
-        end_time:'',
-        status:''
+        termid: '',
+        trxid: '',
+        start_time: '',
+        end_time: '',
+        status: ''
       },
       alwaysFalse: false,
       totalCount: 0,
@@ -201,11 +201,11 @@ export default {
     this.init()
   },
   methods: {
-    init(){
+    init() {
       this.query.start_time = this.query.start_time.valueOf()
       this.query.end_time = this.query.end_time.valueOf()
-      getSubResult(this.query).then(res=>{
-        console.log('getSubResult res--:',res);
+      getSubResult(this.query).then(res => {
+        console.log('getSubResult res--:', res)
         this.tableData = res.data
       })
     },
@@ -213,8 +213,8 @@ export default {
       console.log('exportCheck')
       window.location.href = 'mould/对账单导出模板.xlsx'
     },
-    changePage(){
-      console.log(changePage);
+    changePage() {
+      console.log(changePage)
     }
   }
 }

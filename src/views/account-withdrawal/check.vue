@@ -8,7 +8,7 @@
         :before-close="handleClose"
       >
         <el-form ref="form" :model="tableData" label-width="90px">
-          <el-form-item label="分账方姓名:">
+          <el-form-item label="用户名:">
             <span>{{ temp.account_name }}</span>
           </el-form-item>
           <el-table-column
@@ -37,7 +37,7 @@
       </el-dialog>
       <!-- 搜索区 -->
       <div v-if="showSearch" id="searchBox" style="margin:40px">
-        <span style="margin-right:15px">分账方姓名:</span>
+        <span style="margin-right:15px">用户名:</span>
         <el-select
           v-model="listQuery.account_name"
           filterable
@@ -105,7 +105,7 @@
       style="width: 100%;margin-left:40px"
       @selection-change="handleSelectionChange"
     >
-    <el-table-column
+      <el-table-column
         prop="bizorderno"
         label="流水号"
         sortable
@@ -114,19 +114,19 @@
       />
       <el-table-column
         prop="nickname"
-        label="分账方名称"
+        label="用户名"
         sortable
         align="center"
         width="160"
       />
       <el-table-column
-         prop="name"
-         label="银行户名"
-          sortable
-         align="center"
-         width="100"
-       />
-       <!-- <el-table-column
+        prop="name"
+        label="银行户名"
+        sortable
+        align="center"
+        width="100"
+      />
+      <!-- <el-table-column
         prop="state"
         label="状态"
         align="center"
@@ -194,7 +194,7 @@
           <el-tooltip  v-if="checkPermission(['机构管理员','操作员'])" class="item" effect="dark" content="提现申请" placement="top">
             <el-button type="warning" icon="el-icon-check" circle size="mini" @click="open(row)" />
           </el-tooltip> -->
-          <el-tooltip  v-if="checkPermission(['机构管理员','复核员'])" class="item" effect="dark" content="提现审核" placement="top">
+          <el-tooltip v-if="checkPermission(['机构管理员','复核员'])" class="item" effect="dark" content="提现审核" placement="top">
             <el-button type="success" icon="el-icon-check" circle size="mini" @click="open(row)" />
           </el-tooltip>
           <!-- <el-tooltip v-if="(row.state==='待提交'||row.state==='异常')?true:false" class="item" effect="dark" content="删除" placement="top">
@@ -273,9 +273,9 @@ import waves from '@/directive/waves'
 import permission from '@/directive/permission/index.js'
 import Editform from '@/components/accountForm'
 import checkPermission from '@/utils/permission'
-import { getReviewList,getTrancpwd } from '@/api/tsyaccount'
+import { getReviewList, getTrancpwd } from '@/api/tsyaccount'
 export default {
-  directives: { waves,permission },
+  directives: { waves, permission },
   components: {
     Editform
   },
@@ -309,7 +309,7 @@ export default {
         page: 1,
         limit: 10,
         business_code: '',
-        state:'',
+        state: '',
         submit_time_start: '',
         submit_time_end: '',
         bank_code: '',
@@ -380,11 +380,11 @@ export default {
       }
     }
   },
-  mounted(){
-    getTrancpwd().then(res=>{
-      if(res.success===1){
+  mounted() {
+    getTrancpwd().then(res => {
+      if (res.success === 1) {
         this.handleFilter()
-      }else{
+      } else {
         this.$router.push('/')
       }
     })
@@ -392,16 +392,16 @@ export default {
   methods: {
     checkPermission,
     handleFilter() {
-      this.listLoading=true
-      getReviewList().then(res=>{
-        if(res.success===1){
-          this.tableData=res.data
-          this.listLoading=false
-        }else{
-          this.listLoading=false
+      this.listLoading = true
+      getReviewList().then(res => {
+        if (res.success === 1) {
+          this.tableData = res.data
+          this.listLoading = false
+        } else {
+          this.listLoading = false
           this.$message({
-            message:res.message,
-            type:'error'
+            message: res.message,
+            type: 'error'
           })
         }
       })
@@ -467,38 +467,38 @@ export default {
       })
     },
     getSummaries(param) {
-        const { columns, data } = param;
-        // console.log(columns)
-        console.log(data)
+      const { columns, data } = param
+      // console.log(columns)
+      console.log(data)
 
-        const sums = [];
-        columns.forEach((column, index) => {
-          console.log(column)
-          if (index === 0) {
-            sums[index] = '合计';
-            return;
+      const sums = []
+      columns.forEach((column, index) => {
+        console.log(column)
+        if (index === 0) {
+          sums[index] = '合计'
+          return
+        }
+        if (index === 5) {
+          const values = data.map(item => Number(item[column.property]))
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr)
+              console.log(curr)
+              if (!isNaN(value)) {
+                return prev + curr
+              } else {
+                return prev
+              }
+            }, 0)
+            sums[index] += ''
+          } else {
+            sums[index] = 'N/A'
           }
-          if(index===5){
-            const values = data.map(item => Number(item[column.property]));
-            if (!values.every(value => isNaN(value))) {
-              sums[index] = values.reduce((prev, curr) => {
-                const value = Number(curr);
-                console.log(curr)
-                if (!isNaN(value)) {
-                  return prev + curr;
-                } else {
-                  return prev;
-                }
-              }, 0);
-              sums[index] += '';
-            } else {
-              sums[index] = 'N/A';
-            }
-          }
-        });
+        }
+      })
 
-        return sums;
-      }
+      return sums
+    }
   }
 }
 </script>

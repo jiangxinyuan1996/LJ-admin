@@ -3,7 +3,7 @@ import fetch from '@/config/fetch'
 // 获取待分账明细
 export const getPayResult = (data) => fetch('/TSY/home/result/getPayResult', data)
 
-// 获取分账方
+// 获取服务商
 export const getUserList = (data) => fetch('/TSY/home/user/getUserList', data)
 
 // 获取分账比例列表
@@ -33,14 +33,14 @@ export const addRule = (data) => fetch('/TSY/home/rule/addRule', data, 'POST')
 // 删除分账规则
 export const deleteRule = (data) => fetch('/TSY/home/rule/deleteRule', data, 'POST')
 
-// 添加分账/被分账方商户
+// 添加分账/合作伙伴商户
 export const addUser = (data) => fetch('/TSY/home/user/addUser', data, 'POST')
 
-// 更新分账/被分账方商户
+// 更新分账/合作伙伴商户
 export const updateUser = (data) => fetch('/TSY/home/user/updateUser', data, 'POST')
 
-// 逻辑删除分账/被分账方商户
+// 逻辑删除分账/合作伙伴商户
 export const deleteUser = (data) => fetch('/TSY/home/user/deleteUser', data, 'POST')
 
-//数据查询-->明细查询
+// 数据查询-->明细查询
 export const getSubResult = (data) => fetch('/TSY/home/result/getSubResult', data)

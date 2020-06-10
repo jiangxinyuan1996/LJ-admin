@@ -76,7 +76,7 @@
           align="center"
           width="120"
           show-overflow-tooltip
-          label="分账方"
+          label="服务商"
         >
           <template slot-scope="scope">
             <el-select v-model="scope.row.subuser1" size="mini" filterable placeholder="请选择">
@@ -96,7 +96,7 @@
           align="center"
           width="170"
           show-overflow-tooltip
-          label="被分账方"
+          label="合作伙伴"
         >
           <template slot-scope="scope">
             <el-select v-model="scope.row.subuser2" size="mini" filterable placeholder="请选择">
@@ -284,7 +284,7 @@ export default {
     },
     commit(e) {
       if (!e.subuser1 && !e.subuser2) {
-        this.$alert('请选择分账方与被分账方', '标题名称', {
+        this.$alert('请选择服务商与合作伙伴', '标题名称', {
           confirmButtonText: '确定',
           callback: action => {
 

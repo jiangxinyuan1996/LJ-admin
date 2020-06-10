@@ -162,14 +162,14 @@ export default {
         createtime: '2020/6/5  8:30:00',
         account: '-10000',
         payer: '本公司',
-        getter: '被分账方1'
+        getter: '合作伙伴1'
       },
       {
         id: 'A000003',
         type: '转账',
         createtime: '2020/6/5  8:30:00',
         account: '20000',
-        payer: '被分账方2',
+        payer: '合作伙伴2',
         getter: '本公司'
       },
       {

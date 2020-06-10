@@ -3,7 +3,7 @@
     <div class="filter-container">
       <!-- 搜索区 -->
       <div v-if="showSearch" id="searchBox" style="margin:40px">
-        <span style="margin-right:15px">分账方姓名:</span>
+        <span style="margin-right:15px">用户名:</span>
         <el-select
           v-model="listQuery.account_no"
           filterable
@@ -66,7 +66,7 @@
       style="width: 100%;margin-left:50px"
       @selection-change="handleSelectionChange"
     >
-    <el-table-column
+      <el-table-column
         prop="id"
         label="流水号"
         sortable
@@ -75,25 +75,25 @@
       />
       <el-table-column
         prop="account_name"
-        label="分账方名称"
+        label="用户名"
         sortable
         align="center"
         width="110"
       />
       <el-table-column
-         prop="name"
-         label="银行户名"
-         sortable
-         align="center"
-         width="110"
-       />
-       <el-table-column
-         prop="date"
-         label="日期"
-         sortable
-         align="center"
-         width="140"
-       />
+        prop="name"
+        label="银行户名"
+        sortable
+        align="center"
+        width="110"
+      />
+      <el-table-column
+        prop="date"
+        label="日期"
+        sortable
+        align="center"
+        width="140"
+      />
       <el-table-column
         prop="account_no"
         label="账号"
@@ -323,15 +323,15 @@ export default {
         {
           account_name: '本公司',
           name: '张三',
-          date:'2020-5-20 13:25:10',
+          date: '2020-5-20 13:25:10',
           account_no: '6227336643994455',
           bank_code: '大连银行',
           amount_show: '100'
         },
         {
-          account_name: '被分账方1',
+          account_name: '合作伙伴1',
           name: '李四',
-          date:'2020-5-22 13:25:10',
+          date: '2020-5-22 13:25:10',
           account_no: '6227336643994455',
           bank_code: '大连银行',
           amount_show: '100'
@@ -354,15 +354,15 @@ export default {
       }
     }
   },
-  methods:{
-      handleFilter(){
-        this.listLoading=true
-        setTimeout(()=>{
-          this.listLoading=false
-        },2000)
-          console.log('handlefilter')
-      },
-      handleUpdate(row) {
+  methods: {
+    handleFilter() {
+      this.listLoading = true
+      setTimeout(() => {
+        this.listLoading = false
+      }, 2000)
+      console.log('handlefilter')
+    },
+    handleUpdate(row) {
       // 数据更新（修改按钮）
       this.detailToUpdate = row
       this.dialogStatus = 'update'
@@ -400,38 +400,38 @@ export default {
       // this.handleFilter()
     },
     getSummaries(param) {
-        const { columns, data } = param;
-        // console.log(columns)
-        console.log(data)
+      const { columns, data } = param
+      // console.log(columns)
+      console.log(data)
 
-        const sums = [];
-        columns.forEach((column, index) => {
-          console.log(index)
-          if (index === 0) {
-            sums[index] = '合计';
-            return;
+      const sums = []
+      columns.forEach((column, index) => {
+        console.log(index)
+        if (index === 0) {
+          sums[index] = '合计'
+          return
+        }
+        if (index === 6) {
+          const values = data.map(item => Number(item[column.property]))
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr)
+              if (!isNaN(value)) {
+                return prev + curr
+              } else {
+                return prev
+              }
+            }, 0)
+            sums[index] += ''
+          } else {
+            sums[index] = 'N/A'
           }
-          if(index===6){
-            const values = data.map(item => Number(item[column.property]));
-            if (!values.every(value => isNaN(value))) {
-              sums[index] = values.reduce((prev, curr) => {
-                const value = Number(curr);
-                if (!isNaN(value)) {
-                  return prev + curr;
-                } else {
-                  return prev;
-                }
-              }, 0);
-              sums[index] += '';
-            } else {
-              sums[index] = 'N/A';
-            }
-          }
-        });
+        }
+      })
 
-        return sums;
-      }
-      //
+      return sums
+    }
+    //
   }
 }
 </script>

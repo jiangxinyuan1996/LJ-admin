@@ -15,7 +15,7 @@
             <span>{{ temp.inputer }}</span>
           </el-form-item>
           <el-form-item label="日期">
-              <span>{{temp.createtime}}</span>
+            <span>{{ temp.createtime }}</span>
           </el-form-item>
           <el-form-item label="金额:">
             <span style="color: rgb(238, 120, 0);">{{ temp.amount_show }}</span>
@@ -30,31 +30,31 @@
       <div v-if="showSearch" id="searchBox" style="margin:40px">
         <span style="margin-right:15px">转出方:</span>
         <el-select
-            v-model="listQuery.outputer"
-            filterable
-            placeholder="请输入关键词"
-            size="mini"
-            >
-            <el-option
+          v-model="listQuery.outputer"
+          filterable
+          placeholder="请输入关键词"
+          size="mini"
+        >
+          <el-option
             v-for="item in list"
             :key="item.value"
             :label="item.label"
-            :value="item.value">
-            </el-option>
+            :value="item.value"
+          />
         </el-select>
-         <span style="margin:0 15px">转入方:</span>
+        <span style="margin:0 15px">转入方:</span>
         <el-select
-            v-model="listQuery.inputer"
-            filterable
-            placeholder="请输入关键词"
-            size="mini"
-            >
-            <el-option
+          v-model="listQuery.inputer"
+          filterable
+          placeholder="请输入关键词"
+          size="mini"
+        >
+          <el-option
             v-for="item in list"
             :key="item.value"
             :label="item.label"
-            :value="item.value">
-            </el-option>
+            :value="item.value"
+          />
         </el-select>
         <!-- <span style="margin:0 15px 0 35px">状态:</span>
         <el-select size="mini" clearable v-model="listQuery.state" placeholder="状态" style="width: 130px" @keyup.enter.native="handleFilter">
@@ -110,7 +110,7 @@
       style="width: 100%;margin-left:40px"
       @selection-change="handleSelectionChange"
     >
-    <el-table-column
+      <el-table-column
         prop="id"
         label="流水号"
         sortable
@@ -138,7 +138,7 @@
         align="center"
         width="200"
       />
-       <el-table-column
+      <el-table-column
         prop="amount_show"
         label="金额(元)"
         sortable
@@ -151,7 +151,7 @@
         width="140"
       >
         <template slot-scope="{ $index,row }">
-          <el-tooltip  v-if="checkPermission(['机构管理员','复核员'])" class="item" effect="dark" content="转账审核" placement="top">
+          <el-tooltip v-if="checkPermission(['机构管理员','复核员'])" class="item" effect="dark" content="转账审核" placement="top">
             <el-button type="success" icon="el-icon-check" circle size="mini" @click="open(row)" />
           </el-tooltip>
         </template>
@@ -228,8 +228,8 @@ import permission from '@/directive/permission/index.js'
 import Editform from '@/components/accountForm'
 import checkPermission from '@/utils/permission'
 export default {
-  
-  directives: { waves,permission },
+
+  directives: { waves, permission },
   components: {
     Editform
   },
@@ -263,7 +263,7 @@ export default {
         page: 1,
         limit: 10,
         business_code: '',
-        state:'',
+        state: '',
         submit_time_start: '',
         submit_time_end: '',
         bank_code: '',
@@ -320,14 +320,14 @@ export default {
         {
           outputer: '本公司',
           inputer: '张三',
-          createtime:'2012-5-20 08:15:20',
-          amount_show: '100',
+          createtime: '2012-5-20 08:15:20',
+          amount_show: '100'
         },
         {
-          outputer: '被分账方1',
+          outputer: '合作伙伴1',
           inputer: '张三',
-          createtime:'2020-5-20 08:15:20',
-          amount_show: '100',
+          createtime: '2020-5-20 08:15:20',
+          amount_show: '100'
         }
       ],
       dialogFormVisible: false,
@@ -413,38 +413,38 @@ export default {
       })
     },
     getSummaries(param) {
-        const { columns, data } = param;
-        // console.log(columns)
-        console.log(data)
+      const { columns, data } = param
+      // console.log(columns)
+      console.log(data)
 
-        const sums = [];
-        columns.forEach((column, index) => {
-          console.log(column)
-          if (index === 0) {
-            sums[index] = '合计';
-            return;
+      const sums = []
+      columns.forEach((column, index) => {
+        console.log(column)
+        if (index === 0) {
+          sums[index] = '合计'
+          return
+        }
+        if (index === 4) {
+          const values = data.map(item => Number(item[column.property]))
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr)
+              console.log(curr)
+              if (!isNaN(value)) {
+                return prev + curr
+              } else {
+                return prev
+              }
+            }, 0)
+            sums[index] += ''
+          } else {
+            sums[index] = 'N/A'
           }
-          if(index===4){
-            const values = data.map(item => Number(item[column.property]));
-            if (!values.every(value => isNaN(value))) {
-              sums[index] = values.reduce((prev, curr) => {
-                const value = Number(curr);
-                console.log(curr)
-                if (!isNaN(value)) {
-                  return prev + curr;
-                } else {
-                  return prev;
-                }
-              }, 0);
-              sums[index] += '';
-            } else {
-              sums[index] = 'N/A';
-            }
-          }
-        });
+        }
+      })
 
-        return sums;
-      }
+      return sums
+    }
   }
 }
 </script>
