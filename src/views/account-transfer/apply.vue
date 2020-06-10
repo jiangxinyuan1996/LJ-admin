@@ -7,10 +7,10 @@
       :before-close="handleClose">
       <el-form ref="form" :model="numberValidateForm" label-width="80px">
         <el-form-item label="转出方:">
-          <span>{{numberValidateForm.outputer}}</span>
+          <span>{{outputer}}</span>
         </el-form-item>
         <el-form-item label="转入方:">
-          <span>{{numberValidateForm.inputer}}</span>
+          <span>{{inputer}}</span>
         </el-form-item>
         <el-form-item label="金额:">
           <span style="color: rgb(238, 120, 0);">{{numberValidateForm.money}}</span>
@@ -31,14 +31,18 @@
             v-model="numberValidateForm.outputer"
             filterable
             placeholder="请输入关键词"
+            @change="change"
             >
             <el-option
             v-for="item in list"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+            :key="item.id"
+            :label="item.nickname"
+            :value="item.id">
             </el-option>
         </el-select>
+        </el-form-item>
+        <el-form-item label="账户余额:">
+          <span style="color:blue">{{amount}}</span><span> 元</span>
         </el-form-item>
          <el-form-item
             label="转入方"
@@ -52,9 +56,9 @@
             >
             <el-option
             v-for="item in list"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+            :key="item.id"
+            :label="item.nickname"
+            :value="item.id">
             </el-option>
         </el-select>
         </el-form-item>
@@ -76,6 +80,9 @@
     </div>
 </template>
 <script>
+import { getBalance,applyTransfer } from '@/api/tsyaccount'
+import { getUserList } from '@/api/tsyLj'
+
   export default {
     data() {
       return {
@@ -85,23 +92,64 @@
             outputer: '',
             money:''
         },
+        amount:0,
         options: [],
         list: [],
         loading: false,
-        states: ["张一","张三","张二","王一","王三","王二","孙一","孙三","孙二","周一","周三","周二"]
+      }
+    },
+    computed:{
+      outputer(){
+        let name = this.list.map(item=>{
+          if(item.id===this.numberValidateForm.outputer){
+            return item.nickname
+          }
+        }).join('')
+        return  name
+      },
+      inputer(){
+        let name = this.list.map(item=>{
+          if(item.id===this.numberValidateForm.inputer){
+            return item.nickname
+          }
+        }).join('')
+        return  name
       }
     },
     mounted() {
-      this.list = this.states.map(item => {
-        return { value: `${item}`, label: `${item}` };
-      });
+      getUserList().then(res=>{
+        this.list=[...res.data.fromList,...res.data.toList]
+        // console.log(res.data)
+      })
+      
     },
     methods: {
+      change(){
+        getBalance({from_user_id:this.numberValidateForm.outputer}).then(res=>{
+                console.log('转出方余额',res)
+                this.amount=res.data.allAmount
+        })
+      },
         submit(){
           this.dialogVisible=false
-          this.$message({
-            message:'转账成功',
-            type:'success'
+          applyTransfer({from_user_id:this.numberValidateForm.outputer,to_user_id:this.numberValidateForm.inputer,amount:this.numberValidateForm.money}).then(res=>{
+            if(res.success===1){
+              this.$message({
+                message:res.message,
+                type:'success'
+              })
+              this.numberValidateForm={
+                inputer: '',
+                outputer: '',
+                money:''
+              }
+              this.amount=0
+            }else{
+              this.$message({
+                message:res.message,
+                type:'error'
+              })
+            }
           })
         },
         submitForm(formName) {

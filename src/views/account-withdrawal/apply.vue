@@ -47,29 +47,9 @@
             :value="item.value"
           />
         </el-select>
-        <!-- <span style="margin:0 18px;padding-left:5px;">日期:</span>
-        <el-date-picker
-          v-model="listQuery.submit_time_start"
-          size="mini"
-          style="width:13%"
-          type="date"
-          placeholder="选择日期"
-        />
-        <span style="margin-right:15px;margin-left:15px;">至</span>
-        <el-date-picker
-          v-model="listQuery.submit_time_end"
-          size="mini"
-          style="width:13%"
-          type="date"
-          placeholder="选择日期"
-        /> -->
-
         <el-button type="primary" size="mini" style="margin-left:15px;" @click="handleFilter">
           查询
         </el-button>
-        <!-- <el-button type="success" size="mini" style="margin-left:15px;" @click="createWithdrawalDialogVisible=true">
-          新建
-        </el-button> -->
       </div>
     </div>
     <!-- 查询信息表格 -->
@@ -177,7 +157,6 @@ export default {
         submit_time_end: '',
         account_name: ''
       },
-     
       temp: {
         userid:'',
         amount:''
@@ -190,10 +169,6 @@ export default {
       // mock数据
       tableData: [],
       dialogFormVisible: false,
-      bankCodeOptions: [],
-      businessCodeOptions: [],
-      bankCode: {},
-      businessCode: {},
     }
   },
   mounted(){

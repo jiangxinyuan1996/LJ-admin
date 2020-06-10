@@ -42,9 +42,6 @@
         >
           <el-input v-model="createRoles.duty" type="text" style="width:60%" />
         </el-form-item>
-        <!-- <el-form-item label="选择角色" prop="role_arr">
-            <el-checkbox v-for="item in rolelist" v-model="createRoles.role_arr" :key="item.role_id" :label="item.role_id" name="type">{{ item.remark }}</el-checkbox>
-        </el-form-item> -->
         <el-form-item label="选择角色" prop="roles">
         <el-select v-model="createRoles.roles" placeholder="请选择角色">
           <el-option
@@ -86,11 +83,6 @@
       </el-form>
     </el-dialog>
     <span style="margin-right:15px">姓名:</span><el-input size="mini" v-model="query.nickname" placeholder="姓名" style="width: 200px;margin-right:15px" class="filter-item" />
-            <!-- <span style="margin-right:15px">角色:</span> -->
-            <!-- <el-input size="mini" v-model="query.roles" placeholder="角色" style="width: 200px;margin-right:15px" class="filter-item" /> -->
-            <!-- <el-select size="mini" v-model="query.roles" placeholder="角色" class="filter-item" style="width:200px;margin-right:15px">
-            <el-option v-for="item in rolelist" :key="item.role_id" :label="item.remark" :value="item.role_id" />
-            </el-select> -->
             <el-button class="filter-item" style="margin-left: 10px;" size="mini" type="primary" icon="el-icon-search" @click="getUser">
               查询
             </el-button>
@@ -333,4 +325,3 @@ export default {
   }
 }
 </script>
-

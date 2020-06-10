@@ -1,86 +1,77 @@
 <template>
   <div id="password">
-    <el-form style="margin:15px;" :rules="rules" :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
-      <el-form-item label="请输入登录密码" prop="passWord" style="width: 20vw;">
-        <el-input v-model="passWord" />
+    <el-form style="margin:15px;" :rules="rules" :label-position="labelPosition" label-width="80px" :model="formLabelAlign" ref="form">
+      <el-form-item label="请输入登录密码" prop="password" style="width: 20vw;">
+        <el-input v-model="formLabelAlign.password" />
       </el-form-item>
-      <el-form-item label="请输入旧密码" prop="oldPassWord">
-        <el-input v-model="oldPassWord" style="width: 20vw;" type="password"  />
+      <el-form-item label="请输入提现密码" prop="pay_pwd">
+        <el-input v-model="formLabelAlign.pay_pwd" style="width: 20vw;" type="password"  />
       </el-form-item>
-      <el-form-item label="请输入新密码" prop="newPassWord">
-        <el-input v-model="newPassWord" style="width: 20vw;" type="password"  />
-      </el-form-item>
-      <el-form-item label="请确认新密码" prop="confirmPassword">
-        <el-input v-model="confirmPassword" style="width: 20vw;" type="password"  />
+      <el-form-item label="请确认提现密码" prop="confirm_pay_pwd">
+        <el-input v-model="formLabelAlign.confirm_pay_pwd" style="width: 20vw;" type="password"  />
       </el-form-item>
     </el-form>
-    <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="success" @click="modify()">
+    <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="success" @click="submitForm('form')">
       修改密码
     </el-button>
   </div>
 </template>
 
 <script>
+import { setPassword } from '@/api/tsyaccount'
 export default {
   name: 'Password',
   data() {
     return {
-      formLabelAlign: {},
-      passWord: '',
-      oldPassWord: '',
-      newPassWord: '',
-      confirmPassword: '',
+      formLabelAlign: {
+        password: '',
+        pay_pwd: '',
+        confirm_pay_pwd: '',
+      },
       labelPosition: 'top',
       rules: {
-        passWord: [
+        password: [
           { required: true, message: '请输入登录密码', trigger: 'blur' }
-          // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ], oldPassWord: [
-          { required: true, message: '请输入旧密码', trigger: 'blur' }
-          // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ], newPassWord: [
-          { required: true, message: '请输入新密码', trigger: 'blur' }
-          // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-        ], confirmPassword: [
-          { required: true, message: '请确认新密码', trigger: 'blur' }
-          // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ], 
+        pay_pwd: [
+          { required: true, message: '请输入提现密码', trigger: 'blur' }
+        ],
+        confirm_pay_pwd: [
+          { required: true, message: '请确认提现密码', trigger: 'blur' }
         ]
       }
     }
   },
-  created() {
-  },
   methods: {
-    modify() {
-      console.log('modify', this.formLabelAlign.oldPassWord)
-      const h = this.$createElement
-      this.$msgbox({
-        title: '信息确认',
-        message: h('p', null, [
-          h('span', null, `是否确认修改密码? `)
-        ]),
-        showCancelButton: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        beforeClose: (action, instance, done) => {
-          if (action === 'confirm') {
-            instance.confirmButtonLoading = true
-            instance.confirmButtonText = '执行中...'
-            setTimeout(() => {
-              done()
-              instance.confirmButtonLoading = false
-            }, 300)
-          } else {
-            done()
-          }
+    submitForm(formName) {
+            this.$refs[formName].validate(valid => {
+                if (valid) {
+                  setPassword(this.formLabelAlign).then(res=>{
+                    if(res.success===1){
+                      this.$message({
+                        message:res.message,
+                        type:'success'
+                      })
+                      this.formLabelAlign={
+                        password: '',
+                        pay_pwd: '',
+                        confirm_pay_pwd: '',
+                      }
+                    }else{
+                      this.$message({
+                        message:res.message,
+                        type:'error'
+                      })
+                    }
+                  })
+                }else{
+                    this.$message({
+                      message:'请填写必要信息',
+                      type:'error'
+                    })
+                }
+            })
         }
-      }).then(action => {
-        this.$message({
-          type: 'info',
-          message: 'action: ' + action
-        })
-      })
-    }
   }
 }
 </script>
