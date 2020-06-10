@@ -1,7 +1,7 @@
 <template>
   <div id="sub-account">
     <el-dialog
-      title="提示"
+      title="服务商配置"
       :visible.sync="dialogVisible"
       width="30%"
     >
@@ -226,7 +226,7 @@ export default {
       })
     },
     closeDialog() {
-      this.createDialogVisible = false
+      this.dialogVisible = false
       this.state = 'init'
       this.dataToModify = null
     }

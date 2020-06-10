@@ -151,7 +151,7 @@
         width="140"
       >
         <template slot-scope="{ $index,row }">
-          <el-tooltip v-if="checkPermission(['机构管理员','复核员'])" class="item" effect="dark" content="转账审核" placement="top">
+          <el-tooltip v-if="checkPermission(['机构管理员','复核员'])" class="item" effect="dark" content="调账审核" placement="top">
             <el-button type="success" icon="el-icon-check" circle size="mini" @click="open(row)" />
           </el-tooltip>
         </template>
@@ -396,7 +396,7 @@ export default {
     },
     submit() {
       this.$message({
-        message: '转账复核成功',
+        message: '调账复核成功',
         type: 'success'
       })
       this.dialogVisible1 = false
@@ -408,7 +408,7 @@ export default {
     handleClose() {
       this.dialogVisible1 = false
       this.$message({
-        message: '转账复核已取消',
+        message: '调账复核已取消',
         type: 'info'
       })
     },

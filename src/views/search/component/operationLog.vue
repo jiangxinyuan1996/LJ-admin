@@ -127,8 +127,8 @@ export default {
         label: '提现',
         value: '提现'
       }, {
-        label: '转账',
-        value: '转账'
+        label: '调账',
+        value: '调账'
       }],
       createtime: '',
       alwaysFalse: false,
@@ -154,8 +154,8 @@ export default {
         }, {
           name: '李四',
           createtime: '2020-05-26 15:02:35',
-          status: '转账',
-          operationDetail: '由张三向李四转账100元'
+          status: '调账',
+          operationDetail: '由张三向李四调账100元'
         }
       ],
       currentPage: 1,

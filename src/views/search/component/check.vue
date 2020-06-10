@@ -158,7 +158,7 @@ export default {
       },
       {
         id: 'A000002',
-        type: '转账',
+        type: '调账',
         createtime: '2020/6/5  8:30:00',
         account: '-10000',
         payer: '本公司',
@@ -166,7 +166,7 @@ export default {
       },
       {
         id: 'A000003',
-        type: '转账',
+        type: '调账',
         createtime: '2020/6/5  8:30:00',
         account: '20000',
         payer: '合作伙伴2',

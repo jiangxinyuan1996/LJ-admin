@@ -1,7 +1,7 @@
 <template>
     <div class="transfer" style="padding-top:30px">
       <el-dialog
-      title="转账信息确认"
+      title="调账信息确认"
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
@@ -100,7 +100,7 @@
         submit(){
           this.dialogVisible=false
           this.$message({
-            message:'转账成功',
+            message:'调账成功',
             type:'success'
           })
         },
@@ -124,7 +124,7 @@
       handleClose(){
         this.dialogVisible=false
         this.$message({
-          message:'转账已取消',
+          message:'调账已取消',
           type:'info'
         })
       },
