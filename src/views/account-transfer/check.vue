@@ -87,6 +87,12 @@
         <el-button type="primary" size="mini" style="margin-left:15px;" @click="handleFilter">
           查询
         </el-button>
+        <el-button v-show="multipleSelection.length>0" size="mini" style="margin-left: 5px;" type="warning" @click="refuseList">
+          批量驳回
+        </el-button>
+        <el-button v-show="multipleSelection.length>0" size="mini" style="margin-left: 5px;" type="success" @click="checkList">
+          批量复核
+        </el-button>
       </div>
     </div>
     <!-- 查询信息表格 -->
@@ -101,6 +107,10 @@
       style="width: 100%;margin-left:40px"
       @selection-change="handleSelectionChange"
     >
+    <el-table-column
+      type="selection"
+      width="55"
+    />
     <el-table-column
         prop="bizorderno"
         label="流水号"
@@ -142,7 +152,10 @@
         width="140"
       >
         <template slot-scope="{ $index,row }">
-          <el-tooltip v-if="checkPermission(['机构管理员','复核员'])" class="item" effect="dark" content="调账审核" placement="top">
+          <el-tooltip v-if="checkPermission(['机构管理员','复核员'])" class="item" effect="dark" content="驳回" placement="left">
+            <el-button type="warning" icon="el-icon-refresh-left" circle size="mini" @click="refuse(row)" />
+          </el-tooltip>
+          <el-tooltip v-if="checkPermission(['机构管理员','复核员'])" class="item" effect="dark" content="复核" placement="right">
             <el-button type="success" icon="el-icon-check" circle size="mini" @click="open(row)" />
           </el-tooltip>
         </template>
@@ -187,7 +200,7 @@ export default {
         from_user_id:'',
         to_user_id:'',
         start_time: '',
-        end_time: '', 
+        end_time: '',
       },
       // 修改列表参数
       temp: {},
@@ -239,6 +252,71 @@ export default {
   },
   methods: {
     checkPermission,
+    refuseList(){
+      console.log('==========refuse===========')
+      const h = this.$createElement
+      this.$msgbox({
+        title: '信息确认',
+        message: h('p', null, [
+          h('span', null, `是否确认驳回这`),
+          h('span', { style: 'color: rgb(250,190,0)' }, `${this.multipleSelection.length}`),
+          h('span', null, `条数据?`)
+        ]),
+        showCancelButton: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        beforeClose: (action, instance, done) => {
+          if (action === 'confirm') {
+            instance.confirmButtonLoading = true
+            instance.confirmButtonText = '执行中...'
+            done()
+            setTimeout(() => {
+              instance.confirmButtonLoading = false
+            }, 300)
+          } else {
+            done()
+          }
+        }
+      }).then(action => {
+        this.$message({
+          type: 'info',
+          message: 'action: ' + action
+        })
+      })
+    },
+    checkList(){
+
+        console.log('==========refuse===========')
+        const h = this.$createElement
+        this.$msgbox({
+          title: '信息确认',
+          message: h('p', null, [
+            h('span', null, `是否确认复核这`),
+            h('span', { style: 'color: rgb(250,190,0)' }, `${this.multipleSelection.length}`),
+            h('span', null, `条数据?`)
+          ]),
+          showCancelButton: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          beforeClose: (action, instance, done) => {
+            if (action === 'confirm') {
+              instance.confirmButtonLoading = true
+              instance.confirmButtonText = '执行中...'
+              done()
+              setTimeout(() => {
+                instance.confirmButtonLoading = false
+              }, 300)
+            } else {
+              done()
+            }
+          }
+        }).then(action => {
+          this.$message({
+            type: 'info',
+            message: 'action: ' + action
+          })
+        })
+    },
     startchange(e){
       if(e==null){
         this.start_time=''
@@ -248,6 +326,9 @@ export default {
       if(e==null){
         this.end_time=''
       }
+    },
+    refuse(e){
+      console.log('refuse');
     },
     handleFilter() {
       this.listLoading=true
