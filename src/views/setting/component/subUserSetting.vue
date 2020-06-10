@@ -1,15 +1,15 @@
 <template>
   <div id="sub-account">
     <el-dialog
-      title="提示"
+      title="服务商配置"
       :visible.sync="dialogVisible"
       width="30%"
     >
-      <subUserForm :state="state" :data-to-modify="dataToModify" @createConfirm="createConfirm" @updateConfirm="updateConfirm" @close="closeDialog" @closeDialog="closeDialog"/>
+      <subUserForm :state="state" :data-to-modify="dataToModify" @createConfirm="createConfirm" @updateConfirm="updateConfirm" @close="closeDialog" @closeDialog="closeDialog" />
     </el-dialog>
     <div id="searchBox">
       <div id="buttonBox" style="margin:50px;">
-        <span style="margin-right:10px">分账方名称 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 15vw;margin-right:15px;" class="filter-item" />
+        <span style="margin-right:10px">用户名 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 15vw;margin-right:15px;" class="filter-item" />
 
         <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="init()">
           查询
@@ -22,8 +22,8 @@
 
     <div id="dataForm">
       <el-table
-        :data="tableData"
         v-loading="loading"
+        :data="tableData"
         size="mini"
         stripe
         border
@@ -33,19 +33,19 @@
           prop="nickname"
           align="center"
           width="120"
-          label="分账方名称"
+          label="用户名"
         />
         <el-table-column
           prop="default_status"
           align="center"
           width="120"
-          label="分账方类型"
+          label="角色"
         />
         <el-table-column
           prop="name"
           align="center"
           width="110"
-          label="提现账户名"
+          label="账户名"
         />
         <el-table-column
           prop="phone"
@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import { getUserList , addUser , updateUser , deleteUser} from '@/api/tsyLj.js'
+import { getUserList, addUser, updateUser, deleteUser } from '@/api/tsyLj.js'
 import subUserForm from './form/subUserForm'
 export default {
   name: 'SubAccount',
@@ -135,27 +135,27 @@ export default {
       tableData: [],
       currentPage: 1,
       dialogVisible: false,
-      loading:true
+      loading: true
     }
   },
   created() {
     this.init()
   },
   methods: {
-    init(){
+    init() {
       this.loading = true
       getUserList().then(res => {
         console.log('getUserList---:', res)
         this.tableData = res.data.fromList.concat(res.data.toList)
-        for(let i=0;i<this.tableData.length;i++){
-          if(this.tableData[i].default_status==0){
-            this.tableData[i].default_status='被分账方'
-          }else if (this.tableData[i].default_status==1) {
-            this.tableData[i].default_status='分账方'
+        for (let i = 0; i < this.tableData.length; i++) {
+          if (this.tableData[i].default_status == 0) {
+            this.tableData[i].default_status = '合作伙伴'
+          } else if (this.tableData[i].default_status == 1) {
+            this.tableData[i].default_status = '服务商'
           }
         }
         setTimeout(function() {
-          this.loading = false  //改为self
+          this.loading = false // 改为self
         }.bind(this), 600)
       })
     },
@@ -168,7 +168,7 @@ export default {
     },
     modify(e) {
       console.log('edit')
-      console.log('e--:',e);
+      console.log('e--:', e)
       this.state = 'update'
       this.dataToModify = e
       this.dialogVisible = true
@@ -204,7 +204,7 @@ export default {
       })
     },
     remove(e) {
-      this.$confirm('确认删除该分账方数据?', '提示', {
+      this.$confirm('确认删除该用户数据?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -226,7 +226,7 @@ export default {
       })
     },
     closeDialog() {
-      this.createDialogVisible = false
+      this.dialogVisible = false
       this.state = 'init'
       this.dataToModify = null
     }

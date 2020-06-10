@@ -9,7 +9,7 @@
       active-text-color="#ffd04b"
       @select="handleSelect"
     >
-      <el-menu-item index="1">分账方配置 </el-menu-item>
+      <el-menu-item index="1">服务商配置 </el-menu-item>
       <el-menu-item index="2">分账比例配置 </el-menu-item>
       <el-menu-item index="3">角色配置</el-menu-item>
       <el-menu-item index="4">提现密码配置</el-menu-item>
@@ -17,7 +17,7 @@
     <SubUser v-if="activeIndex2==='1'" />
     <subRatio v-if="activeIndex2==='2'" />
     <role v-if="activeIndex2==='3'" />
-    <transpwd v-if="activeIndex2==='4'" ></transpwd>
+    <transpwd v-if="activeIndex2==='4'" />
   </div>
 </template>
 <script>

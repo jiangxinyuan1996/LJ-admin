@@ -24,7 +24,7 @@
           align="right"
           :picker-options="pickerOptions"
         />
-        <span style="margin-top:15px;margin-right:10px;margin-left:5px;" class="demonstration">分账方 : </span>
+        <span style="margin-top:15px;margin-right:10px;margin-left:5px;" class="demonstration">服务商 : </span>
         <el-select v-model="query.sub1_user_id" style="margin-top:15px;width: 8vw;" size="mini" filterable placeholder="请选择">
           <el-option
             v-for="item in subuser1List"
@@ -33,7 +33,7 @@
             :value="item.value"
           />
         </el-select>
-        <span style="margin-top:15px;margin-right:10px;margin-left:5px;" class="demonstration">被分账方 : </span>
+        <span style="margin-top:15px;margin-right:10px;margin-left:5px;" class="demonstration">合作伙伴 : </span>
         <el-select v-model="query.sub2_user_id" style="margin-top:15px;width: 8vw;" size="mini" filterable placeholder="请选择">
           <el-option
             v-for="item in subuser2List"
@@ -105,7 +105,7 @@
           sortable
           width="100"
           show-overflow-tooltip
-          label="分账方"
+          label="服务商"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.sub1_user_name }}</span>
@@ -117,7 +117,7 @@
           sortable
           width="120"
           show-overflow-tooltip
-          label="分账方金额"
+          label="服务商金额"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.sub1_account }}</span>
@@ -129,7 +129,7 @@
           width="100"
           sortable
           show-overflow-tooltip
-          label="被分账方"
+          label="合作伙伴"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.sub2_user_name }}</span>
@@ -141,7 +141,7 @@
           width="120"
           sortable
           show-overflow-tooltip
-          label="被分账方金额"
+          label="合作伙伴金额"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.sub2_account }}</span>

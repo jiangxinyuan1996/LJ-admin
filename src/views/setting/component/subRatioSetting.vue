@@ -9,7 +9,7 @@
     </el-dialog>
     <div id="searchBox">
       <div id="buttonBox" style="margin:50px;">
-        <!-- <span style="margin-right:10px">分账方名称 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 15vw;margin-right:15px;" class="filter-item" /> -->
+        <!-- <span style="margin-right:10px">服务商名称 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 15vw;margin-right:15px;" class="filter-item" /> -->
         <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="init()">
           查询
         </el-button>
@@ -21,7 +21,7 @@
 
     <div id="dataForm">
       <el-table
-      v-loading="loading"
+        v-loading="loading"
         :data="tableData"
         size="mini"
         stripe
@@ -32,13 +32,13 @@
           prop="fromratio"
           align="center"
           width="120"
-          label="分账方比例"
+          label="服务商比例"
         />
         <el-table-column
           prop="toratio"
           align="center"
           width="120"
-          label="被分账方比例"
+          label="合作伙伴比例"
         />
 
         <el-table-column label="操作" width="90"align="center">
@@ -109,7 +109,7 @@ export default {
       dialogVisible: false,
       state: 'init',
       dataToModify: null,
-      loading:true
+      loading: true
     }
   },
   created() {
@@ -122,7 +122,7 @@ export default {
         console.log('getRuleList res---:', res)
         this.tableData = res.data
         setTimeout(function() {
-          this.loading = false  //改为self
+          this.loading = false // 改为self
         }.bind(this), 600)
       })
     },

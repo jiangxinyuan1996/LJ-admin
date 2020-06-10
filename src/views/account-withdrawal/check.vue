@@ -48,7 +48,7 @@
       </el-dialog>
       <!-- 搜索区 -->
       <div v-if="showSearch" id="searchBox" style="margin:40px">
-        <span style="margin-right:15px">分账方姓名:</span>
+        <span style="margin-right:15px">用户名:</span>
         <el-select
           v-model="listQuery.userid"
           filterable
@@ -99,7 +99,7 @@
       style="width: 100%;margin-left:40px"
       @selection-change="handleSelectionChange"
     >
-    <el-table-column
+      <el-table-column
         prop="bizorderno"
         label="流水号"
         sortable
@@ -108,7 +108,7 @@
       />
       <el-table-column
         prop="nickname"
-        label="分账方名称"
+        label="用户名"
         sortable
         align="center"
         width="160"
@@ -255,8 +255,8 @@ export default {
         }else{
           this.listLoading=false
           this.$message({
-            message:res.message,
-            type:'error'
+            message: res.message,
+            type: 'error'
           })
         }
       })
@@ -366,10 +366,9 @@ export default {
               sums[index] = 'N/A';
             }
           }
-        });
-
-        return sums;
-      }
+      })
+      return sums
+    }
   }
 }
 </script>

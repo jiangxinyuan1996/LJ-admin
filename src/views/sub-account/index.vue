@@ -76,7 +76,7 @@
           align="center"
           width="120"
           show-overflow-tooltip
-          label="分账方"
+          label="服务商"
         >
           <template slot-scope="scope">
             <el-select v-model="scope.row.subuser1" size="mini" filterable placeholder="请选择">
@@ -96,7 +96,7 @@
           align="center"
           width="170"
           show-overflow-tooltip
-          label="被分账方"
+          label="合作伙伴"
         >
           <template slot-scope="scope">
             <el-select v-model="scope.row.subuser2" size="mini" filterable placeholder="请选择">
@@ -143,6 +143,14 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-dialog
+        title="确认支付"
+        :visible.sync="dialogVisible"
+        width="60%"
+      >
+        <iframe style="width:100%;height:100%" :src="jumpUrl" />
+      </el-dialog>
+
       <el-pagination
         :page-size="10"
         :current-page="currentPage"
@@ -199,7 +207,15 @@ export default {
       ratios: [],
       subuser2List: [],
       subuser1List: [],
-      loading: true
+      loading: true,
+      jumpForm: {
+        sysid: '',
+        timestamp: '',
+        sign: '',
+        req: ''
+      },
+      jumpUrl: '',
+      dialogVisible: false
     }
   },
   created() {
@@ -268,7 +284,7 @@ export default {
     },
     commit(e) {
       if (!e.subuser1 && !e.subuser2) {
-        this.$alert('请选择分账方与被分账方', '标题名称', {
+        this.$alert('请选择服务商与合作伙伴', '标题名称', {
           confirmButtonText: '确定',
           callback: action => {
 
@@ -340,10 +356,17 @@ export default {
             instance.confirmButtonText = '执行中...'
             const param = e
             console.log('param---', param)
+
             submitSubResult(param).then(res => {
               console.log('submitSubResult res---:', res)
               if (res.success === 1) {
-                this.init()
+                this.jumpForm = res.data
+                this.jumpUrl = 'http://116.228.64.55:6900/yungateway/pwd/payOrder.html?sysid=' + this.jumpForm.sysid + '&v=2&timestamp=' + this.jumpForm.timestamp + '&sign=' + this.jumpForm.sign + '&req=' + this.jumpForm.req
+
+                // window.location.href =url
+                // console.log('this.jumpForm---:',this.jumpForm);
+                // document.gatewayForm.submit()
+                // this.init()
                 this.$message({
                   type: 'success',
                   message: res.message
@@ -351,6 +374,7 @@ export default {
               }
               instance.confirmButtonLoading = false
               done()
+              this.dialogVisible = true
             })
           } else {
             done()
@@ -364,5 +388,11 @@ export default {
 <style>
 .el-divider--horizontal{
   margin: 5px 0;
+}
+.el-dialog{
+  height: 70%;
+}
+.el-dialog__body{
+  height: 90%;
 }
 </style>

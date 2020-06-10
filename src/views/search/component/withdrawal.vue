@@ -3,7 +3,7 @@
     <div class="filter-container">
       <!-- 搜索区 -->
       <div v-if="showSearch" id="searchBox" style="margin:40px">
-        <span style="margin-right:15px">分账方姓名:</span>
+        <span style="margin-right:15px">用户名:</span>
         <el-select
           v-model="listQuery.userid"
           filterable
@@ -299,11 +299,10 @@ export default {
               sums[index] = 'N/A';
             }
           }
-        });
-
-        return sums;
-      }
-      //
+        })
+      return sums
+    }
+    //
   }
 }
 </script>

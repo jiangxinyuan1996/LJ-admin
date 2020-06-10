@@ -21,7 +21,7 @@
           :picker-options="pickerOptions"
         />
 
-        <span style="margin-left:15px;" class="demonstration">分账方 : </span>
+        <span style="margin-left:15px;" class="demonstration">服务商 : </span>
         <el-select v-model="subuser1" size="mini" filterable placeholder="请选择">
           <el-option
             v-for="item in subuser1List"
@@ -30,7 +30,7 @@
             :value="item.value"
           />
         </el-select>
-        <span style="margin-left:15px;" class="demonstration">被分账方 : </span>
+        <span style="margin-left:15px;" class="demonstration">合作伙伴 : </span>
         <el-select v-model="subuser2" size="mini" filterable placeholder="请选择">
           <el-option
             v-for="item in subuser2List"
@@ -64,7 +64,7 @@
           align="center"
           width="170"
           sortable
-          label="分账方"
+          label="服务商"
         />
         <el-table-column
           prop="fromaccount"
@@ -79,7 +79,7 @@
           sortable
           width="120"
           show-overflow-tooltip
-          label="被分账方"
+          label="合作伙伴"
         />
         <el-table-column
           prop="toamount"

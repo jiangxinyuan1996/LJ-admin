@@ -9,21 +9,21 @@
       >
         <el-form ref="form" :model="temp" label-width="120px" :rules="formRules">
           <el-form-item
-          label="提现账户名"
-          prop="userid"
-        >
-         <el-select  v-model="temp.userid" placeholder="请选择提现账户">
-            <el-option
-              v-for="item in createlist"
-              :key="item.id"
-              :label="item.nickname"
-              :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
+            label="提现账户名"
+            prop="userid"
+          >
+            <el-select v-model="temp.userid" placeholder="请选择提现账户">
+              <el-option
+                v-for="item in createlist"
+                :key="item.id"
+                :label="item.nickname"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
           <el-form-item label="金额:" prop="amount">
             <!-- <span style="color: rgb(238, 120, 0);">{{ temp.amount_show }}</span> -->
-            <el-input type="text" v-model.number="temp.amount" autocomplete="off" style="width:50%"></el-input>       
+            <el-input v-model.number="temp.amount" type="text" autocomplete="off" style="width:50%" />
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -66,7 +66,7 @@
     >
       <el-table-column
         prop="nickname"
-        label="分账方姓名"
+        label="用户名"
         sortable
         align="center"
         width="160"
@@ -84,7 +84,7 @@
         width="140"
       >
         <template slot-scope="{ $index,row }">
-          <el-tooltip  v-if="checkPermission(['机构管理员','操作员'])" class="item" effect="dark" content="提现申请" placement="top">
+          <el-tooltip v-if="checkPermission(['机构管理员','操作员'])" class="item" effect="dark" content="提现申请" placement="top">
             <el-button type="warning" icon="el-icon-check" circle size="mini" @click="open(row)" />
           </el-tooltip>
         </template>
@@ -111,28 +111,26 @@ import checkPermission from '@/utils/permission'
 import { getUserList } from '@/api/tsyLj'
 import { getWithdrawalList, addWithdrawal, applyWithdrawal } from '@/api/tsyaccount'
 
-
-export default {  
-  directives: { waves,permission },
+export default {
+  directives: { waves, permission },
   data() {
     const validateAmount = (rule, value, callback) => {
-      if(value.length===0){
-       callback(new Error('请填写金额'))
+      if (value.length === 0) {
+        callback(new Error('请填写金额'))
       }
-      if(value>this.maxAmount){
-       callback(new Error('提现金额应小于可提现金额'))
-      } 
-      else {
+      if (value > this.maxAmount) {
+        callback(new Error('提现金额应小于可提现金额'))
+      } else {
         callback()
       }
     }
     return {
-      createWithdrawalDialogVisible:false,
-      createWithdrawal:{
-        userid:'',
-        amount:''
+      createWithdrawalDialogVisible: false,
+      createWithdrawal: {
+        userid: '',
+        amount: ''
       },
-      createlist:[],
+      createlist: [],
       dialogVisible1: false,
       alwaysFalse: false,
       showSearch: true,
@@ -158,68 +156,67 @@ export default {
         account_name: ''
       },
       temp: {
-        userid:'',
-        amount:''
+        userid: '',
+        amount: ''
       },
-      maxAmount:null,
+      maxAmount: null,
       formRules: {
         userid: [{ required: true, message: '必填项', trigger: 'change' }],
-        amount: [{ required: true,  trigger: 'blur',validator:validateAmount}],
+        amount: [{ required: true, trigger: 'blur', validator: validateAmount }]
       },
       // mock数据
       tableData: [],
       dialogFormVisible: false,
     }
   },
-  mounted(){
+  mounted() {
     this.handleFilter()
-    getUserList().then(res=>{
-      this.createlist=[...res.data.fromList,...res.data.toList]
+    getUserList().then(res => {
+      this.createlist = [...res.data.fromList, ...res.data.toList]
     })
   },
   methods: {
     checkPermission,
     handleFilter() {
-      this.listLoading=true
+      this.listLoading = true
       // console.log('handlefilter')
-      getWithdrawalList().then(res=>{
-        if(res.success===1){
-          this.tableData=res.data
-          this.listLoading=false
-        }else{
-          this.listLoading=false
+      getWithdrawalList().then(res => {
+        if (res.success === 1) {
+          this.tableData = res.data
+          this.listLoading = false
+        } else {
+          this.listLoading = false
           this.$message({
-            message:res.message,
-            type:'error'
+            message: res.message,
+            type: 'error'
           })
         }
       })
     },
-     submitForm(formName) {
+    submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          addWithdrawal(this.temp).then(res=>{
+          addWithdrawal(this.temp).then(res => {
             console.log(res)
-            if(res.success===1){
+            if (res.success === 1) {
               this.$message({
-                message:res.message,
-                type:'success'
+                message: res.message,
+                type: 'success'
               })
               this.handleFilter()
-              this.dialogVisible1=false
-            }else{
+              this.dialogVisible1 = false
+            } else {
               this.$message({
-                message:res.message,
-                type:'error'
+                message: res.message,
+                type: 'error'
               })
-              this.dialogVisible1=false
-
+              this.dialogVisible1 = false
             }
           })
         }
       })
-     },
-     resetForm(formName) {
+    },
+    resetForm(formName) {
       this.$refs[formName].resetFields()
     },
     handleCurrentChange(val) {
@@ -252,8 +249,8 @@ export default {
     },
     open(row) {
       this.dialogVisible1 = true
-      this.temp.amount=row.balance.allAmount
-      this.maxAmount=row.balance.allAmount
+      this.temp.amount = row.balance.allAmount
+      this.maxAmount = row.balance.allAmount
       console.log(this.maxAmount)
     },
     clearfzData() {
@@ -268,33 +265,33 @@ export default {
       })
     },
     getSummaries(param) {
-        const { columns, data } = param;
-        const sums = [];
-        columns.forEach((column, index) => {
-          if (index === 0) {
-            sums[index] = '合计';
-            return;
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '合计'
+          return
+        }
+        if (index === 1) {
+          const values = data.map(item => Number(item.balance.allAmount))
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr)
+              if (!isNaN(value)) {
+                return prev + curr
+              } else {
+                return prev
+              }
+            }, 0)
+            sums[index] += ''
+          } else {
+            sums[index] = 'N/A'
           }
-          if(index===1){
-            const values = data.map(item => Number(item.balance.allAmount));
-            if (!values.every(value => isNaN(value))) {
-              sums[index] = values.reduce((prev, curr) => {
-                const value = Number(curr);
-                if (!isNaN(value)) {
-                  return prev + curr;
-                } else {
-                  return prev;
-                }
-              }, 0);
-              sums[index] += '';
-            } else {
-              sums[index] = 'N/A';
-            }
-          }
-        });
+        }
+      })
 
-        return sums;
-      }
+      return sums
+    }
   }
 }
 </script>

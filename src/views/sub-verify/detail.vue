@@ -43,7 +43,7 @@
           sortable
           width="100"
           show-overflow-tooltip
-          label="分账方"
+          label="服务商"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.fromsubuser }}</span>
@@ -55,7 +55,7 @@
           sortable
           width="120"
           show-overflow-tooltip
-          label="分账方金额"
+          label="服务商金额"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.subuser1Account }}</span>
@@ -67,7 +67,7 @@
           width="100"
           sortable
           show-overflow-tooltip
-          label="被分账方"
+          label="合作伙伴"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.tosubuser }}</span>
@@ -79,7 +79,7 @@
           width="120"
           sortable
           show-overflow-tooltip
-          label="被分账方金额"
+          label="合作伙伴金额"
         >
           <template slot-scope="scope">
             <span>{{ scope.row.subuser2Account }}</span>
@@ -141,16 +141,16 @@ export default {
       }],
       subuser2List: [
         {
-          value: '被分账方1',
-          label: '被分账方1'
+          value: '合作伙伴1',
+          label: '合作伙伴1'
         },
         {
-          value: '被分账方2',
-          label: '被分账方2'
+          value: '合作伙伴2',
+          label: '合作伙伴2'
         },
         {
-          value: '被分账方3',
-          label: '被分账方3'
+          value: '合作伙伴3',
+          label: '合作伙伴3'
         }
       ],
       subuser1List: [{
@@ -162,12 +162,12 @@ export default {
   created() {
     this.init()
 
-    console.log(this.tableData);
+    console.log(this.tableData)
   },
   methods: {
-    init(){
-      getCheckResultDetail().then(res=>{
-        console.log('getCheckResultDetail res--:',res);
+    init() {
+      getCheckResultDetail().then(res => {
+        console.log('getCheckResultDetail res--:', res)
         this.tableData = res.data
         for (let i = 0; i < this.tableData.length; i++) {
           const subuser1Ratio = this.tableData[i].ratio.split(':')[0]
@@ -177,11 +177,10 @@ export default {
         }
       })
     },
-    changePage(){
-      console.log('changePage');
+    changePage() {
+      console.log('changePage')
     },
     commit(e) {
-
       const h = this.$createElement
       this.$msgbox({
         title: '信息确认',

@@ -1,10 +1,10 @@
 <template>
   <div>
     <el-form :model="createForm" size="mini" :rules="rules" label-width="100px">
-      <el-form-item label="分账方名称" prop="nickname" style="margin-top:0;display: inline-block;">
+      <el-form-item label="用户名" prop="nickname" style="margin-top:0;display: inline-block;">
         <el-input v-model="createForm.nickname" />
       </el-form-item>
-      <el-form-item label="分账方类型" prop="default_status">
+      <el-form-item label="角色" prop="default_status">
         <el-select v-model="createForm.default_status" filterable clearable placeholder="请选择">
           <el-option
             v-for="item in typeOptions"
@@ -14,15 +14,22 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="提现账户名" prop="name" style="margin-top:0;display: inline-block;">
+      <el-form-item label="账户名" prop="name" style="margin-top:0;display: inline-block;">
         <el-input v-model="createForm.name" style="width:15vw;" />
       </el-form-item>
       <el-form-item label="联系方式" prop="phone">
         <el-input v-model="createForm.phone" style="width:15vw;" />
       </el-form-item>
+      <el-form-item label="身份证" prop="id">
+        <el-input v-model="createForm.id" style="width:15vw;" />
+      </el-form-item>
       <el-form-item label="银行卡号" prop="card_no">
         <el-input v-model="createForm.card_no" style="width:15vw;" />
       </el-form-item>
+      <el-form-item label="预留手机号" prop="tel">
+        <el-input v-model="createForm.tel" style="width:15vw;" />
+      </el-form-item>
+      <el-divider></el-divider>
       <el-form-item label="银行名称" prop="bank" style="margin-top:0;display: inline-block;">
         <el-select v-model="createForm.bank" filterable clearable placeholder="请选择">
           <el-option
@@ -33,7 +40,18 @@
           />
         </el-select>
       </el-form-item>
-
+      <el-form-item label="企业名称" prop="company_name">
+        <el-input v-model="createForm.company_name" style="width:15vw;" />
+      </el-form-item>
+      <el-form-item label="统一社会信用" prop="company_id">
+        <el-input v-model="createForm.company_id" style="width:15vw;" />
+      </el-form-item>
+      <el-form-item label="开户行支行" prop="subbranch">
+        <el-input v-model="createForm.subbranch" style="width:15vw;" />
+      </el-form-item>
+      <el-form-item label="支行行号" prop="subbranch_num">
+        <el-input v-model="createForm.subbranch_num" style="width:15vw;" />
+      </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="handleCloseDialog()">取 消</el-button>
@@ -62,23 +80,32 @@ export default {
         bank: '',
         default_status: '',
         card_no: '',
-        phone: ''
+        phone: '',
+        tel:'',
+        company_name:'',
+        company_id:'',
+        subbranch:'',
+        subbranch_num:''
       },
       rules: {
         nickname: [
-          { required: true, message: '请输入分账方名称', trigger: 'blur' }
+          { required: true, message: '请输入用户名', trigger: 'blur' }
           // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ],
         name: [
-          { required: true, message: '请输入提现账户名', trigger: 'blur' }
+          { required: true, message: '请输入账户名', trigger: 'blur' }
           // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ],
-        bank: [
-          { required: true, message: '请输入银行', trigger: 'blur' }
+        id: [
+          { required: true, message: '请输入身份证', trigger: 'blur' }
+          // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ],
+        tel: [
+          { required: true, message: '请输入预留手机号', trigger: 'blur' }
           // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ],
         default_status: [
-          { required: true, message: '请输入分账方类型', trigger: 'blur' }
+          { required: true, message: '请输入角色', trigger: 'blur' }
           // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ],
         card_no: [
@@ -92,10 +119,10 @@ export default {
       },
       bankCodeOptions: [],
       typeOptions: [{
-        label: '分账方',
+        label: '服务商',
         value: '1'
       }, {
-        label: '被分账方',
+        label: '合作伙伴',
         value: '0'
       }]
     }
@@ -113,7 +140,12 @@ export default {
           bank: '',
           default_status: '',
           card_no: '',
-          phone: ''
+          phone: '',
+          tel:'',
+          company_name:'',
+          company_id:'',
+          subbranch:'',
+          subbranch_num:''
         }
       }
     }
@@ -125,32 +157,34 @@ export default {
     }
   },
   methods: {
-    handleCommitDialog(){
+    handleCommitDialog() {
       console.log('handleCommitDialog')
       let bankCode = this.createForm.bank
-      for(let i=0;i<bankCodeOptionsConstant.length;i++){
-        if(bankCode==bankCodeOptionsConstant[i].key){
+      for (let i = 0; i < bankCodeOptionsConstant.length; i++) {
+        if (bankCode == bankCodeOptionsConstant[i].key) {
           bankCode = bankCodeOptionsConstant[i].value
           this.createForm.bank = bankCode
           break
         }
       }
-      console.log('bankCode---:',bankCode);
-      if(this.createForm.default_status=='被分账方'){
-        this.createForm.default_status=0
-      }else if (this.createForm.default_status=='分账方') {
-        this.createForm.default_status=1
+      console.log('bankCode---:', bankCode)
+      if (this.createForm.default_status == '合作伙伴') {
+        this.createForm.default_status = 0
+      } else if (this.createForm.default_status == '服务商') {
+        this.createForm.default_status = 1
       }
       if (this.state === 'create') {
         this.$emit('createConfirm', this.createForm)
       } else if (this.state === 'update') {
         this.$emit('updateConfirm', this.createForm)
       }
+    },
+    handleCloseDialog(){
+      this.$emit('closeDialog')
     }
   }
 }
 </script>
 
 <style>
-
 </style>

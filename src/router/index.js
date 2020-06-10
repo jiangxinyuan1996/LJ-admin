@@ -217,19 +217,19 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/transfer/index',
     name: 'accounttransfer',
-    meta: { title: '转账', icon: 'user', roles: ['机构管理员'] },
+    meta: { title: '调账', icon: 'user', roles: ['机构管理员'] },
     children: [
       {
         path: 'transfer_apply',
         component: () => import('@/views/account-transfer/apply'),
         name: 'transfer_apply',
-        meta: { title: '转账申请', roles: ['机构管理员','操作员'] }
+        meta: { title: '调账申请', roles: ['机构管理员','操作员'] }
       },
       {
         path: 'transfer_check',
         component: () => import('@/views/account-transfer/check'),
         name: 'transfer_check',
-        meta: { title: '转账复核', roles: ['机构管理员','转账复核员'] }
+        meta: { title: '调账复核', roles: ['机构管理员','调账复核员'] }
       }
     ]
   },

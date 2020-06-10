@@ -3,13 +3,13 @@
     <div id="searchBox">
       <div id="buttonBox" style="margin:50px;">
         <span style="margin-right:10px">操作人 : </span>
-        <el-select size="mini" v-model="name" placeholder="请选择">
+        <el-select v-model="name" size="mini" placeholder="请选择">
           <el-option
             v-for="item in nameoptions"
             :key="item.value"
             :label="item.label"
-            :value="item.value">
-          </el-option>
+            :value="item.value"
+          />
         </el-select>
         <span style="margin-right:10px;margin-left:10px;" class="demonstration">操作时间 : </span>
         <el-date-picker
@@ -21,13 +21,13 @@
           :picker-options="pickerOptions"
         />
         <span style="margin-right:10px;margin-left:10px;">操作类型 : </span>
-        <el-select size="mini" v-model="status" placeholder="请选择">
+        <el-select v-model="status" size="mini" placeholder="请选择">
           <el-option
             v-for="item in statusoptions"
             :key="item.value"
             :label="item.label"
-            :value="item.value">
-          </el-option>
+            :value="item.value"
+          />
         </el-select>
         <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="clickSearch()">
           查询
@@ -84,7 +84,7 @@
 
 <script>
 export default {
-  name: 'operationLog',
+  name: 'OperationLog',
   data() {
     return {
       pickerOptions: {
@@ -109,28 +109,28 @@ export default {
           }
         }]
       },
-      nameoptions:[{
-        label:"张三",
-        value:"张三"
-      },{
-        label:"李四",
-        value:"李四"
+      nameoptions: [{
+        label: '张三',
+        value: '张三'
+      }, {
+        label: '李四',
+        value: '李四'
       }],
-      status:'',
-      statusoptions:[{
-        label:"提交",
-        value:"提交"
-      },{
-        label:"复核",
-        value:"复核"
-      },{
-        label:"提现",
-        value:"提现"
-      },{
-        label:"转账",
-        value:"转账"
+      status: '',
+      statusoptions: [{
+        label: '提交',
+        value: '提交'
+      }, {
+        label: '复核',
+        value: '复核'
+      }, {
+        label: '提现',
+        value: '提现'
+      }, {
+        label: '调账',
+        value: '调账'
       }],
-      createtime:'',
+      createtime: '',
       alwaysFalse: false,
       totalCount: 0,
       pageSize: 10,
@@ -139,24 +139,24 @@ export default {
         {
           name: '张三',
           createtime: '2020-05-26 15:02:35',
-          status:'提交',
+          status: '提交',
           operationDetail: '提交了流水号为A1000001的单据'
-        },{
+        }, {
           name: '张三',
           createtime: '2020-05-26 15:02:35',
-          status:'复核',
+          status: '复核',
           operationDetail: '复核了(2020-05-27 15:00:00至2020-05-28 19:00:00) (张三与李四)的单据'
-        },{
+        }, {
           name: '李四',
           createtime: '2020-05-26 15:02:35',
-          status:'提现',
+          status: '提现',
           operationDetail: '向李四的账户提现100元'
-        },{
+        }, {
           name: '李四',
           createtime: '2020-05-26 15:02:35',
-          status:'转账',
-          operationDetail: '由张三向李四转账100元'
-        },
+          status: '调账',
+          operationDetail: '由张三向李四调账100元'
+        }
       ],
       currentPage: 1,
       ratios: [{
@@ -171,16 +171,16 @@ export default {
       }],
       subuser2List: [
         {
-          value: '被分账方1',
-          label: '被分账方1'
+          value: '合作伙伴1',
+          label: '合作伙伴1'
         },
         {
-          value: '被分账方2',
-          label: '被分账方2'
+          value: '合作伙伴2',
+          label: '合作伙伴2'
         },
         {
-          value: '被分账方3',
-          label: '被分账方3'
+          value: '合作伙伴3',
+          label: '合作伙伴3'
         }
       ],
       subuser1List: [{
@@ -191,7 +191,7 @@ export default {
   },
   created() {
     for (let i = 0; i < this.tableData.length; i++) {
-      if(this.tableData[i].ratio!=''&&this.tableData[i].ratio!=null){
+      if (this.tableData[i].ratio != '' && this.tableData[i].ratio != null) {
         const subuser1Ratio = this.tableData[i].ratio.split(':')[0]
         const subuser2Ratio = this.tableData[i].ratio.split(':')[1]
         this.tableData[i].subuser1Account = this.tableData[i].account * subuser1Ratio / 10

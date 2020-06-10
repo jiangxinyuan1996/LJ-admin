@@ -1,10 +1,10 @@
 <template>
   <div>
     <el-form :model="createForm" size="mini" label-width="100px">
-      <el-form-item label="分账方比例" prop="fromratio" style="margin-top:0;display: inline-block;">
+      <el-form-item label="服务商比例" prop="fromratio" style="margin-top:0;display: inline-block;">
         <el-input-number v-model="fromratio" :precision="0" :step="1" :min="0" :max="10" />
       </el-form-item>
-      <el-form-item label="被分账方比例" prop="toratio" style="margin-top:0;display: inline-block;">
+      <el-form-item label="合作伙伴比例" prop="toratio" style="margin-top:0;display: inline-block;">
         <el-input-number v-model="toratio" disabled :precision="0" :step="1" :min="0" :max="10" />
       </el-form-item>
 
