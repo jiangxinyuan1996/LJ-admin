@@ -20,8 +20,8 @@
       <el-form-item label="联系方式" prop="phone">
         <el-input v-model="createForm.phone" style="width:15vw;" />
       </el-form-item>
-      <el-form-item label="身份证" prop="phone">
-        <el-input v-model="createForm.phone" style="width:15vw;" />
+      <el-form-item label="身份证" prop="id">
+        <el-input v-model="createForm.id" style="width:15vw;" />
       </el-form-item>
       <el-form-item label="银行卡号" prop="card_no">
         <el-input v-model="createForm.card_no" style="width:15vw;" />
@@ -94,6 +94,10 @@ export default {
         ],
         name: [
           { required: true, message: '请输入账户名', trigger: 'blur' }
+          // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ],
+        id: [
+          { required: true, message: '请输入身份证', trigger: 'blur' }
           // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ],
         tel: [
