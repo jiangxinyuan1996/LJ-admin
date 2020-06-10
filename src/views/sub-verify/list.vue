@@ -49,10 +49,10 @@
         <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="warning" @click="exportCheck()">
           导出
         </el-button>
-        <el-button v-show="selectionList.length>0" size="mini" class="filter-item" style="margin-left: 57vw;margin-top:15px;" type="warning">
+        <el-button v-show="selectionList.length>0" size="mini" class="filter-item" style="margin-left: 57vw;margin-top:15px;" type="warning" @click="refuseList">
           批量驳回
         </el-button>
-        <el-button v-show="selectionList.length>0" size="mini" class="filter-item" style="margin-left: 5px;margin-top:15px;" type="success">
+        <el-button v-show="selectionList.length>0" size="mini" class="filter-item" style="margin-left: 5px;margin-top:15px;" type="success" @click="checkList">
           批量复核
         </el-button>
       </div>
@@ -271,6 +271,71 @@ export default {
     handleSelectionChange(rows) {
       console.log('handleSelectionChange')
       this.selectionList = rows
+    },
+    refuseList(){
+      console.log('==========refuse===========')
+      const h = this.$createElement
+      this.$msgbox({
+        title: '信息确认',
+        message: h('p', null, [
+          h('span', null, `是否确认驳回这`),
+          h('span', { style: 'color: rgb(250,190,0)' }, `${this.selectionList.length}`),
+          h('span', null, `条数据?`)
+        ]),
+        showCancelButton: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        beforeClose: (action, instance, done) => {
+          if (action === 'confirm') {
+            instance.confirmButtonLoading = true
+            instance.confirmButtonText = '执行中...'
+            done()
+            setTimeout(() => {
+              instance.confirmButtonLoading = false
+            }, 300)
+          } else {
+            done()
+          }
+        }
+      }).then(action => {
+        this.$message({
+          type: 'info',
+          message: 'action: ' + action
+        })
+      })
+    },
+    checkList(){
+
+        console.log('==========refuse===========')
+        const h = this.$createElement
+        this.$msgbox({
+          title: '信息确认',
+          message: h('p', null, [
+            h('span', null, `是否确认复核这`),
+            h('span', { style: 'color: rgb(250,190,0)' }, `${this.selectionList.length}`),
+            h('span', null, `条数据?`)
+          ]),
+          showCancelButton: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          beforeClose: (action, instance, done) => {
+            if (action === 'confirm') {
+              instance.confirmButtonLoading = true
+              instance.confirmButtonText = '执行中...'
+              done()
+              setTimeout(() => {
+                instance.confirmButtonLoading = false
+              }, 300)
+            } else {
+              done()
+            }
+          }
+        }).then(action => {
+          this.$message({
+            type: 'info',
+            message: 'action: ' + action
+          })
+        })
     },
     changePage() {
       console.log('changePage')

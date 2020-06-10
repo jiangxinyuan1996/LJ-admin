@@ -207,6 +207,18 @@ export default {
       getSubResult(this.query).then(res => {
         console.log('getSubResult res--:', res)
         this.tableData = res.data
+        for (var i = 0; i < this.tableData.length; i++) {
+          switch (this.tableData[i].status) {
+            case "0":this.tableData[i].status = "未分账"
+              break;
+              case "1":this.tableData[i].status = "待复核"
+                break;
+                case "2":this.tableData[i].status = "处理中"
+                  break;
+                  case "3":this.tableData[i].status = "已分账"
+                    break;
+          }
+        }
       })
     },
     exportCheck() {
