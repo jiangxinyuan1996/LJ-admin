@@ -143,14 +143,14 @@
           </template>
         </el-table-column>
       </el-table>
-      <form v-show="alwaysFalse" name="gatewayForm" action="http://116.228.64.55:6900/yungateway/pwd/payOrder.html" method='GET'>
-         <input type="hidden" name="sysid" id="sysid" v-model="jumpForm.sysid" >
-         <input type="hidden" name="v" id="v" v-model="2.0" >
-         <input type="hidden" name="timestamp" id="timestamp" v-model="jumpForm.timestamp" >
-         <input type="hidden" name="sign" id="sign" v-model="jumpForm.sign">
-         <input type="hidden" name="req" id="req" v-model="jumpForm.req">
-         <input ref="confirm" type="submit" id="confirm"  value="确认支付" >
-      </form>
+      <el-dialog
+        title="确认支付"
+        :visible.sync="dialogVisible"
+        width="60%"
+      >
+        <iframe style="width:100%;height:100%" :src="jumpUrl" />
+      </el-dialog>
+
       <el-pagination
         :page-size="10"
         :current-page="currentPage"
@@ -208,12 +208,14 @@ export default {
       subuser2List: [],
       subuser1List: [],
       loading: true,
-      jumpForm:{
-        sysid:'',
-        timestamp:'',
-        sign:'',
-        req:''
-      }
+      jumpForm: {
+        sysid: '',
+        timestamp: '',
+        sign: '',
+        req: ''
+      },
+      jumpUrl: '',
+      dialogVisible: false
     }
   },
   created() {
@@ -359,8 +361,9 @@ export default {
               console.log('submitSubResult res---:', res)
               if (res.success === 1) {
                 this.jumpForm = res.data
-                let url = 'http://116.228.64.55:6900/yungateway/pwd/payOrder.html?sysid='+this.jumpForm.sysid+'&v=2&timestamp='+this.jumpForm.timestamp+'&sign='+this.jumpForm.sign+'&req='+this.jumpForm.req
-                window.location.href =url
+                this.jumpUrl = 'http://116.228.64.55:6900/yungateway/pwd/payOrder.html?sysid=' + this.jumpForm.sysid + '&v=2&timestamp=' + this.jumpForm.timestamp + '&sign=' + this.jumpForm.sign + '&req=' + this.jumpForm.req
+
+                // window.location.href =url
                 // console.log('this.jumpForm---:',this.jumpForm);
                 // document.gatewayForm.submit()
                 // this.init()
@@ -370,7 +373,8 @@ export default {
                 })
               }
               instance.confirmButtonLoading = false
-              // done()
+              done()
+              this.dialogVisible = true
             })
           } else {
             done()
@@ -384,5 +388,11 @@ export default {
 <style>
 .el-divider--horizontal{
   margin: 5px 0;
+}
+.el-dialog{
+  height: 70%;
+}
+.el-dialog__body{
+  height: 90%;
 }
 </style>
