@@ -237,4 +237,10 @@ export default {
 .el-divider--horizontal{
   margin: 5px 0;
 }
+.el-dialog{
+  height: auto;
+}
+.el-dialog__body{
+  height: auto;
+}
 </style>
