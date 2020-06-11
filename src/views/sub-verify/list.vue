@@ -289,6 +289,15 @@ export default {
           if (action === 'confirm') {
             instance.confirmButtonLoading = true
             instance.confirmButtonText = '执行中...'
+
+            let bizordernoList = []
+            for(let i=0;i<this.selectionList.length;i++){
+              bizordernoList.push(this.selectionList[i].bizorderno)
+            }
+            refusedCheckResult({order_list:bizordernoList}).then(res => {
+              console.log('refusedCheckResult res---:', res)
+              this.init()
+            })
             done()
             setTimeout(() => {
               instance.confirmButtonLoading = false
@@ -355,12 +364,11 @@ export default {
           if (action === 'confirm') {
             instance.confirmButtonLoading = true
             instance.confirmButtonText = '执行中...'
-            const param = {
-              bizOrderNo: e.bizorderno,
-              message: ''
-            }
-            refusedCheckResult(param).then(res => {
+            let bizordernoList = []
+            bizordernoList.push(e.bizorderno)
+            refusedCheckResult({order_list:bizordernoList}).then(res => {
               console.log('refusedCheckResult res---:', res)
+              this.init()
             })
             done()
             setTimeout(() => {

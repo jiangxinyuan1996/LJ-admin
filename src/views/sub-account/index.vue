@@ -389,10 +389,10 @@ export default {
 .el-divider--horizontal{
   margin: 5px 0;
 }
-.el-dialog{
+/* .el-dialog{
   height: 70%;
-}
-.el-dialog__body{
+} */
+/* .el-dialog__body{
   height: 90%;
-}
+} */
 </style>

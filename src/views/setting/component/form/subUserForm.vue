@@ -15,23 +15,23 @@
         </el-select>
       </el-form-item>
       <el-form-item label="账户名" prop="name" style="margin-top:0;display: inline-block;">
-        <el-input v-model="createForm.name" style="width:15vw;" />
+        <el-input v-model="createForm.name" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
       <el-form-item label="联系方式" prop="phone">
-        <el-input v-model="createForm.phone" style="width:15vw;" />
+        <el-input v-model="createForm.phone" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
       <el-form-item label="身份证" prop="id">
-        <el-input v-model="createForm.id" style="width:15vw;" />
+        <el-input v-model="createForm.id" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
       <el-form-item label="银行卡号" prop="card_no">
-        <el-input v-model="createForm.card_no" style="width:15vw;" />
+        <el-input v-model="createForm.card_no" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
       <el-form-item label="预留手机号" prop="tel">
-        <el-input v-model="createForm.tel" style="width:15vw;" />
+        <el-input v-model="createForm.tel" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
-      <el-divider></el-divider>
+      <el-divider />
       <el-form-item label="银行名称" prop="bank" style="margin-top:0;display: inline-block;">
-        <el-select v-model="createForm.bank" filterable clearable placeholder="请选择">
+        <el-select v-model="createForm.bank" :disabled="state=='update'" filterable clearable placeholder="请选择">
           <el-option
             v-for="item in bankCodeOptions"
             :key="item.key"
@@ -41,16 +41,76 @@
         </el-select>
       </el-form-item>
       <el-form-item label="企业名称" prop="company_name">
-        <el-input v-model="createForm.company_name" style="width:15vw;" />
+        <el-input v-model="createForm.company_name" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
       <el-form-item label="统一社会信用" prop="company_id">
-        <el-input v-model="createForm.company_id" style="width:15vw;" />
+        <el-input v-model="createForm.company_id" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
       <el-form-item label="开户行支行" prop="subbranch">
-        <el-input v-model="createForm.subbranch" style="width:15vw;" />
+        <el-input v-model="createForm.subbranch" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
       <el-form-item label="支行行号" prop="subbranch_num">
-        <el-input v-model="createForm.subbranch_num" style="width:15vw;" />
+        <el-input v-model="createForm.subbranch_num" :disabled="state=='update'" style="width:15vw;" />
+      </el-form-item>
+      <el-form-item label="营业执照" v-if="state=='create'" prop="business_license">
+        <el-upload
+          ref="upload"
+          class="upload-demo"
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :on-change="businessLicenseOnChange"
+          :file-list="testList"
+          :limit="1"
+          :auto-upload="false"
+        >
+          <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+        </el-upload>
+      </el-form-item>
+      <el-form-item label="开户许可证" v-if="state=='create'"prop="account_opening_permit">
+        <el-upload
+          ref="upload"
+          class="upload-demo"
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :on-change="accountOpeningPermitOnChange"
+          :file-list="testList"
+          :limit="1"
+          :auto-upload="false"
+        >
+          <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+        </el-upload>
+      </el-form-item>
+      <el-form-item label="身份证(正)" v-if="state=='create'"prop="id_card_f">
+        <el-upload
+          ref="upload"
+          class="upload-demo"
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :on-change="idCardFOnChange"
+          :file-list="testList"
+          :limit="1"
+          :auto-upload="false"
+        >
+          <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+        </el-upload>
+      </el-form-item>
+      <el-form-item label="身份证(反)" v-if="state=='create'"prop="id_card_b">
+        <el-upload
+          ref="upload"
+          class="upload-demo"
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :on-change="idCardBOnChange"
+          :file-list="testList"
+          :limit="1"
+          :auto-upload="false"
+        >
+          <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+        </el-upload>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -81,11 +141,11 @@ export default {
         default_status: '',
         card_no: '',
         phone: '',
-        tel:'',
-        company_name:'',
-        company_id:'',
-        subbranch:'',
-        subbranch_num:''
+        tel: '',
+        company_name: '',
+        company_id: '',
+        subbranch: '',
+        subbranch_num: ''
       },
       rules: {
         nickname: [
@@ -124,7 +184,12 @@ export default {
       }, {
         label: '合作伙伴',
         value: '0'
-      }]
+      }],
+      businessLicenseList: [],
+      accountOpeningPermitList: [],
+      idCardFList: [],
+      idCardBList: [],
+      testList: []
     }
   },
   watch: {
@@ -141,11 +206,11 @@ export default {
           default_status: '',
           card_no: '',
           phone: '',
-          tel:'',
-          company_name:'',
-          company_id:'',
-          subbranch:'',
-          subbranch_num:''
+          tel: '',
+          company_name: '',
+          company_id: '',
+          subbranch: '',
+          subbranch_num: ''
         }
       }
     }
@@ -173,14 +238,44 @@ export default {
       } else if (this.createForm.default_status == '服务商') {
         this.createForm.default_status = 1
       }
+
       if (this.state === 'create') {
+        this.testList = []
         this.$emit('createConfirm', this.createForm)
       } else if (this.state === 'update') {
+        this.testList = []
         this.$emit('updateConfirm', this.createForm)
       }
     },
-    handleCloseDialog(){
+    handleCloseDialog() {
+      this.testList = []
       this.$emit('closeDialog')
+    },
+    businessLicenseOnChange(file, fileList) {
+      console.log('testList---:', this.testList)
+      console.log('businessLicenseOnChange--:', file, fileList)
+      this.createForm.businessLicense = file
+    },
+    accountOpeningPermitOnChange(file, fileList) {
+      console.log('accountOpeningPermitOnChange--:', file, fileList)
+      this.createForm.accountOpeningPermit = file
+    },
+    idCardFOnChange(file, fileList) {
+      console.log('idCardFOnChange--:', file, fileList)
+      this.createForm.idCardF = file
+    },
+    idCardBOnChange(file, fileList) {
+      console.log('idCardBOnChange--:', file, fileList)
+      this.createForm.idCardB = file
+    },
+    submitUpload() {
+      this.$refs.upload.submit()
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePreview(file) {
+      console.log(file)
     }
   }
 }
