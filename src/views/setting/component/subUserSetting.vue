@@ -7,6 +7,35 @@
     >
       <subUserForm :state="state" :data-to-modify="dataToModify" @createConfirm="createConfirm" @updateConfirm="updateConfirm" @close="closeDialog" @closeDialog="closeDialog" />
     </el-dialog>
+    <el-dialog
+      title="服务商导入"
+      :close-on-click-modal="alwaysFalse"
+      :visible.sync="uploadVisible"
+      width="30%"
+    >
+      <el-upload
+        ref="upload"
+        style="margin-left: 10px;margin-top:10px;display: inline-block;"
+        class="filter-item"
+        :action="uploadUrl"
+        :data="uploadData"
+        :show-file-list="showFileList"
+        :before-upload="handleUpload"
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :before-remove="beforeRemove"
+        :on-success="handleSuccess"
+        :auto-upload="false"
+        multiple
+        :limit="1"
+        :on-exceed="handleExceed"
+        :file-list="fileList"
+      >
+        <el-button slot="trigger" size="mini" type="primary">选取文件</el-button>
+        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">确认上传</el-button>
+        <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
+      </el-upload>
+    </el-dialog>
     <div id="searchBox">
       <div id="buttonBox" style="margin:50px;">
         <span style="margin-right:10px">用户名 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 15vw;margin-right:15px;" class="filter-item" />
@@ -14,9 +43,18 @@
         <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="init()">
           查询
         </el-button>
-        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="success" @click="create()">
+        <!-- <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="success" @click="create()">
           新建
-        </el-button>
+        </el-button> -->
+        <el-dropdown size="mini" split-button type="success" style="margin-left:15px" @click="create()" @command="handleCommand">
+          新建
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item :command="{ cmd:'upload' }">
+              导入
+            </el-dropdown-item>
+            <el-dropdown-item :command="{ cmd:'downLoad' }">下载模板</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </div>
     </div>
 
@@ -135,7 +173,12 @@ export default {
       tableData: [],
       currentPage: 1,
       dialogVisible: false,
-      loading: true
+      uploadVisible: false,
+      loading: true,
+      uploadUrl: '/tlt/index.php?controller/upload/importExcel',
+      uploadData: null,
+      showFileList: true,
+      fileList: []
     }
   },
   created() {
@@ -143,6 +186,10 @@ export default {
   },
   methods: {
     init() {
+      this.uploadData = {
+        flag: '服务商导入模板',
+        sheet_num: '0'
+      }
       this.loading = true
       getUserList().then(res => {
         console.log('getUserList---:', res)
@@ -158,6 +205,42 @@ export default {
           this.loading = false // 改为self
         }.bind(this), 600)
       })
+    },
+    handleUpload(file, fileList) {
+      console.log(file)
+      console.log('------handleUpload------ ')
+      this.uploadData.file = file
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePreview(file) {
+      console.log(file)
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择 1个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+    },
+    beforeRemove(file) {
+      return this.$confirm(`确定移除 ${file.name}？`)
+    },
+    handleSuccess(res, file, fileList) {
+      console.log('===========handleSuccess=========')
+
+      console.log('res----:', res)
+
+      this.fileList = []
+      this.init()
+      if (res.success == 1) {
+        this.$message({
+          message: '上传成功',
+          type: 'success'
+        })
+      } else {
+        this.$message({
+          message: res.message,
+          type: 'error'
+        })
+      }
     },
     changeRatio(e) {
       console.log('changeRatio e---:', e)
@@ -229,6 +312,21 @@ export default {
       this.dialogVisible = false
       this.state = 'init'
       this.dataToModify = null
+    },
+    submitUpload() {
+      this.$refs.upload.submit()
+      this.uploadVisible = false
+    },
+    downLoadVerifyModule() {
+      console.log('downLoadVerifyModule')
+      window.location.href = '/mould/服务商导入模板0611.xlsx'
+    },
+    handleCommand(e) {
+      if (e.cmd === 'downLoad') {
+        this.downLoadVerifyModule()
+      } else if (e.cmd === 'upload') {
+        this.uploadVisible = true
+      }
     }
   }
 }
