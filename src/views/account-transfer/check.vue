@@ -254,14 +254,12 @@ export default {
   methods: {
     checkPermission,
     refuse(row){
-      console.log(row)
       this.$confirm('是否确认驳回这条数据?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           refuseTransfer({order_list:[row.bizorderno]}).then(res=>{
-            console.log('驳回',res)
             if(res.success===1){
               this.$message({
                 type: 'success',
