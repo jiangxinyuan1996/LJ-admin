@@ -381,7 +381,7 @@ export default {
         }else{
           this.listQuery.end_time=''
         }
-      getTransferList(this.listQuery).then(res=>{
+      getTransferList({...this.listQuery,status:'1'}).then(res=>{
         console.log('待复核列表',res)
         if(res.success===1){
           this.listLoading=false
