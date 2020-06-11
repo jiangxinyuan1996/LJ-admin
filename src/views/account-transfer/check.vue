@@ -180,7 +180,7 @@
 import waves from '@/directive/waves'
 import permission from '@/directive/permission/index.js'
 import checkPermission from '@/utils/permission'
-import { getTransferList,submitTransfer } from '@/api/tsyaccount'
+import { getTransferList,submitTransfer,refuseTransfer } from '@/api/tsyaccount'
 import { getUserList } from '@/api/tsyLj'
 export default {
   directives: { waves,permission },
@@ -254,15 +254,27 @@ export default {
   methods: {
     checkPermission,
     refuse(row){
+      console.log(row)
       this.$confirm('是否确认驳回这条数据?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '驳回成功'
-          });
+          refuseTransfer({order_list:[row.bizorderno]}).then(res=>{
+            console.log('驳回',res)
+            if(res.success===1){
+              this.$message({
+                type: 'success',
+                message: res.message
+              });
+            }else{
+              this.$message({
+                type: 'error',
+                message: res.message
+              });
+            }
+              this.handleFilter()
+          })
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -296,14 +308,28 @@ export default {
           }
         }
       }).then(action => {
-        this.$message({
-          type: 'info',
-          message: 'action: ' + action
-        })
+          let order_list = []
+          for(let i=0;i<this.multipleSelection.length;i++){
+            order_list.push(this.multipleSelection[i].bizorderno)
+          }
+          refuseTransfer({order_list}).then(res=>{
+            console.log('批量驳回',res)
+            if(res.success===1){
+              this.$message({
+                type: 'success',
+                message: res.message
+              })
+            }else{
+              this.$message({
+                type: 'error',
+                message: res.message
+              })
+            }
+              this.handleFilter()
+          })
       })
     },
     checkList(){
-
         console.log('==========refuse===========')
         const h = this.$createElement
         this.$msgbox({

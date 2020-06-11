@@ -192,7 +192,7 @@
 import waves from '@/directive/waves'
 import permission from '@/directive/permission/index.js'
 import checkPermission from '@/utils/permission'
-import { getReviewList,getTrancpwd,transactionReview } from '@/api/tsyaccount'
+import { getReviewList,getTrancpwd,transactionReview,refuseWithdraw } from '@/api/tsyaccount'
 import { getUserList } from '@/api/tsyLj'
 
 export default {
@@ -326,10 +326,20 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '驳回成功'
-          });
+          refuseWithdraw({order_list:row.bizorderno}).then(res=>{
+            if(res.success===1){
+              this.$message({
+                type: 'success',
+                message: res.message
+              });
+            }else{
+              this.$message({
+                type: 'error',
+                message: res.message
+              });
+            }
+            this.handleFilter()
+          })
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -355,20 +365,65 @@ export default {
               instance.confirmButtonText = '执行中...';
               setTimeout(() => {
                 done();
-                setTimeout(() => {
                   instance.confirmButtonLoading = false;
-                }, 300);
-              }, 3000);
+              }, 300);
             } else {
               done();
             }
           }
         }).then(action => {
-          this.$message({
-            type: 'success',
-            message: 'action: ' + action
-          });
+          let order_list = []
+          for(let i=0;i<this.multipleSelection.length;i++){
+            order_list.push(this.multipleSelection[i].bizorderno)
+          }
+         refuseWithdraw({order_list}).then(res=>{
+            console.log('批量驳回',res)
+            if(res.success===1){
+              this.$message({
+                type: 'success',
+                message: res.message
+              })
+            }else{
+              this.$message({
+                type: 'error',
+                message: res.message
+              })
+            }
+              this.handleFilter()
+          })
         });
+    },
+    checkList(){
+        console.log('==========refuse===========')
+        const h = this.$createElement
+        this.$msgbox({
+          title: '信息确认',
+          message: h('p', null, [
+            h('span', null, `是否确认复核这`),
+            h('span', { style: 'color: rgb(250,190,0)' }, `${this.multipleSelection.length}`),
+            h('span', null, `条数据?`)
+          ]),
+          showCancelButton: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          beforeClose: (action, instance, done) => {
+            if (action === 'confirm') {
+              instance.confirmButtonLoading = true
+              instance.confirmButtonText = '执行中...'
+              done()
+              setTimeout(() => {
+                instance.confirmButtonLoading = false
+              }, 300)
+            } else {
+              done()
+            }
+          }
+        }).then(action => {
+          this.$message({
+            type: 'info',
+            message: 'action: ' + action
+          })
+        })
     },
     handleDump(){
       this.$router.push({

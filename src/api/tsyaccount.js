@@ -27,6 +27,8 @@ export const getReviewList = (data) => fetch('/TSY/home/result/getWithdrawDetail
 export const getTrancpwd = (data) => fetch('/TSY/home/admin/getPayStatus', data)
 //设置提现密码
 export const setPassword = (data) => fetch('/TSY/home/admin/setPayPwd', data,'POST')
+//提现驳回
+export const refuseWithdraw = (data) => fetch('/TSY/home/result/refusedWithdrawResult', data,'POST')
 //提现复核提交
 export const transactionReview = (data) => fetch('/TSY/home/tsy/withdrawApply', data,'POST')
 //获取转出方账户余额
@@ -37,6 +39,9 @@ export const applyTransfer = (data) => fetch('/TSY/home/result/applyTransferResu
 export const getTransferList = (data) => fetch('/TSY/home/result/getTransferResult', data)
 //调账复核
 export const submitTransfer = (data) => fetch('/TSY/home/result/checkTransferResult', data,'POST')
+//调账驳回
+export const refuseTransfer = (data) => fetch('/TSY/home/result/refusedTransferResult', data,'POST')
+
 
 
 

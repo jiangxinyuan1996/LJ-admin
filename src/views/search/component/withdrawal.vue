@@ -87,7 +87,7 @@
       />
       <el-table-column
         prop="nickname"
-        label="分账方名称"
+        label="用户名"
         sortable
         align="center"
         width="140"

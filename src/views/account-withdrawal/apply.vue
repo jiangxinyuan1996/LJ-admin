@@ -25,18 +25,18 @@
       </el-dialog>
       <!-- 搜索区 -->
       <div v-if="showSearch" id="searchBox" style="margin:40px">
-        <span style="margin-right:15px">提现账户名:</span>
+        <span style="margin-right:15px">账户名:</span>
         <el-select
-          v-model="listQuery.account_name"
+          v-model="listQuery.userid"
           filterable
           size="mini"
           placeholder="请输入关键词"
         >
           <el-option
-            v-for="item in list"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            v-for="item in createlist"
+            :key="item.id"
+            :label="item.nickname"
+            :value="item.id"
           />
         </el-select>
         <el-button type="primary" size="mini" style="margin-left:15px;" @click="handleFilter">
@@ -58,7 +58,7 @@
     >
       <el-table-column
         prop="nickname"
-        label="用户名"
+        label="账户名"
         sortable
         align="center"
         width="160"
@@ -145,7 +145,7 @@ export default {
         limit: 10,
         submit_time_start: '',
         submit_time_end: '',
-        account_name: ''
+        userid: ''
       },
       temp: {
         amount: ''
@@ -171,7 +171,7 @@ export default {
     handleFilter() {
       this.listLoading = true
       // console.log('handlefilter')
-      getWithdrawalList().then(res => {
+      getWithdrawalList({userid:this.listQuery.userid}).then(res => {
         if (res.success === 1) {
           this.tableData = res.data
           this.listLoading = false

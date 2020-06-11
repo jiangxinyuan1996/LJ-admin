@@ -43,22 +43,23 @@
 <script>
 import PanelGroup from './components/PanelGroup'
 import LineChart from './components/LineChart'
+import { getHomeList } from '@/api/tsyaccount'
 const lineChartData = {
   newVisitis: {
-    expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [120, 82, 91, 154, 162, 140, 145]
+    expectedData: [],
+    date: []
   },
   messages: {
-    expectedData: [200, 192, 120, 144, 160, 130, 140],
-    actualData: [180, 160, 151, 106, 145, 150, 130]
+    expectedData: [],
+    date: []
   },
   purchases: {
-    expectedData: [80, 100, 121, 104, 105, 90, 100],
-    actualData: [120, 90, 100, 138, 142, 130, 130]
+    expectedData: [],
+    date: []
   },
   shoppings: {
     expectedData: [130, 140, 141, 142, 145, 150, 160],
-    actualData: [120, 82, 91, 154, 162, 140, 130]
+    date: [120, 82, 91, 154, 162, 140, 130]
   }
 }
 
@@ -72,6 +73,25 @@ export default {
     return {
       lineChartData: lineChartData.newVisitis
     }
+  },
+  mounted(){
+    getHomeList().then(res=>{
+      console.log(res)
+      for(let i=0;i<res.data.pay.length;i++){
+        lineChartData.newVisitis.expectedData.push(Number(res.data.pay[i].amount))
+        lineChartData.newVisitis.date.push(res.data.pay[i].date)
+      }
+      for(let i=0;i<res.data.sub.length;i++){
+        lineChartData.messages.expectedData.push(Number(res.data.sub[i].amount))
+        lineChartData.messages.date.push(res.data.sub[i].date)
+      }
+      for(let i=0;i<res.data.withdraw.length;i++){
+        lineChartData.purchases.expectedData.push(Number(res.data.withdraw[i].amount))
+        lineChartData.purchases.date.push(res.data.withdraw[i].date)
+      }
+      console.log('1',lineChartData.messages)
+      console.log('2',lineChartData.purchases)
+    })
   },
   methods: {
     handleSetLineChartData(type) {

@@ -1,6 +1,6 @@
 <template>
   <el-row :gutter="40" class="panel-group">
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :lg="8" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('newVisitis')">
         <div class="card-panel-icon-wrapper icon-people">
           <svg-icon icon-class="peoples" class-name="card-panel-icon" />
@@ -9,11 +9,11 @@
           <div class="card-panel-text">
             总进账
           </div>
-          <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="pay" :duration="2600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :lg="8" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('messages')">
         <div class="card-panel-icon-wrapper icon-message">
           <svg-icon icon-class="message" class-name="card-panel-icon" />
@@ -22,11 +22,11 @@
           <div class="card-panel-text">
             已分账(本公司)
           </div>
-          <count-to :start-val="0" :end-val="81212" :duration="3000" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="sub" :duration="3000" class="card-panel-num" />
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :lg="8" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('purchases')">
         <div class="card-panel-icon-wrapper icon-money">
           <svg-icon icon-class="money" class-name="card-panel-icon" />
@@ -35,11 +35,11 @@
           <div class="card-panel-text">
             已提现(本公司)
           </div>
-          <count-to :start-val="0" :end-val="9280" :duration="3200" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="withdraw" :duration="3200" class="card-panel-num" />
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <!-- <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel" @click="handleSetLineChartData('shoppings')">
         <div class="card-panel-icon-wrapper icon-shopping">
           <svg-icon icon-class="shopping" class-name="card-panel-icon" />
@@ -51,16 +51,39 @@
           <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
         </div>
       </div>
-    </el-col>
+    </el-col> -->
   </el-row>
 </template>
 
 <script>
 import CountTo from 'vue-count-to'
-
+import { getHomeList } from '@/api/tsyaccount'
 export default {
+  data(){
+    return {
+      pay:0,
+      sub:0,
+      withdraw:0
+    }
+  },
   components: {
-    CountTo
+    CountTo    
+  },
+  mounted(){
+    getHomeList().then(res=>{
+      let payArr = res.data.pay
+      let subArr = res.data.sub
+      let withdrawArr = res.data.withdraw
+      for(let i=0;i<payArr.length;i++){
+        this.pay+=Number(payArr[i].amount)
+      }
+      for(let i=0;i<subArr.length;i++){
+        this.sub+=Number(subArr[i].amount)
+      }
+      for(let i=0;i<withdrawArr.length;i++){
+        this.withdraw+=Number(withdrawArr[i].amount)
+      }
+    })
   },
   methods: {
     handleSetLineChartData(type) {
