@@ -104,7 +104,7 @@
           label="提现账号"
         />
 
-        <el-table-column label="操作" width="90" align="center">
+        <el-table-column label="操作" width="120" align="center">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" content="编辑" placement="left">
               <el-button type="primary" icon="el-icon-edit" circle size="mini" @click="modify(scope.row)" />
@@ -175,7 +175,7 @@ export default {
       dialogVisible: false,
       uploadVisible: false,
       loading: true,
-      uploadUrl: '/tlt/index.php?controller/upload/importExcel',
+      uploadUrl: '/TSY/home/upload/importExcel',
       uploadData: null,
       showFileList: true,
       fileList: []
