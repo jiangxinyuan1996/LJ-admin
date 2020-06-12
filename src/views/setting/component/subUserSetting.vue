@@ -14,7 +14,7 @@
     >
       <el-steps :active="active" finish-status="success">
         <el-step title="绑定手机" />
-        <el-step title="实名认证" />
+        <el-step title="企业信息认证" />
         <el-step title="绑定银行卡" />
         <el-step title="电子签约" />
         <el-step title="完成激活" />
@@ -31,10 +31,10 @@
       </div>
       <div v-if="active==1">
         <div style="margin-top:15px;">
-          <span style="line-height:15px;">姓名 : </span><span>{{ activateObj.name }}</span>
+          <span style="line-height:15px;">法人姓名 : </span><span>{{ activateObj.name }}</span>
         </div>
         <div style="margin-top:15px;">
-          <span style="margin-top:15px;">身份证 : </span><span>{{ activateObj.identityno }}</span>
+          <span style="margin-top:15px;">法人证件号 : </span><span>{{ activateObj.identityno }}</span>
         </div>
         <el-button style="margin-top: 15px;" size="mini" @click="checkRealName()">下一步</el-button>
       </div>
@@ -57,10 +57,13 @@
         <iframe style="width:100%;height:100%" :src="iframeUrl" />
         <el-button style="margin-top: 15px;" size="mini" @click="next">{{ nextStr }}</el-button>
       </div>
-      <div v-if="active==4" style="text-align:center;margin-top:15px;">
-        <span>服务商已激活 <i class="el-icon-check" /></span>
+      <div v-if="active==4" style="margin-top:15px;">
+        <div style="text-align:center;">
+          <span>服务商已激活 <i class="el-icon-check" /></span>
+        </div>
+        <el-button style="margin-top: 15px;" size="mini" @click="next">完成</el-button>
       </div>
-      <el-button style="margin-top: 15px;" size="mini" @click="next">完成</el-button>
+
 
     </el-dialog>
     <el-dialog
