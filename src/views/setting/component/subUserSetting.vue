@@ -272,9 +272,6 @@ export default {
       }, {
         label: '激活中',
         value: '2'
-      }, {
-        label: '激活失败',
-        value: '-1'
       }],
       activateDialogVisible: false,
       active: 0,
