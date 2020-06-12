@@ -209,6 +209,13 @@ export const asyncRoutes = [
         component: () => import('@/views/account-withdrawal/check'),
         name: 'withdrawal_check',
         meta: { title: '提现复核', roles: ['机构管理员', '提现复核员'] }
+      },
+      {
+        path: 'test',
+        component: () => import('@/views/account-withdrawal/test'),
+        name: 'test',
+        meta: { title: '测试', roles: ['机构管理员'] },
+        hidden:true
       }
     ]
   },

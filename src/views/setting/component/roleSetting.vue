@@ -4,7 +4,7 @@
       :close-on-click-modal="alwaysFalse"
       :title="rolestatus==='create'?'业务人员创建':'业务角色修改'"
       :visible.sync="createWorkerDialogVisible"
-      width="28%"
+      width="38%"
     >
       <el-form ref="createRoles" :model="createRoles" label-width="100px" class="demo-ruleForm" :rules="formRules">
         <el-form-item
@@ -43,6 +43,11 @@
           <el-input v-model="createRoles.duty" type="text" style="width:60%" />
         </el-form-item>
         <el-form-item label="选择角色" prop="roles">
+          <!-- <el-checkbox-group v-model="createRoles.roles"> -->
+            <el-checkbox v-for="item in rolelist" v-model="createRoles.role_arr" :key="item.role_id" :label="item.role_id" name="type" @change="changeClear">{{ item.remark }}</el-checkbox>
+          <!-- </el-checkbox-group> -->
+        </el-form-item>
+        <!-- <el-form-item label="选择角色" prop="roles">
           <el-select v-model="createRoles.roles" placeholder="请选择角色">
             <el-option
               v-for="item in rolelist"
@@ -51,14 +56,14 @@
               :value="item.role_id"
             />
           </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-radio-group v-if="createRoles.roles==='RI1005'" v-model="radio" @change="changeClear">
+        </el-form-item> -->
+        <el-form-item v-if="createRoles.role_arr.join('').includes('RI1005')" label="选择所属机构">
+          <el-radio-group  v-model="radio"  @change="changeClear1">
             <el-radio :label="1">服务商</el-radio>
             <el-radio :label="2">合作伙伴</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item v-if="createRoles.roles==='RI1005'">
+        <el-form-item v-if="createRoles.role_arr.join('').includes('RI1005')" label="选择服务商">
           <el-select v-if="radio===1" v-model="createRoles.userid" placeholder="请选择服务商">
             <el-option
               v-for="item in fromList"
@@ -102,6 +107,11 @@
               <el-table-column
                 prop="roleList"
                 label="角色"
+                width="300"
+              />
+              <el-table-column
+                prop="cate"
+                label="岗位"
                 width="300"
               />
               <el-table-column label="操作" width="160">
@@ -195,7 +205,12 @@ export default {
   },
   methods: {
     changeClear() {
-      this.createRoles.userid = ''
+      if(!this.createRoles.role_arr.join('').includes('RI1005')){
+        this.createRoles.userid = ''
+      }
+    },
+    changeClear1() {
+        this.createRoles.userid = ''
     },
     showCreateWorkerDialog() {
       this.rolestatus = 'create'
@@ -247,8 +262,8 @@ export default {
       console.log(this.createRoles)
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.rolestatus === 'create') {
-            this.createRoles.role_arr.push(this.createRoles.roles)
+          // if (this.rolestatus === 'create') {
+          //   this.createRoles.role_arr.push(this.createRoles.roles)
             if (this.createRoles.roles !== 'RI1005') {
               this.createRoles.userid = ''
             }
@@ -298,7 +313,7 @@ export default {
                 })
               }
             })
-          }
+          // }
         }
       })
     },
