@@ -44,3 +44,18 @@ export const deleteUser = (data) => fetch('/TSY/home/user/deleteUser', data, 'PO
 
 // 数据查询-->明细查询
 export const getSubResult = (data) => fetch('/TSY/home/result/getSubResult', data)
+
+// 获取验证码
+export const getCode = (data) => fetch('/TSY/home/user/getCode', data, 'POST')
+
+// 绑定手机
+export const bindPhone = (data) => fetch('/TSY/home/user/bindPhone', data, 'POST')
+
+// 实名制
+export const setRealName = (data) => fetch('/TSY/home/user/setRealName', data, 'POST')
+
+// 绑定银行卡
+export const bindBankCard = (data) => fetch('/TSY/home/user/bindBankCard', data, 'POST')
+
+// 获取电子签约配置
+export const signContract = (data) => fetch('/TSY/home/tsy/signContract', data, 'POST')
