@@ -20,14 +20,14 @@
       <el-form-item label="联系方式" prop="phone">
         <el-input v-model="createForm.phone" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
-      <el-form-item label="身份证" prop="id">
-        <el-input v-model="createForm.id" :disabled="state=='update'" style="width:15vw;" />
+      <el-form-item label="身份证" prop="identityno">
+        <el-input v-model="createForm.identityno" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
       <el-form-item label="银行卡号" prop="card_no">
         <el-input v-model="createForm.card_no" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
-      <el-form-item label="预留手机号" prop="tel">
-        <el-input v-model="createForm.tel" :disabled="state=='update'" style="width:15vw;" />
+      <el-form-item label="预留手机号" prop="bank_phone">
+        <el-input v-model="createForm.bank_phone" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
       <el-divider />
       <el-form-item label="银行名称" prop="bank" style="margin-top:0;display: inline-block;">
@@ -40,19 +40,19 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="企业名称" prop="company_name">
-        <el-input v-model="createForm.company_name" :disabled="state=='update'" style="width:15vw;" />
+      <el-form-item label="企业名称" prop="companyName">
+        <el-input v-model="createForm.companyName" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
-      <el-form-item label="统一社会信用" prop="company_id">
-        <el-input v-model="createForm.company_id" :disabled="state=='update'" style="width:15vw;" />
+      <el-form-item label="统一社会信用" prop="uniCredit">
+        <el-input v-model="createForm.uniCredit" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
       <el-form-item label="开户行支行" prop="subbranch">
         <el-input v-model="createForm.subbranch" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
-      <el-form-item label="支行行号" prop="subbranch_num">
-        <el-input v-model="createForm.subbranch_num" :disabled="state=='update'" style="width:15vw;" />
+      <el-form-item label="支行行号" prop="unionBank">
+        <el-input v-model="createForm.unionBank" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
-      <el-form-item label="营业执照" v-if="state=='create'" prop="business_license">
+      <el-form-item v-if="state=='create'" label="营业执照" prop="business_license">
         <el-upload
           ref="upload"
           class="upload-demo"
@@ -67,7 +67,7 @@
           <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
         </el-upload>
       </el-form-item>
-      <el-form-item label="开户许可证" v-if="state=='create'"prop="account_opening_permit">
+      <el-form-item v-if="state=='create'" label="银行开户证明"prop="account_opening_permit">
         <el-upload
           ref="upload"
           class="upload-demo"
@@ -82,7 +82,7 @@
           <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
         </el-upload>
       </el-form-item>
-      <el-form-item label="身份证(正)" v-if="state=='create'"prop="id_card_f">
+      <el-form-item v-if="state=='create'" label="身份证(正)"prop="id_card_f">
         <el-upload
           ref="upload"
           class="upload-demo"
@@ -97,7 +97,7 @@
           <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
         </el-upload>
       </el-form-item>
-      <el-form-item label="身份证(反)" v-if="state=='create'"prop="id_card_b">
+      <el-form-item v-if="state=='create'" label="身份证(反)"prop="id_card_b">
         <el-upload
           ref="upload"
           class="upload-demo"
@@ -141,11 +141,11 @@ export default {
         default_status: '',
         card_no: '',
         phone: '',
-        tel: '',
-        company_name: '',
-        company_id: '',
+        bank_phone: '',
+        companyName: '',
+        uniCredit: '',
         subbranch: '',
-        subbranch_num: ''
+        unionBank: ''
       },
       rules: {
         nickname: [
@@ -156,11 +156,11 @@ export default {
           { required: true, message: '请输入账户名', trigger: 'blur' }
           // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ],
-        id: [
+        identityNo: [
           { required: true, message: '请输入身份证', trigger: 'blur' }
           // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ],
-        tel: [
+        bank_phone: [
           { required: true, message: '请输入预留手机号', trigger: 'blur' }
           // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ],
@@ -206,11 +206,11 @@ export default {
           default_status: '',
           card_no: '',
           phone: '',
-          tel: '',
-          company_name: '',
-          company_id: '',
+          bank_phone: '',
+          companyName: '',
+          uniCredit: '',
           subbranch: '',
-          subbranch_num: ''
+          unionBank: ''
         }
       }
     }

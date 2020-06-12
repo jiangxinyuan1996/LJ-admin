@@ -8,6 +8,62 @@
       <subUserForm :state="state" :data-to-modify="dataToModify" @createConfirm="createConfirm" @updateConfirm="updateConfirm" @close="closeDialog" @closeDialog="closeDialog" />
     </el-dialog>
     <el-dialog
+      title="激活服务商"
+      :visible.sync="activateDialogVisible"
+      width="30%"
+    >
+      <el-steps :active="active" finish-status="success">
+        <el-step title="绑定手机" />
+        <el-step title="实名认证" />
+        <el-step title="绑定银行卡" />
+        <el-step title="电子签约" />
+        <el-step title="完成激活" />
+      </el-steps>
+      <div v-if="active==0">
+        <span>手机号 : </span><span>{{ activateObj.phone }}</span>
+        <el-button size="mini" class="filter-item" style="margin-left: 10px;margin-top:15px;" type="primary" @click="sendCode()">
+          获取验证码
+        </el-button>
+        </br>
+        <span>验证码 : </span><el-input v-model="verifyCode" size="mini" style="width:160px;margin-top:15px;" placeholder="请输入验证码" />
+        </br>
+        <el-button style="margin-top: 15px;" size="mini" @click="checkCode()">下一步</el-button>
+      </div>
+      <div v-if="active==1">
+        <div style="margin-top:15px;">
+          <span style="line-height:15px;">姓名 : </span><span>{{ activateObj.name }}</span>
+        </div>
+        <div style="margin-top:15px;">
+          <span style="margin-top:15px;">身份证 : </span><span>{{ activateObj.identityno }}</span>
+        </div>
+        <el-button style="margin-top: 15px;" size="mini" @click="checkRealName()">下一步</el-button>
+      </div>
+      <div v-if="active==2">
+        <div style="margin-top:15px;">
+          <span style="line-height:15px;">姓名 : </span><span>{{ activateObj.name }}</span>
+        </div>
+        <div style="margin-top:15px;">
+          <span style="margin-top:15px;">身份证 : </span><span>{{ activateObj.identityno }}</span>
+        </div>
+        <div style="margin-top:15px;">
+          <span style="margin-top:15px;">银行预留手机号 : </span><span>{{ activateObj.bank_phone }}</span>
+        </div>
+        <div style="margin-top:15px;">
+          <span style="margin-top:15px;">银行卡号 : </span><span>{{ activateObj.card_no }}</span>
+        </div>
+        <el-button style="margin-top: 15px;" size="mini" @click="checkBank()">下一步</el-button>
+      </div>
+      <div v-if="active==3">
+        <iframe style="width:100%;height:100%" :src="iframeUrl" />
+        <el-button style="margin-top: 15px;" size="mini" @click="next">{{ nextStr }}</el-button>
+      </div>
+      <div v-if="active==4" style="text-align:center;margin-top:15px;">
+        <span>服务商已激活 <i class="el-icon-check" /></span>
+      </div>
+      <el-button style="margin-top: 15px;" size="mini" @click="next">完成</el-button>
+
+    </el-dialog>
+    <el-dialog
       title="服务商导入"
       :close-on-click-modal="alwaysFalse"
       :visible.sync="uploadVisible"
@@ -39,7 +95,15 @@
     <div id="searchBox">
       <div id="buttonBox" style="margin:50px;">
         <span style="margin-right:10px">用户名 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 15vw;margin-right:15px;" class="filter-item" />
-
+        <span style="margin-right:10px">状态 : </span>
+        <el-select v-model="query.status" size="mini" clearable style="width: 8vw;" placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
         <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="init()">
           查询
         </el-button>
@@ -74,6 +138,19 @@
           label="用户名"
         />
         <el-table-column
+          prop="status"
+          align="center"
+          width="120"
+          label="状态"
+        >
+          <template slot-scope="scope">
+            <el-tag v-show="scope.row.status==3" type="success">已激活</el-tag>
+            <el-tag v-show="scope.row.status==2" type="warning">激活中</el-tag>
+            <el-tag v-show="scope.row.status==1" type="danger">未激活</el-tag>
+            <el-tag v-show="scope.row.status==-1" type="info">激活失败</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="default_status"
           align="center"
           width="120"
@@ -104,14 +181,18 @@
           label="提现账号"
         />
 
-        <el-table-column label="操作" width="120" align="center">
+        <el-table-column label="操作" width="160" align="center">
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" content="编辑" placement="left">
+            <el-tooltip v-show="scope.row.status==1" class="item" effect="dark" content="激活" placement="left">
+              <el-button type="success" icon="el-icon-magic-stick" circle size="mini" @click="activate(scope.row)" />
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="编辑" placement="top">
               <el-button type="primary" icon="el-icon-edit" circle size="mini" @click="modify(scope.row)" />
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="删除" placement="right">
               <el-button type="danger" icon="el-icon-delete" circle size="mini" @click="remove(scope.row)" />
             </el-tooltip>
+
           </template>
         </el-table-column>
       </el-table>
@@ -129,7 +210,7 @@
 </template>
 
 <script>
-import { getUserList, addUser, updateUser, deleteUser } from '@/api/tsyLj.js'
+import { getUserList, addUser, updateUser, deleteUser, getCode, bindPhone, setRealName, bindBankCard, signContract } from '@/api/tsyLj.js'
 import subUserForm from './form/subUserForm'
 export default {
   name: 'SubAccount',
@@ -178,7 +259,26 @@ export default {
       uploadUrl: '/TSY/home/upload/importExcel',
       uploadData: null,
       showFileList: true,
-      fileList: []
+      fileList: [],
+      options: [{
+        label: '已激活',
+        value: '3'
+      }, {
+        label: '未激活',
+        value: '1'
+      }, {
+        label: '激活中',
+        value: '2'
+      }, {
+        label: '激活失败',
+        value: '-1'
+      }],
+      activateDialogVisible: false,
+      active: 0,
+      nextStr: '下一步',
+      activateObj: {},
+      verifyCode: '',
+      iframeUrl: ''
     }
   },
   created() {
@@ -205,6 +305,12 @@ export default {
           this.loading = false // 改为self
         }.bind(this), 600)
       })
+    },
+    activate(e) {
+      this.activateDialogVisible = true
+      this.activateObj = e
+      this.active = e.step
+      this.nextStr = '下一步'
     },
     handleUpload(file, fileList) {
       console.log(file)
@@ -248,6 +354,16 @@ export default {
       const subuser2Ratio = e.ratio.split(':')[1]
       e.subuser1Account = e.account * subuser1Ratio / 10
       e.subuser2Account = e.account * subuser2Ratio / 10
+    },
+    next() {
+      if (this.active == 3) {
+        this.nextStr = '完成'
+        this.active++
+      } else if (this.active == 4) {
+        this.activateDialogVisible = false
+      } else {
+        this.active++
+      }
     },
     modify(e) {
       console.log('edit')
@@ -319,7 +435,7 @@ export default {
     },
     downLoadVerifyModule() {
       console.log('downLoadVerifyModule')
-      window.location.href = '/mould/服务商导入模板0611.xlsx'
+      window.location.href = 'mould/服务商导入模板0611.xlsx'
     },
     handleCommand(e) {
       if (e.cmd === 'downLoad') {
@@ -327,6 +443,69 @@ export default {
       } else if (e.cmd === 'upload') {
         this.uploadVisible = true
       }
+    },
+    sendCode() {
+      console.log('==========sendCode==========')
+      const param = {
+        bizUserId: this.activateObj.id,
+        phone: this.activateObj.phone
+      }
+      getCode(param).then(res => {
+        console.log('getCode res--:', res)
+      })
+    },
+    checkCode() {
+      console.log('==========checkCode==========')
+      const param = {
+        bizUserId: this.activateObj.id,
+        phone: this.activateObj.phone,
+        code: this.verifyCode
+      }
+      bindPhone(param).then(res => {
+        console.log('bindPhone res--:', res)
+        this.active++
+      })
+    },
+    checkRealName() {
+      console.log('==========checkRealName==========')
+      const param = {
+        bizUserId: this.activateObj.id,
+        name: this.activateObj.name,
+        identityNo: this.activateObj.identityno
+      }
+      setRealName(param).then(res => {
+        console.log('setRealName res--:', res)
+        this.active++
+
+        const data = {
+          bizUserId: this.activateObj.id
+        }
+        signContract(data).then(res => {
+          console.log('signContract res---:', res)
+          this.iframeUrl = 'http://116.228.64.55:6900/yungateway/member/signContract.html?sysid=' +
+          res.data.sysid +
+          '&v=2&timestamp=' +
+          res.data.timestamp +
+          '&sign=' +
+          res.data.sign +
+          '&req=' +
+          res.data.req
+        })
+      })
+    },
+    checkBank() {
+      console.log('==========checkBank==========')
+      const param = {
+        bizUserId: this.activateObj.id,
+        name: this.activateObj.name,
+        identityNo: this.activateObj.identityno,
+        bank_phone: this.activateObj.bank_phone,
+        card_no: this.activateObj.card_no
+      }
+      bindBankCard(param).then(res => {
+        console.log('bindBankCard res--:', res)
+        this.active++
+      })
     }
   }
 }
@@ -336,6 +515,7 @@ export default {
   margin: 5px 0;
 }
 .el-dialog{
+  width: 50% !important;
   height: auto;
 }
 .el-dialog__body{
