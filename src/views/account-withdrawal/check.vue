@@ -9,7 +9,7 @@
         <span>您还没有交易密码,点击设置跳转页面配置交易密码</span>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible2 = false">取 消</el-button>
-          <el-button type="primary" @click="handleDump">确 定</el-button>
+          <el-button type="primary" @click="handleDump">设 置</el-button>
         </span>
       </el-dialog>
       <el-dialog
@@ -38,7 +38,7 @@
             <span>{{ temp.amount }}</span>
           </el-form-item>
           <el-form-item label="提现密码:" prop="payPwd">
-            <el-input type="password" v-model.number="temp.payPwd" autocomplete="off" style="width:50%"></el-input>  
+            <el-input type="password" v-model="temp.payPwd" autocomplete="off" style="width:50%"></el-input>  
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
