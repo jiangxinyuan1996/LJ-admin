@@ -42,9 +42,9 @@
         >
           <el-input v-model="createRoles.post_name" type="text" style="width:40%" />
         </el-form-item>
-        <el-form-item label="选择角色" prop="roles" v-if="rolestatus==='create'|| createRoles.role_arr.length">
+        <el-form-item label="选择角色" prop="roles" >
           <!-- <el-checkbox-group v-model="createRoles.roles"> -->
-            <el-checkbox  v-for="item in rolelist" v-model="createRoles.role_arr"  :checked="createRoles.role_arr.join('').includes(item.role_id)?true:false" :key="item.role_id" :label="item.role_id" name="type" @change="changeClear">{{ item.remark }}</el-checkbox>
+            <el-checkbox  v-for="item in rolelist" v-model="createRoles.role_arr"  :key="item.role_id" :label="item.role_id" name="type" @change="changeClear">{{ item.remark }}</el-checkbox>
           <!-- </el-checkbox-group> -->
         </el-form-item>
         <!-- <el-form-item label="选择角色" prop="roles">
@@ -57,13 +57,13 @@
             />
           </el-select>
         </el-form-item> -->
-        <el-form-item v-if="createRoles.role_arr.join('').includes('RI1005')" label="选择所属机构">
+        <el-form-item  label="选择所属机构" v-if="createRoles.role_arr.join('').includes('RI1005')">
           <el-radio-group  v-model="radio"  @change="changeClear1">
             <el-radio :label="1">服务商</el-radio>
             <el-radio :label="2">合作伙伴</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item v-if="createRoles.role_arr.join('').includes('RI1005')" label="选择服务商">
+        <el-form-item  label="选择服务商" v-if="createRoles.role_arr.join('').includes('RI1005')">
           <el-select v-if="radio===1" v-model="createRoles.userid" placeholder="请选择服务商">
             <el-option
               v-for="item in fromList"
@@ -108,6 +108,12 @@
                 prop="roleList"
                 label="角色"
                 width="300"
+              />
+              <el-table-column
+                prop="idList"
+                label="角色"
+                width="300"
+                v-if="false"
               />
               <el-table-column
                 prop="post_name"
@@ -158,7 +164,9 @@ export default {
     return {
       createWorkerDialogVisible: false,
       alwaysFalse: false,
+      isShow:false,
       admin_id: '',
+      str:'',
       loading: false,
       rolestatus: '',
       radio: 1,
@@ -235,19 +243,10 @@ export default {
         this.downLoadVerifyModule()
       } else if (e.cmd === 'edit') {
         this.createWorkerDialogVisible = true
-        this.createRoles.role_arr=[]
         this.rolestatus = 'update'
-        const { admin_id, roleList, post_name} = e.group
-        this.admin_id = admin_id
-        this.createRoles.post_name=post_name
-        console.log(e.group)
-        for(var i=0;i<this.rolelist.length;i++){
-          if(roleList.includes(this.rolelist[i].remark)){
-            this.createRoles.role_arr.push(this.rolelist[i].role_id)
-          }
-        }
-        console.log(this.createRoles)
-
+        this.admin_id = e.group.admin_id
+        this.createRoles.post_name=e.group.post_name        
+        this.createRoles.role_arr=e.group.idList.split(',')
       } else if (e.cmd === 'remove') {
         this.$confirm('此操作将删除数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
@@ -287,9 +286,9 @@ export default {
         if (valid) {
           // if (this.rolestatus === 'create') {
           //   this.createRoles.role_arr.push(this.createRoles.roles)
-            if (this.createRoles.roles !== 'RI1005') {
-              this.createRoles.userid = ''
-            }
+            // if (this.createRoles.roles !== 'RI1005') {
+            //   this.createRoles.userid = ''
+            // }
             if(this.rolestatus==='create'){
             addPeople(this.createRoles).then(res => {
               if (res.success === 1) {
@@ -317,9 +316,9 @@ export default {
             })
             }else{
               // this.createRoles.role_arr.push(this.createRoles.roles)
-              if (this.createRoles.roles !== 'RI1005') {
-                this.createRoles.userid = ''
-              }
+              // if (this.createRoles.roles !== 'RI1005') {
+              //   this.createRoles.userid = ''
+              // }
               updatePeople({ admin_id: this.admin_id, role_arr: this.createRoles.role_arr, userid: this.createRoles.userid,post_name:this.createRoles.post_name}).then(res => {
                 console.log(res)
                 if (res.success === 1) {
@@ -327,7 +326,15 @@ export default {
                     message: res.message,
                     type: 'success'
                   })
-                  this.createRoles.role_arr = []
+                  this.createRoles={
+                    nickname: '',
+                    account: '',
+                    password: '',
+                    confirmPassword: '',
+                    role_arr: [],
+                    roles: '',
+                    userid: ''
+                  }
                   this.createWorkerDialogVisible = false
                   this.getUser()
                 } else {
@@ -348,16 +355,19 @@ export default {
     },
     getUser() {
       console.log('获取角色列表')
-      this.loading = true
+      this.listLoading = true
       getPeopleList(this.query).then(res => {
-        console.log(res)
-        this.loading = false
-        this.workerData = res.data
-        for (let i = 0; i < this.workerData.length; i++) {
-          this.workerData[i].roleList = this.workerData[i].roleList.map(item => {
+        this.listLoading = false
+        this.workerData = JSON.parse(JSON.stringify(res.data))
+        for (let i = 0; i < res.data.length; i++) {
+          this.workerData[i].roleList = res.data[i].roleList.map(item => {
             return item.remark
           }).join(',')
+          this.workerData[i].idList = res.data[i].roleList.map(item => {
+            return item.role_id
+          }).join(',')
         }
+        console.log(res.data)
       })
     }
   }
