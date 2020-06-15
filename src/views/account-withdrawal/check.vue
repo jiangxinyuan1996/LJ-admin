@@ -326,7 +326,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          refuseWithdraw({order_list:row.bizorderno}).then(res=>{
+          refuseWithdraw({order_list:[row.bizorderno]}).then(res=>{
             if(res.success===1){
               this.$message({
                 type: 'success',

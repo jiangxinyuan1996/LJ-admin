@@ -84,7 +84,19 @@
         sortable
         align="center"
         width="120"
-      />
+      >
+      <template slot-scope="scope">
+          <el-popover
+            placement="top-start"
+            title="信息"
+            width="200"
+            trigger="hover"
+            :content="scope.row.errormsg"
+          >
+            <el-tag slot="reference" :type="scope.row.status==='待复核'?'info':scope.row.status==='提现成功'?'success':'danger'">{{ scope.row.status }}</el-tag>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column
         prop="nickname"
         label="用户名"
@@ -113,13 +125,13 @@
         align="center"
         width="180"
       />
-      <el-table-column
+      <!-- <el-table-column
         prop="bank"
         label="开户行"
         sortable
         align="center"
         width="160"
-      />
+      /> -->
       <el-table-column
         prop="amount"
         label="金额(元)"
@@ -188,19 +200,29 @@ export default {
       states: [
         {
           key: '1',
-          value: '待审核'
+          value: '待复核'
         },
         {
           key: '2',
-          value: '复核成功'
+          value: '提现成功'
         },
         {
           key: '-1',
-          value: '复核失败'
+          value: '提现失败'
+        },
+         {
+          key: '-2',
+          value: '被驳回'
         }
       ],
       // mock数据
       tableData: [],
+      status:{
+        '1':'待复核',
+        '2':'提现成功',
+        '-1':'提现失败',
+        '-2':'被驳回'
+      },
       dialogFormVisible: false,
       bankCodeOptions: [],
       businessCodeOptions: [],
@@ -243,6 +265,7 @@ export default {
             this.tableData=res.data
             for(let i=0;i<this.tableData.length;i++){
               this.tableData[i].amount=Number(this.tableData[i].amount)
+            this.tableData[i].status=this.status[this.tableData[i].status]
             }
           }else{
             this.listLoading=false
