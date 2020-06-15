@@ -4,7 +4,7 @@
       <el-dialog
         title="复核信息确认"
         :visible.sync="dialogVisible1"
-        width="30%"
+        width="28%"
         :before-close="handleClose"
       >
         <el-form ref="form" :model="temp" label-width="90px">

@@ -3,7 +3,7 @@
       <el-dialog
       title="调账信息确认"
       :visible.sync="dialogVisible"
-      width="30%"
+      width="25%"
       :before-close="handleClose">
       <el-form ref="form" :model="numberValidateForm" label-width="80px">
         <el-form-item label="转出方:">

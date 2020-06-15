@@ -4,7 +4,8 @@
       :close-on-click-modal="alwaysFalse"
       :title="rolestatus==='create'?'业务人员创建':'业务角色修改'"
       :visible.sync="createWorkerDialogVisible"
-      width="38%"
+      :before-close="handleClose"
+      width="32%"
     >
       <el-form ref="createRoles" :model="createRoles" label-width="100px" class="demo-ruleForm" :rules="formRules">
         <el-form-item
@@ -12,39 +13,38 @@
           label="用户名称"
           prop="nickname"
         >
-          <el-input v-model="createRoles.nickname" type="name" style="width:60%" />
+          <el-input v-model="createRoles.nickname" type="name" style="width:40%" />
         </el-form-item>
         <el-form-item
           v-if="rolestatus==='create'"
           label="登录账号"
           prop="account"
         >
-          <el-input v-model="createRoles.account" type="account" style="width:60%" />
+          <el-input v-model="createRoles.account" type="account" style="width:40%" />
         </el-form-item>
         <el-form-item
           v-if="rolestatus==='create'"
           label="登录密码"
           prop="password"
         >
-          <el-input v-model="createRoles.password" type="password" style="width:60%" />
+          <el-input v-model="createRoles.password" type="password" style="width:40%" />
         </el-form-item>
         <el-form-item
           v-if="rolestatus==='create'"
           label="确认密码"
           prop="confirmPassword"
         >
-          <el-input v-model="createRoles.confirmPassword" type="password" style="width:60%" />
+          <el-input v-model="createRoles.confirmPassword" type="password" style="width:40%" />
         </el-form-item>
         <el-form-item
-          v-if="rolestatus==='create'"
           label="岗位名称"
-          prop="duty"
+          prop="post_name"
         >
-          <el-input v-model="createRoles.duty" type="text" style="width:60%" />
+          <el-input v-model="createRoles.post_name" type="text" style="width:40%" />
         </el-form-item>
-        <el-form-item label="选择角色" prop="roles">
+        <el-form-item label="选择角色" prop="roles" v-if="rolestatus==='create'|| createRoles.role_arr.length">
           <!-- <el-checkbox-group v-model="createRoles.roles"> -->
-            <el-checkbox v-for="item in rolelist" v-model="createRoles.role_arr" :key="item.role_id" :label="item.role_id" name="type" @change="changeClear">{{ item.remark }}</el-checkbox>
+            <el-checkbox  v-for="item in rolelist" v-model="createRoles.role_arr"  :checked="createRoles.role_arr.join('').includes(item.role_id)?true:false" :key="item.role_id" :label="item.role_id" name="type" @change="changeClear">{{ item.remark }}</el-checkbox>
           <!-- </el-checkbox-group> -->
         </el-form-item>
         <!-- <el-form-item label="选择角色" prop="roles">
@@ -110,7 +110,7 @@
                 width="300"
               />
               <el-table-column
-                prop="cate"
+                prop="post_name"
                 label="岗位"
                 width="300"
               />
@@ -169,6 +169,7 @@ export default {
         account: '',
         password: '',
         confirmPassword: '',
+        post_name:'',
         roles: '',
         role_arr: [],
         userid: ''
@@ -204,6 +205,19 @@ export default {
     })
   },
   methods: {
+    handleClose(){
+      this.createWorkerDialogVisible=false
+      this.createRoles={
+        nickname: '',
+        account: '',
+        password: '',
+        confirmPassword: '',
+        post_name:'',
+        roles: '',
+        role_arr: [],
+        userid: ''
+      }
+    },
     changeClear() {
       if(!this.createRoles.role_arr.join('').includes('RI1005')){
         this.createRoles.userid = ''
@@ -221,16 +235,25 @@ export default {
         this.downLoadVerifyModule()
       } else if (e.cmd === 'edit') {
         this.createWorkerDialogVisible = true
+        this.createRoles.role_arr=[]
         this.rolestatus = 'update'
-        const { admin_id, roles } = e.group
+        const { admin_id, roleList, post_name} = e.group
         this.admin_id = admin_id
+        this.createRoles.post_name=post_name
+        console.log(e.group)
+        for(var i=0;i<this.rolelist.length;i++){
+          if(roleList.includes(this.rolelist[i].remark)){
+            this.createRoles.role_arr.push(this.rolelist[i].role_id)
+          }
+        }
+        console.log(this.createRoles)
+
       } else if (e.cmd === 'remove') {
         this.$confirm('此操作将删除数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          console.log(e.group)
           const delRole = { admin_id: e.group.row.admin_id }
           delPeople(delRole).then(res => {
             if (res.success === 1) {
@@ -267,6 +290,7 @@ export default {
             if (this.createRoles.roles !== 'RI1005') {
               this.createRoles.userid = ''
             }
+            if(this.rolestatus==='create'){
             addPeople(this.createRoles).then(res => {
               if (res.success === 1) {
                 this.getUser()
@@ -291,28 +315,30 @@ export default {
                 })
               }
             })
-          } else {
-            this.createRoles.role_arr.push(this.createRoles.roles)
-            if (this.createRoles.roles !== 'RI1005') {
-              this.createRoles.userid = ''
-            }
-            updatePeople({ admin_id: this.admin_id, role_arr: this.createRoles.role_arr, userid: this.createRoles.userid }).then(res => {
-              console.log(res)
-              if (res.success === 1) {
-                this.$message({
-                  message: res.message,
-                  type: 'success'
-                })
-                this.createRoles.role_arr = []
-                this.createWorkerDialogVisible = false
-                this.getUser()
-              } else {
-                this.$message({
-                  message: res.message,
-                  type: 'error'
-                })
+            }else{
+              // this.createRoles.role_arr.push(this.createRoles.roles)
+              if (this.createRoles.roles !== 'RI1005') {
+                this.createRoles.userid = ''
               }
-            })
+              updatePeople({ admin_id: this.admin_id, role_arr: this.createRoles.role_arr, userid: this.createRoles.userid,post_name:this.createRoles.post_name}).then(res => {
+                console.log(res)
+                if (res.success === 1) {
+                  this.$message({
+                    message: res.message,
+                    type: 'success'
+                  })
+                  this.createRoles.role_arr = []
+                  this.createWorkerDialogVisible = false
+                  this.getUser()
+                } else {
+                  this.$message({
+                    message: res.message,
+                    type: 'error'
+                  })
+                }
+              })
+            }
+          } else {
           // }
         }
       })
