@@ -519,6 +519,7 @@ export default {
   height: auto;
 }
 .el-dialog__body{
+  margin: 20px;
   height: auto;
 }
 </style>
