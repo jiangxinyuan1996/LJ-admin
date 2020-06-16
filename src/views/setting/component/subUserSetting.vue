@@ -54,7 +54,7 @@
         <el-button style="margin-top: 15px;" size="mini" @click="checkBank()">下一步</el-button>
       </div>
       <div v-if="active==3">
-        <iframe style="width:100%;height:100%" :src="iframeUrl" />
+        <iframe id="iframe" style="width:100%;height:100%" scrolling="yes" :src="iframeUrl" />
         <el-button style="margin-top: 15px;" size="mini" @click="next">{{ nextStr }}</el-button>
       </div>
       <div v-if="active==4" style="margin-top:15px;">
@@ -63,7 +63,6 @@
         </div>
         <el-button style="margin-top: 15px;" size="mini" @click="next">完成</el-button>
       </div>
-
 
     </el-dialog>
     <el-dialog
@@ -215,6 +214,7 @@
 <script>
 import { getUserList, addUser, updateUser, deleteUser, getCode, bindPhone, setRealName, bindBankCard, signContract } from '@/api/tsyLj.js'
 import subUserForm from './form/subUserForm'
+
 export default {
   name: 'SubAccount',
   components: {
@@ -309,7 +309,27 @@ export default {
     activate(e) {
       this.activateDialogVisible = true
       this.activateObj = e
-      this.active = e.step
+      this.active = Number(e.step)
+      if (this.active == 3) {
+        const data = {
+          bizUserId: this.activateObj.id
+        }
+        signContract(data).then(res => {
+          console.log('signContract res---:', res)
+          this.iframeUrl = 'http://116.228.64.55:6900/yungateway/member/signContract.html?sysid=' +
+          encodeURIComponent(res.data.sysid) +
+          '&v=2.0&timestamp=' +
+          encodeURIComponent(res.data.timestamp) +
+          '&sign=' +
+          encodeURIComponent(res.data.sign) +
+          '&req=' +
+          encodeURIComponent(res.data.req)
+          console.log('this.iframeUrl---:', this.iframeUrl)
+          const iframe = document.getElementById('iframe').contentWindow
+          const son = document.getElementById('iframe')
+          son.style.height = 500 + 'px'
+        })
+      }
       this.nextStr = '下一步'
     },
     handleUpload(file, fileList) {
@@ -476,21 +496,6 @@ export default {
       setRealName(param).then(res => {
         console.log('setRealName res--:', res)
         this.active++
-
-        const data = {
-          bizUserId: this.activateObj.id
-        }
-        signContract(data).then(res => {
-          console.log('signContract res---:', res)
-          this.iframeUrl = 'http://116.228.64.55:6900/yungateway/member/signContract.html?sysid=' +
-          res.data.sysid +
-          '&v=2&timestamp=' +
-          res.data.timestamp +
-          '&sign=' +
-          res.data.sign +
-          '&req=' +
-          res.data.req
-        })
       })
     },
     checkBank() {
@@ -505,6 +510,24 @@ export default {
       bindBankCard(param).then(res => {
         console.log('bindBankCard res--:', res)
         this.active++
+        const data = {
+          bizUserId: this.activateObj.id
+        }
+        signContract(data).then(res => {
+          console.log('signContract res---:', res)
+          this.iframeUrl = 'http://116.228.64.55:6900/yungateway/member/signContract.html?sysid=' +
+          encodeURIComponent(res.data.sysid) +
+          '&v=2.0&timestamp=' +
+          encodeURIComponent(res.data.timestamp) +
+          '&sign=' +
+          encodeURIComponent(res.data.sign) +
+          '&req=' +
+          encodeURIComponent(res.data.req)
+          console.log('this.iframeUrl---:', this.iframeUrl)
+          const iframe = document.getElementById('iframe').contentWindow
+          const son = document.getElementById('iframe')
+          son.style.height = 500 + 'px'
+        })
       })
     }
   }

@@ -361,7 +361,14 @@ export default {
               console.log('submitSubResult res---:', res)
               if (res.success === 1) {
                 this.jumpForm = res.data
-                this.jumpUrl = 'http://116.228.64.55:6900/yungateway/pwd/payOrder.html?sysid=' + this.jumpForm.sysid + '&v=2&timestamp=' + this.jumpForm.timestamp + '&sign=' + this.jumpForm.sign + '&req=' + this.jumpForm.req
+                this.jumpUrl = 'http://116.228.64.55:6900/yungateway/pwd/payOrder.html?sysid=' +
+                encodeURIComponent(this.jumpForm.sysid) +
+                '&v=2.0&timestamp=' +
+                encodeURIComponent(this.jumpForm.timestamp) +
+                '&sign=' +
+                encodeURIComponent(this.jumpForm.sign) +
+                '&req=' +
+                encodeURIComponent(this.jumpForm.req)
 
                 // window.location.href =url
                 // console.log('this.jumpForm---:',this.jumpForm);
