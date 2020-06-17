@@ -317,6 +317,17 @@ export default {
             }
             refusedCheckResult({ order_list: bizordernoList }).then(res => {
               console.log('refusedCheckResult res---:', res)
+              if(res.success==0){
+                this.$message({
+                  type: 'error',
+                  message: res.message
+                })
+              }else{
+                this.$message({
+                  type: 'success',
+                  message: res.message
+                })
+              }
               this.init()
             })
             done()
@@ -327,11 +338,6 @@ export default {
             done()
           }
         }
-      }).then(action => {
-        this.$message({
-          type: 'info',
-          message: 'action: ' + action
-        })
       })
     },
     checkList() {
@@ -357,6 +363,18 @@ export default {
             }
             batchCheckResultByNo({order_list:bizordernoList}).then(res=>{
               console.log('batchCheckResultByNo res--:',res);
+              if(res.success==0){
+                this.$message({
+                  type: 'error',
+                  message: res.message
+                })
+              }else{
+                this.$message({
+                  type: 'success',
+                  message: res.message
+                })
+              }
+
             })
             done()
             setTimeout(() => {
@@ -366,11 +384,6 @@ export default {
             done()
           }
         }
-      }).then(action => {
-        this.$message({
-          type: 'info',
-          message: 'action: ' + action
-        })
       })
     },
     changePage() {
@@ -395,6 +408,17 @@ export default {
             bizordernoList.push(e.bizorderno)
             refusedCheckResult({ order_list: bizordernoList }).then(res => {
               console.log('refusedCheckResult res---:', res)
+              if(res.success==0){
+                this.$message({
+                  type: 'error',
+                  message: res.message
+                })
+              }else{
+                this.$message({
+                  type: 'success',
+                  message: res.message
+                })
+              }
               this.init()
             })
             done()
@@ -405,11 +429,6 @@ export default {
             done()
           }
         }
-      }).then(action => {
-        this.$message({
-          type: 'info',
-          message: 'action: ' + action
-        })
       })
     },
 
@@ -447,6 +466,17 @@ export default {
             bizordernoList.push(e.bizorderno)
             batchCheckResultByNo({order_list:bizordernoList}).then(res=>{
               console.log('batchCheckResultByNo res--:',res);
+              if(res.success==0){
+                this.$message({
+                  type: 'error',
+                  message: res.message
+                })
+              }else{
+                this.$message({
+                  type: 'success',
+                  message: res.message
+                })
+              }
             })
             setTimeout(() => {
               done()
@@ -458,11 +488,6 @@ export default {
             done()
           }
         }
-      }).then(action => {
-        this.$message({
-          type: 'info',
-          message: 'action: ' + action
-        })
       })
     }
   }
