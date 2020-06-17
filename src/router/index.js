@@ -62,11 +62,13 @@ export const constantRoutes = [
   },
   {
     path: '/404',
+    redirect: '/dashboard',
     component: () => import('@/views/error-page/404'),
     hidden: true
   },
   {
     path: '/401',
+    redirect: '/dashboard',
     component: () => import('@/views/error-page/401'),
     hidden: true
   },
@@ -90,45 +92,7 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/subaccount',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/sub-account/index'),
-        name: '分账明细',
-        meta: { title: '分账明细', icon: 'edit', affix: true }
-      }
-    ]
-  },
-  {
-    path: '/subverify',
-    component: Layout,
-    name: '分账复核',
-    meta: { title: '分账复核', icon: 'eye-open', affix: true },
-    children: [
-      // {
-      //   path: 'index',
-      //   component: () => import('@/views/sub-verify/index'),
-      //   name: '复核汇总',
-      //   meta: { title: '复核汇总', affix: true }
-      // },
-      {
-        path: 'list',
-        component: () => import('@/views/sub-verify/list'),
-        name: '复核明细',
-        meta: { title: '复核明细', affix: true }
-      },
-      {
-        path: 'detail',
-        component: () => import('@/views/sub-verify/detail'),
-        name: '账单明细',
-        hidden: true,
-        meta: { title: '账单明细', icon: 'eye-open' }
-      }
-    ]
-  },
+  
   {
     path: '/search',
     component: Layout,
@@ -192,23 +156,61 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   {
+    path: '/subaccount',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/sub-account/index'),
+        name: '分账明细',
+        meta: { title: '分账明细', icon: 'edit', affix: true,roles:['机构管理员','操作员'] }
+      }
+    ]
+  },
+  {
+    path: '/subverify',
+    component: Layout,
+    name: 'subverify',
+    meta: { title: '分账复核', icon: 'eye-open', affix: true, roles:['机构管理员','分账复核员']},
+    children: [
+      // {
+      //   path: 'index',
+      //   component: () => import('@/views/sub-verify/index'),
+      //   name: '复核汇总',
+      //   meta: { title: '复核汇总', affix: true }
+      // },
+      {
+        path: 'list',
+        component: () => import('@/views/sub-verify/list'),
+        name: 'list',
+        meta: { title: '复核明细', affix: true }
+      },
+      {
+        path: 'detail',
+        component: () => import('@/views/sub-verify/detail'),
+        name: '账单明细',
+        hidden: true,
+        meta: { title: '账单明细', icon: 'eye-open' }
+      }
+    ]
+  },
+  {
     path: '/withdrawal',
     component: Layout,
-    redirect: '/withdrawal/index',
     name: 'accountwithdrawal',
-    meta: { title: '提现', icon: 'money' },
+    meta: { title: '提现', icon: 'money',roles:['机构管理员','操作员','提现复核员'] },
     children: [
       {
         path: 'withdrawal_apply',
         component: () => import('@/views/account-withdrawal/apply'),
         name: 'withdrawal_apply',
-        meta: { title: '提现申请', roles: ['机构管理员', '操作员'] }
+        meta: { title: '提现申请', roles: ['机构管理员','操作员'] }
       },
       {
         path: 'withdrawal_check',
         component: () => import('@/views/account-withdrawal/check'),
         name: 'withdrawal_check',
-        meta: { title: '提现复核', roles: ['机构管理员', '提现复核员'] }
+        meta: { title: '提现复核', roles: ['机构管理员','提现复核员'] }
       },
       {
         path: 'test',
@@ -222,9 +224,8 @@ export const asyncRoutes = [
   {
     path: '/transfer',
     component: Layout,
-    redirect: '/transfer/index',
     name: 'accounttransfer',
-    meta: { title: '调账', icon: 'user', roles: ['机构管理员'] },
+    meta: { title: '调账', icon: 'user', roles:['机构管理员','操作员','提现复核员']},
     children: [
       {
         path: 'transfer_apply',
@@ -236,7 +237,7 @@ export const asyncRoutes = [
         path: 'transfer_check',
         component: () => import('@/views/account-transfer/check'),
         name: 'transfer_check',
-        meta: { title: '调账复核', roles: ['机构管理员', '调账复核员'] }
+        meta: { title: '调账复核', roles: ['机构管理员', '提现复核员'] }
       }
     ]
   },
@@ -508,7 +509,7 @@ export const asyncRoutes = [
   // },
 
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  { path: '*', redirect:'/404' ,hidden: true }
 ]
 
 const createRouter = () => new Router({

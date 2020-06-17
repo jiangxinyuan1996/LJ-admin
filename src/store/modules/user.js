@@ -68,12 +68,14 @@ const actions = {
           switch (item) {
             case 'edit':
               return '操作员'
-            case 'checker':
+            case 'check':
               return '复核员'
             case 'admin':
               return '机构管理员'
-            case 'browser':
-              return '浏览员'
+            case 'look':
+              return '普通查看员'
+            case 'look_all':
+              return '普通查看员'
           }
         })
         commit('SET_ROLES', maprole)
