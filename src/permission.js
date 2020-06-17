@@ -48,7 +48,7 @@ router.beforeEach(async(to, from, next) => {
               case 'look':
                 return '普通查看员'
               case 'look_all':
-                  return '普通查看员'
+                return '总查看员'
             }
           })
           console.log(maprole)
