@@ -255,6 +255,7 @@ export default {
       })
 
       getRuleList().then(res => {
+        this.ratios = []
         console.log('getRuleList---:', res)
         for (let i = 0; i < res.data.length; i++) {
           const ratio = {}
