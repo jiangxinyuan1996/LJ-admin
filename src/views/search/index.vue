@@ -12,9 +12,9 @@
       <el-menu-item index="1">
         明细查询 </el-menu-item>
       <!-- <el-menu-item index="2">分账查询 </el-menu-item> -->
-      <el-menu-item index="3">调账查询 </el-menu-item>
-      <el-menu-item index="4">提现查询 </el-menu-item>
-      <el-menu-item index="5">操作日志 </el-menu-item>
+      <el-menu-item index="3" v-permission="['机构管理员','操作员','分账复核员','提现复核员','总查看员']">调账查询 </el-menu-item>
+      <el-menu-item index="4" v-permission="['机构管理员','操作员','分账复核员','提现复核员','总查看员']">提现查询 </el-menu-item>
+      <el-menu-item index="5" v-permission="['机构管理员','操作员','分账复核员','提现复核员','总查看员']">操作日志 </el-menu-item>
       <el-menu-item index="6">对账查询 </el-menu-item>
     </el-menu>
     <account v-if="activeIndex2==='1'" />
@@ -32,7 +32,9 @@ import operationLog from './component/operationLog'
 import withdrawal from './component/withdrawal'
 import transfer from './component/transfer'
 import check from './component/check'
+import permission from '@/directive/permission/index.js' // 权限判断指令
 export default {
+  directives: { permission },
   components: {
     withdrawal,
     transfer,
