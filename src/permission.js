@@ -40,7 +40,9 @@ router.beforeEach(async(to, from, next) => {
               case 'edit':
                 return '操作员'
               case 'check':
-                return '复核员'
+                return '提现复核员'
+              case 'sub_check':
+                return '分账复核员'
               case 'admin':
                 return '机构管理员'
               case 'look':

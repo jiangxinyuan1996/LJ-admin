@@ -20,7 +20,7 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <span style="fontSize:16px">欢迎 : {{roles[0] + username}} </span>
+          <span style="fontSize:16px">欢迎 : {{roles[0] +' '+ username}} </span>
           <i class="el-icon-user-solid" style="fontSize:16px"/>
           <i class="el-icon-caret-bottom" />
         </div>

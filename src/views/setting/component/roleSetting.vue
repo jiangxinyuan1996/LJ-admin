@@ -60,11 +60,11 @@
         <el-form-item  label="选择所属机构" v-if="createRoles.role_arr.join('').includes('RI1005')">
           <el-radio-group  v-model="radio"  @change="changeClear1">
             <el-radio :label="1">服务商</el-radio>
-            <el-radio :label="2">合作伙伴</el-radio>
+            <el-radio :label="0">合作伙伴</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item  label="选择服务商" v-if="createRoles.role_arr.join('').includes('RI1005')">
-          <el-select v-if="radio===1" v-model="createRoles.userid" placeholder="请选择服务商">
+          <el-select v-if="radio===1" v-model="createRoles.userid"  placeholder="请选择服务商">
             <el-option
               v-for="item in fromList"
               :key="item.id"
@@ -72,7 +72,7 @@
               :value="item.id"
             />
           </el-select>
-          <el-select v-else v-model="createRoles.userid" placeholder="请选择合作伙伴">
+          <el-select v-else v-model="createRoles.userid"  placeholder="请选择合作伙伴">
             <el-option
               v-for="item in toList"
               :key="item.id"
@@ -169,7 +169,7 @@ export default {
       str:'',
       loading: false,
       rolestatus: '',
-      radio: 1,
+      radio: 0,
       fromList: [],
       toList: [],
       createRoles: {
@@ -247,6 +247,10 @@ export default {
         this.admin_id = e.group.admin_id
         this.createRoles.post_name=e.group.post_name        
         this.createRoles.role_arr=e.group.idList.split(',')
+        this.createRoles.userid=e.group.userInfo.userid
+        this.radio=parseInt(e.group.userInfo.default_status)
+        console.log(this.radio)
+        console.log(e.group)
       } else if (e.cmd === 'remove') {
         this.$confirm('此操作将删除数据, 是否继续?', '提示', {
           confirmButtonText: '确定',

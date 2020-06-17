@@ -13,9 +13,9 @@ export function setToken(token) {
 export function removeToken() {
   return Cookies.remove(TokenKey)
 }
-export function setUsername(username,token){
+export function setUsername(token){
   return Cookies.set(username,token)
 }
-export function getUsername(username){
+export function getUsername(){
   return Cookies.get(username)
 }
