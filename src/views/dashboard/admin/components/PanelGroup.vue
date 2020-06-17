@@ -39,19 +39,6 @@
         </div>
       </div>
     </el-col>
-    <!-- <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('shoppings')">
-        <div class="card-panel-icon-wrapper icon-shopping">
-          <svg-icon icon-class="shopping" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            Shoppings
-          </div>
-          <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
-        </div>
-      </div>
-    </el-col> -->
   </el-row>
 </template>
 
@@ -59,35 +46,50 @@
 import CountTo from 'vue-count-to'
 import { getHomeList } from '@/api/tsyaccount'
 export default {
-  data(){
-    return {
-      pay:0,
-      sub:0,
-      withdraw:0
+  components: {
+    CountTo
+  },
+  props: {
+    data: {
+      type: Object,
+      required: true
     }
   },
-  components: {
-    CountTo    
+  data() {
+    return {
+      pay: 0,
+      sub: 0,
+      withdraw: 0
+    }
   },
-  mounted(){
-    getHomeList().then(res=>{
-      let payArr = res.data.pay
-      let subArr = res.data.sub
-      let withdrawArr = res.data.withdraw
-      for(let i=0;i<payArr.length;i++){
-        this.pay+=Number(payArr[i].amount)
+  watch: {
+    data: {
+      deep: true,
+      handler(val) {
+        this.init()
       }
-      for(let i=0;i<subArr.length;i++){
-        this.sub+=Number(subArr[i].amount)
-      }
-      for(let i=0;i<withdrawArr.length;i++){
-        this.withdraw+=Number(withdrawArr[i].amount)
-      }
-    })
+    }
+  },
+  created() {
+    this.init()
   },
   methods: {
     handleSetLineChartData(type) {
       this.$emit('handleSetLineChartData', type)
+    },
+    init() {
+      const payArr = this.data.newVisitis
+      const subArr = this.data.messages
+      const withdrawArr = this.data.purchases
+      for (let i = 0; i < payArr.expectedData.length; i++) {
+        this.pay += Number(payArr.expectedData[i])
+      }
+      for (let i = 0; i < subArr.expectedData.length; i++) {
+        this.sub += Number(subArr.expectedData[i])
+      }
+      for (let i = 0; i < withdrawArr.expectedData.length; i++) {
+        this.withdraw += Number(withdrawArr.expectedData[i])
+      }
     }
   }
 }

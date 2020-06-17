@@ -1,42 +1,10 @@
 <template>
   <div class="dashboard-editor-container">
-    <!-- <github-corner class="github-corner" /> -->
-
-    <panel-group @handleSetLineChartData="handleSetLineChartData" />
-
+    <panel-group :data="lineChartData" @handleSetLineChartData="handleSetLineChartData" />
+    <!-- <el-button @click="refresh()">刷新</el-button> -->
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :chart-data="lineChartData" />
+      <line-chart ref="chart" :chart-data="showData" />
     </el-row>
-
-    <!-- <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <raddar-chart />
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <pie-chart />
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <bar-chart />
-        </div>
-      </el-col>
-    </el-row>
-
-    <el-row :gutter="8">
-      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
-        <transaction-table />
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-        <todo-list />
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-        <box-card />
-      </el-col>
-    </el-row> -->
   </div>
 </template>
 
@@ -44,58 +12,131 @@
 import PanelGroup from './components/PanelGroup'
 import LineChart from './components/LineChart'
 import { getHomeList } from '@/api/tsyaccount'
-const lineChartData = {
-  newVisitis: {
-    expectedData: [],
-    date: []
-  },
-  messages: {
-    expectedData: [],
-    date: []
-  },
-  purchases: {
-    expectedData: [],
-    date: []
-  },
-  shoppings: {
-    expectedData: [130, 140, 141, 142, 145, 150, 160],
-    date: [120, 82, 91, 154, 162, 140, 130]
-  }
-}
 
 export default {
   name: 'DashboardAdmin',
   components: {
     PanelGroup,
-    LineChart,
+    LineChart
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      lineChartData: {
+        newVisitis: {
+          expectedData: [],
+          date: []
+        },
+        messages: {
+          expectedData: [],
+          date: []
+        },
+        purchases: {
+          expectedData: [],
+          date: []
+        }
+      },
+      showData: {},
+      page: 'newVisitis'
     }
   },
-  mounted(){
-    getHomeList().then(res=>{
-      console.log(res)
-      for(let i=0;i<res.data.pay.length;i++){
-        lineChartData.newVisitis.expectedData.push(Number(res.data.pay[i].amount))
-        lineChartData.newVisitis.date.push(res.data.pay[i].date)
-      }
-      for(let i=0;i<res.data.sub.length;i++){
-        lineChartData.messages.expectedData.push(Number(res.data.sub[i].amount))
-        lineChartData.messages.date.push(res.data.sub[i].date)
-      }
-      for(let i=0;i<res.data.withdraw.length;i++){
-        lineChartData.purchases.expectedData.push(Number(res.data.withdraw[i].amount))
-        lineChartData.purchases.date.push(res.data.withdraw[i].date)
-      }
-      console.log('1',lineChartData.messages)
-      console.log('2',lineChartData.purchases)
-    })
+  created() {
+    this.init()
   },
   methods: {
+    init() {
+      getHomeList().then(res => {
+        this.lineChartData = {
+          newVisitis: {
+            expectedData: [],
+            date: []
+          },
+          messages: {
+            expectedData: [],
+            date: []
+          },
+          purchases: {
+            expectedData: [],
+            date: []
+          }
+        }
+        console.log('null this.lineChartData---:', this.lineChartData)
+        const now = new Date()
+        const day = now.getDate()
+        const dateList = []
+        const dataList = []
+        for (let i = 1; i <= 17; i++) {
+          let date = ''
+          if (now.getMonth() < 9) {
+            date = now.getFullYear() + '-0' + (now.getMonth() + 1)
+          } else {
+            date = now.getFullYear() + '-' + (now.getMonth() + 1)
+          }
+
+          if (i < 10) {
+            date += '-0' + i
+          } else {
+            date += '-' + i
+          }
+          dataList.push(0)
+          dateList.push(date)
+        }
+        console.log('初始数据---', dataList)
+        console.log('初始日期---', dateList)
+
+        this.lineChartData = {
+          newVisitis: {
+            expectedData: [].concat(dataList),
+            date: [].concat(dateList)
+          },
+          messages: {
+            expectedData: [].concat(dataList),
+            date: [].concat(dateList)
+          },
+          purchases: {
+            expectedData: [].concat(dataList),
+            date: [].concat(dateList)
+          }
+        }
+        for (let i = 0; i < res.data.pay.length; i++) {
+          for (let j = 0; j < dateList.length; j++) {
+            if (dateList[j] == res.data.pay[i].date) {
+              this.lineChartData.newVisitis.expectedData[j] = Number(res.data.pay[i].amount)
+              break
+            }
+          }
+        }
+        console.log('newVisitis----:', this.lineChartData.newVisitis)
+        for (let i = 0; i < res.data.sub.length; i++) {
+          for (let j = 0; j < dateList.length; j++) {
+            if (dateList[j] == res.data.sub[i].date) {
+              this.lineChartData.messages.expectedData[j] = Number(res.data.sub[i].amount)
+              break
+            }
+          }
+        }
+        console.log('messages-----:', this.lineChartData.messages)
+        for (let i = 0; i < res.data.withdraw.length; i++) {
+          for (let j = 0; j < dateList.length; j++) {
+            if (dateList[j] == res.data.withdraw[i].date) {
+              this.lineChartData.purchases.expectedData[j] = Number(res.data.withdraw[i].amount)
+              break
+            }
+          }
+        }
+        console.log('purchases-----:', this.lineChartData.purchases)
+        this.showData = this.lineChartData[this.page]
+
+        console.log('this.showData---:', this.showData)
+      })
+    },
     handleSetLineChartData(type) {
-      this.lineChartData = lineChartData[type]
+      this.page = type
+      this.init()
+      this.showData = this.lineChartData[type]
+      console.log('this.showData---:', this.showData)
+    },
+    refresh() {
+      this.$refs.chart.setOptions(this.showData)
     }
   }
 }

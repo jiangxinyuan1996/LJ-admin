@@ -267,33 +267,33 @@ export default {
     exportCheck() {
       console.log('exportCheck')
       // window.location.href = 'mould/对账单导出模板.xlsx'
-      import("@/vendor/Export2Excel").then(excel => {
-        //表格的表头列表
-        console.log('Export2Excel');
-        const tHeader = [ "机器号","流水号","时间","金额(元)","状态","服务商","服务商金额(元)","合作伙伴","合作伙伴金额(元)","比例"];
-        //与表头相对应的数据里边的字段
-        const filterVal = ['termid','trxid','paytime','amount','status','sub1_user_name','sub1_account','sub2_user_name','sub2_account','rule'  ];
-        const list = this.tableData;
-        const data = this.formatJson(filterVal, list);
-        console.log('Export data',data);
-        //这里还是使用export_json_to_excel方法比较好，方便操作数据
-        excel.export_json_to_excel(tHeader,data,'待复核明细导出数据');
-      });
+      import('@/vendor/Export2Excel').then(excel => {
+        // 表格的表头列表
+        console.log('Export2Excel')
+        const tHeader = ['机器号', '流水号', '时间', '金额(元)', '服务商', '服务商金额(元)', '合作伙伴', '合作伙伴金额(元)', '比例']
+        // 与表头相对应的数据里边的字段
+        const filterVal = ['termid', 'bizorderno', 'create_time', 'amount', 'sub1_user_name', 'sub1_account', 'sub2_user_name', 'sub2_account', 'rule']
+        const list = this.tableData
+        const data = this.formatJson(filterVal, list)
+        console.log('Export data', data)
+        // 这里还是使用export_json_to_excel方法比较好，方便操作数据
+        excel.export_json_to_excel(tHeader, data, '待复核明细导出数据')
+      })
     },
-    formatJson(filterVal,jsonData){
-      console.log('formatJson');
-      return jsonData.map(v=>
-        filterVal.map(j=>{
-        console.log('v[j]-----:',v[j]);
-        return v[j]
+    formatJson(filterVal, jsonData) {
+      console.log('formatJson')
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          console.log('v[j]-----:', v[j])
+          return v[j]
         })
-      );
+      )
     },
     handleSelectionChange(rows) {
       console.log('handleSelectionChange')
       this.selectionList = rows
     },
-    refuseList(){
+    refuseList() {
       console.log('==========refuse===========')
       const h = this.$createElement
       this.$msgbox({
@@ -311,11 +311,11 @@ export default {
             instance.confirmButtonLoading = true
             instance.confirmButtonText = '执行中...'
 
-            let bizordernoList = []
-            for(let i=0;i<this.selectionList.length;i++){
+            const bizordernoList = []
+            for (let i = 0; i < this.selectionList.length; i++) {
               bizordernoList.push(this.selectionList[i].bizorderno)
             }
-            refusedCheckResult({order_list:bizordernoList}).then(res => {
+            refusedCheckResult({ order_list: bizordernoList }).then(res => {
               console.log('refusedCheckResult res---:', res)
               this.init()
             })
@@ -334,38 +334,37 @@ export default {
         })
       })
     },
-    checkList(){
-
-        console.log('==========refuse===========')
-        const h = this.$createElement
-        this.$msgbox({
-          title: '信息确认',
-          message: h('p', null, [
-            h('span', null, `是否确认复核这`),
-            h('span', { style: 'color: rgb(250,190,0)' }, `${this.selectionList.length}`),
-            h('span', null, `条数据?`)
-          ]),
-          showCancelButton: true,
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          beforeClose: (action, instance, done) => {
-            if (action === 'confirm') {
-              instance.confirmButtonLoading = true
-              instance.confirmButtonText = '执行中...'
-              done()
-              setTimeout(() => {
-                instance.confirmButtonLoading = false
-              }, 300)
-            } else {
-              done()
-            }
+    checkList() {
+      console.log('==========refuse===========')
+      const h = this.$createElement
+      this.$msgbox({
+        title: '信息确认',
+        message: h('p', null, [
+          h('span', null, `是否确认复核这`),
+          h('span', { style: 'color: rgb(250,190,0)' }, `${this.selectionList.length}`),
+          h('span', null, `条数据?`)
+        ]),
+        showCancelButton: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        beforeClose: (action, instance, done) => {
+          if (action === 'confirm') {
+            instance.confirmButtonLoading = true
+            instance.confirmButtonText = '执行中...'
+            done()
+            setTimeout(() => {
+              instance.confirmButtonLoading = false
+            }, 300)
+          } else {
+            done()
           }
-        }).then(action => {
-          this.$message({
-            type: 'info',
-            message: 'action: ' + action
-          })
+        }
+      }).then(action => {
+        this.$message({
+          type: 'info',
+          message: 'action: ' + action
         })
+      })
     },
     changePage() {
       console.log('changePage')
@@ -385,9 +384,9 @@ export default {
           if (action === 'confirm') {
             instance.confirmButtonLoading = true
             instance.confirmButtonText = '执行中...'
-            let bizordernoList = []
+            const bizordernoList = []
             bizordernoList.push(e.bizorderno)
-            refusedCheckResult({order_list:bizordernoList}).then(res => {
+            refusedCheckResult({ order_list: bizordernoList }).then(res => {
               console.log('refusedCheckResult res---:', res)
               this.init()
             })

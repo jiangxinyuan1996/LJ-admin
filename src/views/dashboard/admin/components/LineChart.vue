@@ -61,13 +61,21 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
       this.setOptions(this.chartData)
     },
-    setOptions({ expectedData, date } = {}) {
+    setOptions(data) {
+      if (!this.chart) {
+        return
+      }
+      this.chart.dispose()
+      this.chart = null
+      this.chart = echarts.init(this.$el, 'macarons')
+      // console.log('11111111');
+      console.log('setOptions data---:', data)
       this.chart.setOption({
         xAxis: {
           axisLabel: {
-            rotate: 60,
+            rotate: 60
           },
-          data:date,
+          data: data.date,
           boundaryGap: false,
           axisTick: {
             show: false
@@ -107,7 +115,7 @@ export default {
           },
           smooth: true,
           type: 'line',
-          data: expectedData,
+          data: data.expectedData,
           animationDuration: 2800,
           animationEasing: 'cubicInOut'
         }]
