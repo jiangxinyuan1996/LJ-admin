@@ -57,6 +57,9 @@
         <el-button type="primary" size="mini" style="margin-left:15px;" @click="handleFilter">
           查询
         </el-button>
+        <el-button size="mini"  v-permission="['机构管理员','操作员','总查看员','提现复核员','分账复核员']" style="margin-left: 10px;" type="warning" @click="exportCheck()">
+          导出
+        </el-button>
       </div>
     </div>
     <!-- 查询信息表格 -->
@@ -156,11 +159,12 @@
 </template>
 <script>
 import waves from '@/directive/waves'
+import permission from '@/directive/permission/index.js' // 权限判断指令
 import { getReviewList } from '@/api/tsyaccount'
 import { getUserList } from '@/api/tsyLj'
 
 export default {
-  directives: { waves },
+  directives: { waves,permission },
   data() {
     return {
       isShow: false,
@@ -237,6 +241,41 @@ export default {
     this.handleFilter()
   },
   methods:{
+    //导出
+    exportCheck() {
+      console.log('exportCheck')
+      // window.location.href = 'mould/对账单导出模板.xlsx'
+      getReviewList(this.listQuery).then(res => {
+        console.log('getSubResult res--:', res)
+        this.tableData = res.data
+        for(let i=0;i<this.tableData.length;i++){
+              this.tableData[i].amount=Number(this.tableData[i].amount)
+            this.tableData[i].status=this.status[this.tableData[i].status]
+            }
+        console.log('this.tableData---:',this.tableData);
+        import("@/vendor/Export2Excel").then(excel => {
+          //表格的表头列表
+          console.log('Export2Excel');
+          const tHeader = [ "流水号","状态","用户名","银行户名","日期","账号","金额(元)"];
+          //与表头相对应的数据里边的字段
+          const filterVal = ['bizorderno','status','nickname','name','time','card_no','amount'];
+          const list = this.tableData;
+          const data = this.formatJson(filterVal, list);
+          console.log('Export data',data);
+          //这里还是使用export_json_to_excel方法比较好，方便操作数据
+          excel.export_json_to_excel(tHeader,data,'提现导出数据');
+        });
+      })
+    },
+    formatJson(filterVal,jsonData){
+      console.log('formatJson');
+      return jsonData.map(v=>
+        filterVal.map(j=>{
+        console.log('v[j]-----:',v[j]);
+        return v[j]
+        })
+      );
+    },
      startchange(e){
       if(e==null){
         this.start_time=''

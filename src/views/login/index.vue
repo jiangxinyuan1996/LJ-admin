@@ -106,6 +106,7 @@
 import { validUsername } from '@/utils/validate'
 import SocialSign from './components/SocialSignin'
 import { setRoles,login } from '@/api/user'
+import { setUsername } from '@/utils/auth'
 export default {
   name: 'Login',
   components: { SocialSign },
@@ -239,13 +240,13 @@ export default {
           //   })
     },
     handleLogin() {
-      console.log(this.temp.role_id)
       if(this.temp.role_id!==''){
 
       setRoles({role_id:this.temp.role_id}).then((res)=>{
             if(res.success===1){
                this.loading = true
-
+               console.log('setRoles',res.data)
+          setUsername(res.data)
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
               this.$message({
