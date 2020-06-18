@@ -88,9 +88,9 @@
         <el-button v-show="isShow" size="mini" style="margin-left: 5px;" type="warning" @click="refuseList">
           批量驳回
         </el-button>
-        <el-button v-show="isShow" size="mini" style="margin-left: 5px;" type="success" @click="checkList">
+        <!-- <el-button v-show="isShow" size="mini" style="margin-left: 5px;" type="success" @click="checkList">
           批量复核
-        </el-button>
+        </el-button> -->
       </div>
     </div>
     <!-- 查询信息表格 -->

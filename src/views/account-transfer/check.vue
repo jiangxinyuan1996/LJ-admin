@@ -29,6 +29,13 @@
           <el-button type="primary" @click="submit">确 定</el-button>
         </span>
       </el-dialog>
+      <el-dialog
+        title="确认调账"
+        :visible.sync="dialogVisible"
+        width="60%"
+      >
+        <iframe style="width:100%;height:100%" :src="jumpUrl" />
+      </el-dialog>
       <!-- 搜索区 -->
       <div v-if="showSearch" id="searchBox" style="margin:40px">
         <span style="margin-right:15px">转出方:</span>
@@ -90,9 +97,9 @@
         <el-button v-show="multipleSelection.length>0" size="mini" style="margin-left: 5px;" type="warning" @click="refuseList">
           批量驳回
         </el-button>
-        <el-button v-show="multipleSelection.length>0" size="mini" style="margin-left: 5px;" type="success" @click="checkList">
+        <!-- <el-button v-show="multipleSelection.length>0" size="mini" style="margin-left: 5px;" type="success" @click="checkList">
           批量复核
-        </el-button>
+        </el-button> -->
       </div>
     </div>
     <!-- 查询信息表格 -->
@@ -186,7 +193,9 @@ export default {
   directives: { waves,permission },
   data() {
     return {
+      jumpUrl: '',
       dialogVisible1: false,
+      dialogVisible:false,
       alwaysFalse: false,
       showSearch: true,
       total: 11,
@@ -434,6 +443,8 @@ export default {
     submit() {
       submitTransfer({bizOrderNo:this.temp.bizorderno}).then(res=>{
         if(res.success===1){
+          let callback = window.open(res.data.url)
+          console.log('callback',callback)
           this.$message({
                 message:res.message,
                 type: 'success'

@@ -134,7 +134,7 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="90"align="center">
+        <el-table-column label="操作" width="90" align="center">
 
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" content="提交" placement="top-end">
