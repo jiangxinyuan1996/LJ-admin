@@ -14,12 +14,12 @@
       width="30%"
     >
       <el-steps :active="active" finish-status="success">
-        <el-step title="绑定手机" />
         <el-step title="企业信息认证" />
+        <el-step title="绑定手机" />
         <el-step title="绑定银行卡" />
         <el-step title="电子签约" />
       </el-steps>
-      <div v-if="active==0">
+      <div v-if="active==1">
         <span>手机号 : </span><span>{{ activateObj.phone }}</span>
         <el-button size="mini" class="filter-item" style="margin-left: 10px;margin-top:15px;" type="primary" @click="sendCode()">
           获取验证码
@@ -29,7 +29,7 @@
         </br>
         <el-button style="margin-top: 15px;" size="mini" @click="checkCode()">下一步</el-button>
       </div>
-      <div v-if="active==1">
+      <div v-if="active==0">
         <div style="margin-top:15px;">
           <span style="line-height:15px;">法人姓名 : </span><span>{{ activateObj.name }}</span>
         </div>
@@ -93,7 +93,7 @@
     </el-dialog>
     <div id="searchBox">
       <div id="buttonBox" style="margin:50px;">
-        <span style="margin-right:10px">用户名 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 15vw;margin-right:15px;" class="filter-item" />
+        <span style="margin-right:10px">用户名 : </span><el-input v-model="query.id" size="mini" placeholder="用户名" style="width: 15vw;margin-right:15px;" class="filter-item" />
         <span style="margin-right:10px">状态 : </span>
         <el-select v-model="query.status" size="mini" clearable style="width: 8vw;" placeholder="请选择">
           <el-option
@@ -143,10 +143,8 @@
           label="状态"
         >
           <template slot-scope="scope">
-            <el-tag v-show="scope.row.status==3" type="success">已激活</el-tag>
-            <el-tag v-show="scope.row.status==2" type="warning">激活中</el-tag>
-            <el-tag v-show="scope.row.status==1" type="danger">未激活</el-tag>
-            <el-tag v-show="scope.row.status==-1" type="info">激活失败</el-tag>
+            <el-tag v-show="scope.row.step==4" type="success">已激活</el-tag>
+            <el-tag v-show="scope.row.status!=4" type="warning">未激活</el-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -182,7 +180,7 @@
 
         <el-table-column label="操作" width="160" align="center">
           <template slot-scope="scope">
-            <el-tooltip v-show="scope.row.status==1" class="item" effect="dark" content="激活" placement="left">
+            <el-tooltip v-show="scope.row.step!=4" class="item" effect="dark" content="激活" placement="left">
               <el-button type="success" icon="el-icon-magic-stick" circle size="mini" @click="activate(scope.row)" />
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="编辑" placement="top">

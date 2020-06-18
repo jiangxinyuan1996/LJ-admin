@@ -116,7 +116,7 @@
   </div>
 </template>
 <script>
-import bankCodeOptionsConstant from '@/constant/bankCodeList.js'
+import bankCodeOptionsConstant from '@/constant/bank.js'
 import { uploadImgToBase64 } from '@/utils/imgToBase64' // 导入本地图片转base64的方法
 export default {
   props: {
