@@ -143,13 +143,14 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-dialog
+      <!-- <el-dialog
         title="确认支付"
         :visible.sync="dialogVisible"
         width="60%"
       >
-        <iframe style="width:100%;height:100%" :src="jumpUrl" />
-      </el-dialog>
+      <el-button type="primary" @click='jump()'>点击跳转至支付页面</el-button>
+        <!-- <iframe style="width:100%;height:100%" :src="jumpUrl" /> -->
+      </el-dialog> -->
 
       <el-pagination
         :page-size="10"
@@ -275,27 +276,27 @@ export default {
       })
       console.log('exportCheck')
       // window.location.href = 'mould/对账单导出模板.xlsx'
-      import("@/vendor/Export2Excel").then(excel => {
-        //表格的表头列表
-        console.log('Export2Excel');
-        const tHeader = [ "机器号","流水号","时间","金额(元)","状态","服务商","服务商金额(元)","合作伙伴","合作伙伴金额(元)","比例"];
-        //与表头相对应的数据里边的字段
-        const filterVal = ['termid','trxid','paytime','amount','status','sub1_user_name','sub1_account','sub2_user_name','sub2_account','rule'  ];
-        const list = this.tableData;
-        const data = this.formatJson(filterVal, list);
-        console.log('Export data',data);
-        //这里还是使用export_json_to_excel方法比较好，方便操作数据
-        excel.export_json_to_excel(tHeader,data,'待分账明细导出数据');
-      });
+      import('@/vendor/Export2Excel').then(excel => {
+        // 表格的表头列表
+        console.log('Export2Excel')
+        const tHeader = ['机器号', '流水号', '时间', '金额(元)', '状态', '服务商', '服务商金额(元)', '合作伙伴', '合作伙伴金额(元)', '比例']
+        // 与表头相对应的数据里边的字段
+        const filterVal = ['termid', 'trxid', 'paytime', 'amount', 'status', 'sub1_user_name', 'sub1_account', 'sub2_user_name', 'sub2_account', 'rule']
+        const list = this.tableData
+        const data = this.formatJson(filterVal, list)
+        console.log('Export data', data)
+        // 这里还是使用export_json_to_excel方法比较好，方便操作数据
+        excel.export_json_to_excel(tHeader, data, '待分账明细导出数据')
+      })
     },
-    formatJson(filterVal,jsonData){
-      console.log('formatJson');
-      return jsonData.map(v=>
-        filterVal.map(j=>{
-        console.log('v[j]-----:',v[j]);
-        return v[j]
+    formatJson(filterVal, jsonData) {
+      console.log('formatJson')
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          console.log('v[j]-----:', v[j])
+          return v[j]
         })
-      );
+      )
     },
     changeRatio(e) {
       console.log('changeRatio e---:', e)
@@ -388,9 +389,15 @@ export default {
               if (res.success === 1) {
                 this.jumpForm = res.data
                 this.jumpUrl = res.data.url
+                window.open(this.jumpUrl, '_blank')
                 this.$message({
                   type: 'success',
                   message: res.message
+                })
+              } else {
+                this.$message({
+                  message: res.message,
+                  type: 'error'
                 })
               }
               instance.confirmButtonLoading = false
