@@ -181,7 +181,7 @@
 </template>
 
 <script>
-import { getCheckResultDetail, getUserList, refusedCheckResult } from '@/api/tsyLj.js'
+import { getCheckResultDetail, getUserList, refusedCheckResult, batchCheckResultByNo } from '@/api/tsyLj.js'
 export default {
   name: 'SubAccount',
   data() {
@@ -317,6 +317,17 @@ export default {
             }
             refusedCheckResult({ order_list: bizordernoList }).then(res => {
               console.log('refusedCheckResult res---:', res)
+              if(res.success==0){
+                this.$message({
+                  type: 'error',
+                  message: res.message
+                })
+              }else{
+                this.$message({
+                  type: 'success',
+                  message: res.message
+                })
+              }
               this.init()
             })
             done()
@@ -327,11 +338,6 @@ export default {
             done()
           }
         }
-      }).then(action => {
-        this.$message({
-          type: 'info',
-          message: 'action: ' + action
-        })
       })
     },
     checkList() {
@@ -351,6 +357,25 @@ export default {
           if (action === 'confirm') {
             instance.confirmButtonLoading = true
             instance.confirmButtonText = '执行中...'
+            const bizordernoList = []
+            for (let i = 0; i < this.selectionList.length; i++) {
+              bizordernoList.push(this.selectionList[i].bizorderno)
+            }
+            batchCheckResultByNo({order_list:bizordernoList}).then(res=>{
+              console.log('batchCheckResultByNo res--:',res);
+              if(res.success==0){
+                this.$message({
+                  type: 'error',
+                  message: res.message
+                })
+              }else{
+                this.$message({
+                  type: 'success',
+                  message: res.message
+                })
+              }
+
+            })
             done()
             setTimeout(() => {
               instance.confirmButtonLoading = false
@@ -359,11 +384,6 @@ export default {
             done()
           }
         }
-      }).then(action => {
-        this.$message({
-          type: 'info',
-          message: 'action: ' + action
-        })
       })
     },
     changePage() {
@@ -388,6 +408,17 @@ export default {
             bizordernoList.push(e.bizorderno)
             refusedCheckResult({ order_list: bizordernoList }).then(res => {
               console.log('refusedCheckResult res---:', res)
+              if(res.success==0){
+                this.$message({
+                  type: 'error',
+                  message: res.message
+                })
+              }else{
+                this.$message({
+                  type: 'success',
+                  message: res.message
+                })
+              }
               this.init()
             })
             done()
@@ -398,11 +429,6 @@ export default {
             done()
           }
         }
-      }).then(action => {
-        this.$message({
-          type: 'info',
-          message: 'action: ' + action
-        })
       })
     },
 
@@ -411,21 +437,21 @@ export default {
       this.$msgbox({
         title: '信息确认',
         message: h('p', null, [
-          h('span', { style: 'color: rgb(238,120,0)' }, `${e.account}`),
+          h('span', { style: 'color: rgb(238,120,0)' }, `${e.amount}`),
           h('span', null, `元`),
           h('br', null, ''),
           h('span', null, `将以`),
-          h('span', { style: 'color: rgb(250,190,0)' }, `${e.ratio}`),
+          h('span', { style: 'color: rgb(250,190,0)' }, `${e.rule}`),
           h('span', null, `的比例`),
           h('br', null, ''),
           h('span', null, `分给 `),
-          h('span', { style: 'color: rgb(0,113,190)' }, `${e.subuser1} `),
-          h('span', { style: 'color: rgb(238,120,0)' }, `${e.subuser1Account}`),
+          h('span', { style: 'color: rgb(0,113,190)' }, `${e.sub1_user_name} `),
+          h('span', { style: 'color: rgb(238,120,0)' }, `${e.sub1_account}`),
           h('span', null, `元`),
           h('br', null, ''),
           h('span', null, `分给 `),
-          h('span', { style: 'color: rgb(0,113,190)' }, `${e.subuser2} `),
-          h('span', { style: 'color: rgb(238,120,0)' }, `${e.subuser2Account}`),
+          h('span', { style: 'color: rgb(0,113,190)' }, `${e.sub2_user_name} `),
+          h('span', { style: 'color: rgb(238,120,0)' }, `${e.sub2_account}`),
           h('span', null, `元`),
           h('span', null, `是否继续?`)
         ]),
@@ -436,6 +462,22 @@ export default {
           if (action === 'confirm') {
             instance.confirmButtonLoading = true
             instance.confirmButtonText = '执行中...'
+            const bizordernoList = []
+            bizordernoList.push(e.bizorderno)
+            batchCheckResultByNo({order_list:bizordernoList}).then(res=>{
+              console.log('batchCheckResultByNo res--:',res);
+              if(res.success==0){
+                this.$message({
+                  type: 'error',
+                  message: res.message
+                })
+              }else{
+                this.$message({
+                  type: 'success',
+                  message: res.message
+                })
+              }
+            })
             setTimeout(() => {
               done()
               setTimeout(() => {
@@ -446,11 +488,6 @@ export default {
             done()
           }
         }
-      }).then(action => {
-        this.$message({
-          type: 'info',
-          message: 'action: ' + action
-        })
       })
     }
   }

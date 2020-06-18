@@ -22,7 +22,7 @@ export const batchCheckResult = (data) => fetch('/TSY/home/result/batchCheckResu
 export const getCheckResultDetail = (data) => fetch('/TSY/home/result/getCheckResultDetail', data)
 
 // 待复核数据提交
-export const submitCheckResult = (data) => fetch('/TSY/home/result/submitCheckResult', data, 'POST')
+export const batchCheckResultByNo = (data) => fetch('/TSY/home/result/batchCheckResultByNo', data, 'POST')
 
 // 待复核数据驳回
 export const refusedCheckResult = (data) => fetch('/TSY/home/result/refusedCheckResult', data, 'POST')

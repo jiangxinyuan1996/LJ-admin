@@ -78,6 +78,7 @@ export default {
       this.$emit('handleSetLineChartData', type)
     },
     init() {
+      this.pay = this.sub = this.withdraw = 0
       const payArr = this.data.newVisitis
       const subArr = this.data.messages
       const withdrawArr = this.data.purchases

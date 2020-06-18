@@ -3,6 +3,7 @@
     <el-dialog
       title="服务商配置"
       :visible.sync="dialogVisible"
+      :close-on-click-modal="alwaysFalse"
       width="30%"
     >
       <subUserForm :state="state" :data-to-modify="dataToModify" @createConfirm="createConfirm" @updateConfirm="updateConfirm" @close="closeDialog" @closeDialog="closeDialog" />
@@ -17,7 +18,6 @@
         <el-step title="企业信息认证" />
         <el-step title="绑定银行卡" />
         <el-step title="电子签约" />
-        <el-step title="完成激活" />
       </el-steps>
       <div v-if="active==0">
         <span>手机号 : </span><span>{{ activateObj.phone }}</span>
@@ -54,14 +54,11 @@
         <el-button style="margin-top: 15px;" size="mini" @click="checkBank()">下一步</el-button>
       </div>
       <div v-if="active==3">
-        <iframe id="iframe" style="width:100%;height:100%" scrolling="yes" :src="iframeUrl" />
+        <!-- <iframe id="iframe" style="width:100%;height:100%" scrolling="yes" :src="iframeUrl" /> -->
+        <div style="text-align:center;margin-top:20px"><el-button type="primary" @click="jump()">点击跳转至电子签约页面</el-button></div>
+
+        </br>
         <el-button style="margin-top: 15px;" size="mini" @click="next">{{ nextStr }}</el-button>
-      </div>
-      <div v-if="active==4" style="margin-top:15px;">
-        <div style="text-align:center;">
-          <span>服务商已激活 <i class="el-icon-check" /></span>
-        </div>
-        <el-button style="margin-top: 15px;" size="mini" @click="next">完成</el-button>
       </div>
 
     </el-dialog>
@@ -316,24 +313,18 @@ export default {
         }
         signContract(data).then(res => {
           console.log('signContract res---:', res)
-          this.iframeUrl = 'http://116.228.64.55:6900/yungateway/member/signContract.html?sysid=' +
-          encodeURIComponent(res.data.sysid) +
-          '&v=2.0&timestamp=' +
-          encodeURIComponent(res.data.timestamp) +
-          '&sign=' +
-          encodeURIComponent(res.data.sign) +
-          '&req=' +
-          encodeURIComponent(res.data.req)
+          this.iframeUrl = res.data.url
           console.log('this.iframeUrl---:', this.iframeUrl)
-          const iframe = document.getElementById('iframe').contentWindow
-          const son = document.getElementById('iframe')
-          son.style.height = 500 + 'px'
+          // const iframe = document.getElementById('iframe').contentWindow
+          // const son = document.getElementById('iframe')
+          // son.style.height = 500 + 'px'
         })
       }
-      this.nextStr = '下一步'
+      this.nextStr = '完成'
     },
     handleUpload(file, fileList) {
       console.log(file)
+      console.log(typeof (file))
       console.log('------handleUpload------ ')
       this.uploadData.file = file
     },
@@ -376,11 +367,12 @@ export default {
       e.subuser2Account = e.account * subuser2Ratio / 10
     },
     next() {
-      if (this.active == 3) {
+      if (this.active == 2) {
         this.nextStr = '完成'
         this.active++
-      } else if (this.active == 4) {
+      } else if (this.active == 3) {
         this.activateDialogVisible = false
+        this.init()
       } else {
         this.active++
       }
@@ -515,20 +507,17 @@ export default {
         }
         signContract(data).then(res => {
           console.log('signContract res---:', res)
-          this.iframeUrl = 'http://116.228.64.55:6900/yungateway/member/signContract.html?sysid=' +
-          encodeURIComponent(res.data.sysid) +
-          '&v=2.0&timestamp=' +
-          encodeURIComponent(res.data.timestamp) +
-          '&sign=' +
-          encodeURIComponent(res.data.sign) +
-          '&req=' +
-          encodeURIComponent(res.data.req)
+          this.iframeUrl = res.data.url
           console.log('this.iframeUrl---:', this.iframeUrl)
-          const iframe = document.getElementById('iframe').contentWindow
-          const son = document.getElementById('iframe')
-          son.style.height = 500 + 'px'
+
+          // const iframe = document.getElementById('iframe').contentWindow
+          // const son = document.getElementById('iframe')
+          // son.style.height = 500 + 'px'
         })
       })
+    },
+    jump() {
+      window.open(this.iframeUrl, '_blank')
     }
   }
 }

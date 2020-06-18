@@ -54,62 +54,58 @@
       </el-form-item>
       <el-form-item v-if="state=='create'" label="营业执照" prop="business_license">
         <el-upload
-          ref="upload"
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :on-change="businessLicenseOnChange"
-          :file-list="testList"
-          :limit="1"
+          ref="imgBroadcastUpload"
           :auto-upload="false"
+          multiple
+          :file-list="businessLicenseList"
+          :on-change="businessLicenseChange"
+          :on-remove="businessLicenseRemove"
+          :limit="1"
+          action=""
         >
-          <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+          <el-button size="mini" type="primary">点击上传</el-button>
         </el-upload>
       </el-form-item>
       <el-form-item v-if="state=='create'" label="银行开户证明"prop="account_opening_permit">
         <el-upload
-          ref="upload"
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :on-change="accountOpeningPermitOnChange"
-          :file-list="testList"
-          :limit="1"
+          ref="imgBroadcastUpload"
           :auto-upload="false"
+          multiple
+          :file-list="accountOpeningPermitList"
+          :on-change="accountOpeningPermitChange"
+          :on-remove="accountOpeningPermitRemove"
+          :limit="1"
+          action=""
         >
-          <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+          <el-button size="mini" type="primary">点击上传</el-button>
         </el-upload>
       </el-form-item>
       <el-form-item v-if="state=='create'" label="身份证(正)"prop="id_card_f">
         <el-upload
-          ref="upload"
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :on-change="idCardFOnChange"
-          :file-list="testList"
-          :limit="1"
+          ref="imgBroadcastUpload"
           :auto-upload="false"
+          multiple
+          :file-list="idCardFList"
+          :on-change="idCardFChange"
+          :on-remove="idCardFRemove"
+          :limit="1"
+          action=""
         >
-          <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+          <el-button size="mini" type="primary">点击上传</el-button>
         </el-upload>
       </el-form-item>
       <el-form-item v-if="state=='create'" label="身份证(反)"prop="id_card_b">
         <el-upload
-          ref="upload"
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :on-change="idCardBOnChange"
-          :file-list="testList"
-          :limit="1"
+          ref="imgBroadcastUpload"
           :auto-upload="false"
+          multiple
+          :file-list="idCardBList"
+          :on-change="idCardBChange"
+          :on-remove="idCardBRemove"
+          :limit="1"
+          action=""
         >
-          <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+          <el-button size="mini" type="primary">点击上传</el-button>
         </el-upload>
       </el-form-item>
     </el-form>
@@ -121,6 +117,7 @@
 </template>
 <script>
 import bankCodeOptionsConstant from '@/constant/bankCodeList.js'
+import { uploadImgToBase64 } from '@/utils/imgToBase64' // 导入本地图片转base64的方法
 export default {
   props: {
     dataToModify: {
@@ -189,7 +186,9 @@ export default {
       accountOpeningPermitList: [],
       idCardFList: [],
       idCardBList: [],
-      testList: []
+      uploadUrl: '/TSY/home/user/addUser',
+      uploadData: null,
+      showFileList: true
     }
   },
   watch: {
@@ -222,7 +221,7 @@ export default {
     }
   },
   methods: {
-    handleCommitDialog() {
+    async handleCommitDialog() {
       console.log('handleCommitDialog')
       let bankCode = this.createForm.bank
       for (let i = 0; i < bankCodeOptionsConstant.length; i++) {
@@ -239,6 +238,13 @@ export default {
         this.createForm.default_status = 1
       }
 
+      await this.submitDialogData('business_license', this.businessLicenseList)
+      await this.submitDialogData('account_opening_permit', this.accountOpeningPermitList)
+      await this.submitDialogData('id_card_f', this.idCardFList)
+      await this.submitDialogData('id_card_b', this.idCardBList)
+
+      console.log('this.createForm---:', this.createForm)
+
       if (this.state === 'create') {
         this.testList = []
         this.$emit('createConfirm', this.createForm)
@@ -251,31 +257,75 @@ export default {
       this.testList = []
       this.$emit('closeDialog')
     },
-    businessLicenseOnChange(file, fileList) {
-      console.log('testList---:', this.testList)
-      console.log('businessLicenseOnChange--:', file, fileList)
-      this.createForm.businessLicense = file
+    businessLicenseChange(file, fileList) {
+      const isLt2M = file.size / 1024 / 1024 < 2 // 上传头像图片大小不能超过 2MB
+      if (!isLt2M) {
+        this.businessLicenseList = fileList.filter(v => v.uid !== file.uid)
+        this.$message.error('图片选择失败，每张图片大小不能超过 2MB,请重新选择!')
+      } else {
+        this.businessLicenseList.push(file)
+      }
     },
-    accountOpeningPermitOnChange(file, fileList) {
-      console.log('accountOpeningPermitOnChange--:', file, fileList)
-      this.createForm.accountOpeningPermit = file
+    businessLicenseRemove(file, fileList) {
+      this.businessLicenseList = fileList
     },
-    idCardFOnChange(file, fileList) {
-      console.log('idCardFOnChange--:', file, fileList)
-      this.createForm.idCardF = file
+    accountOpeningPermitChange(file, fileList) {
+      const isLt2M = file.size / 1024 / 1024 < 2 // 上传头像图片大小不能超过 2MB
+      if (!isLt2M) {
+        this.accountOpeningPermitList = fileList.filter(v => v.uid !== file.uid)
+        this.$message.error('图片选择失败，每张图片大小不能超过 2MB,请重新选择!')
+      } else {
+        this.accountOpeningPermitList.push(file)
+      }
     },
-    idCardBOnChange(file, fileList) {
-      console.log('idCardBOnChange--:', file, fileList)
-      this.createForm.idCardB = file
+    // 有图片移除后 触发
+    accountOpeningPermitRemove(file, fileList) {
+      this.accountOpeningPermitList = fileList
     },
-    submitUpload() {
-      this.$refs.upload.submit()
+    idCardFChange(file, fileList) {
+      const isLt2M = file.size / 1024 / 1024 < 2 // 上传头像图片大小不能超过 2MB
+      if (!isLt2M) {
+        this.idCardFList = fileList.filter(v => v.uid !== file.uid)
+        this.$message.error('图片选择失败，每张图片大小不能超过 2MB,请重新选择!')
+      } else {
+        this.idCardFList.push(file)
+      }
     },
-    handleRemove(file, fileList) {
-      console.log(file, fileList)
+    // 有图片移除后 触发
+    idCardFRemove(file, fileList) {
+      this.idCardFList = fileList
     },
-    handlePreview(file) {
-      console.log(file)
+    idCardBChange(file, fileList) {
+      const isLt2M = file.size / 1024 / 1024 < 2 // 上传头像图片大小不能超过 2MB
+      if (!isLt2M) {
+        this.idCardBList = fileList.filter(v => v.uid !== file.uid)
+        this.$message.error('图片选择失败，每张图片大小不能超过 2MB,请重新选择!')
+      } else {
+        this.idCardBList.push(file)
+      }
+    },
+    // 有图片移除后 触发
+    idCardBRemove(file, fileList) {
+      this.idCardBList = fileList
+    },
+    async submitDialogData(name, imgList) {
+      const imgBroadcastListBase64 = []
+      console.log('图片转base64开始...')
+      // 并发 转码轮播图片list => base64
+      const filePromises = imgList.map(async file => {
+        const response = await uploadImgToBase64(file.raw)
+        return response.result.replace(/.*;base64,/, '') // 去掉data:image/jpeg;base64,
+      })
+      // 按次序输出 base64图片
+      for (const textPromise of filePromises) {
+        imgBroadcastListBase64.push(await textPromise)
+      }
+      console.log('图片转base64结束..., ', imgBroadcastListBase64)
+      if (imgBroadcastListBase64.length > 0) {
+        this.createForm[name] = imgBroadcastListBase64[0]
+      } else {
+        this.createForm[name] = ''
+      }
     }
   }
 }
