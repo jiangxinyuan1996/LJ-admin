@@ -394,10 +394,21 @@ export default {
       console.log('e----:', e)
       addUser(e).then(res => {
         console.log('createVerifyInfo res=======:', res)
-        this.dialogVisible = false
-        this.state = 'init'
-        this.dataToModify = null
-        this.init()
+        if (res.success == 1) {
+          this.$message({
+            type: 'success',
+            message: res.message
+          })
+          this.dialogVisible = false
+          this.state = 'init'
+          this.dataToModify = null
+          this.init()
+        } else {
+          this.$message({
+            type: 'error',
+            message: res.message
+          })
+        }
       })
     },
     updateConfirm(e) {
