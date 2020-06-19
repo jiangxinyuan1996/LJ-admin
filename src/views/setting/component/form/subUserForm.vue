@@ -52,7 +52,7 @@
       <el-form-item label="支行行号" prop="unionBank">
         <el-input v-model="createForm.unionBank" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
-      <el-form-item v-if="state=='create'" label="营业执照" prop="business_license">
+      <!-- <el-form-item v-if="state=='create'" label="营业执照" prop="business_license">
         <el-upload
           ref="imgBroadcastUpload"
           :auto-upload="false"
@@ -65,7 +65,7 @@
         >
           <el-button size="mini" type="primary">点击上传</el-button>
         </el-upload>
-      </el-form-item>
+      </el-form-item> -->
       <!-- <el-form-item v-if="state=='create'" label="银行开户证明"prop="account_opening_permit">
         <el-upload
           ref="imgBroadcastUpload"
@@ -80,7 +80,7 @@
           <el-button size="mini" type="primary">点击上传</el-button>
         </el-upload>
       </el-form-item> -->
-      <el-form-item v-if="state=='create'" label="身份证(正)"prop="id_card_f">
+      <!-- <el-form-item v-if="state=='create'" label="身份证(正)"prop="id_card_f">
         <el-upload
           ref="imgBroadcastUpload"
           :auto-upload="false"
@@ -107,7 +107,7 @@
         >
           <el-button size="mini" type="primary">点击上传</el-button>
         </el-upload>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="handleCloseDialog()">取 消</el-button>
@@ -216,7 +216,8 @@ export default {
   },
   created() {
     this.bankCodeOptions = bankCodeOptionsConstant
-    if (this.dataToModify) {
+    if (this.state == 'update') {
+      console.log('dataToModify-----:', this.dataToModify)
       this.createForm = Object.assign({}, this.dataToModify)
     }
   },

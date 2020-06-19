@@ -150,7 +150,7 @@
       >
       <el-button type="primary" @click='jump()'>点击跳转至支付页面</el-button>
         <!-- <iframe style="width:100%;height:100%" :src="jumpUrl" /> -->
-      </el-dialog> -->
+      </el-dialog>
 
       <el-pagination
         :page-size="10"

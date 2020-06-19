@@ -59,3 +59,9 @@ export const bindBankCard = (data) => fetch('/TSY/home/user/bindBankCard', data,
 
 // 获取电子签约配置
 export const signContract = (data) => fetch('/TSY/home/tsy/signContract', data, 'POST')
+
+// 判断服务商审核状态
+export const getMemberInfo = (data) => fetch('/TSY/home/tsy/getMemberInfo', data, 'POST')
+
+// 更新会员实名/企业认证状态
+export const passRealName = (data) => fetch('/TSY/home/user/passRealName', data, 'POST')
