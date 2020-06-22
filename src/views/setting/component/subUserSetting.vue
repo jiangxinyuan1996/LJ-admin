@@ -303,7 +303,12 @@ export default {
       this.loading = true
       getUserListByAll(this.query).then(res => {
         console.log('getUserListByAll---:', res)
-        this.tableData = res.data
+        if(res.data){
+          this.tableData = res.data
+        }else{
+          this.tableData = []
+        }
+
         for (let i = 0; i < this.tableData.length; i++) {
           if (this.tableData[i].default_status == 0) {
             this.tableData[i].default_status = '合作伙伴'
