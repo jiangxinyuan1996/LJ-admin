@@ -188,8 +188,11 @@
 
         <el-table-column label="操作" width="160" align="center">
           <template slot-scope="scope">
-            <el-tooltip v-show="scope.row.step!=4" class="item" effect="dark" content="激活" placement="left">
+            <el-tooltip v-if="scope.row.step!=4" class="item" effect="dark" content="激活" placement="left">
               <el-button type="success" icon="el-icon-magic-stick" circle size="mini" @click="activate(scope.row)" />
+            </el-tooltip>
+            <el-tooltip v-if="scope.row.step==4" class="item" effect="dark" content="设置支付密码" placement="left">
+              <el-button type="warning" icon="el-icon-s-goods" circle size="mini" @click="manageCode(scope.row)" />
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="编辑" placement="top">
               <el-button type="primary" icon="el-icon-edit" circle size="mini" @click="modify(scope.row)" />
@@ -215,7 +218,7 @@
 </template>
 
 <script>
-import { getUserList, addUser, updateUser, deleteUser, getCode, bindPhone, setRealName, bindBankCard, signContract, getMemberInfo, passRealName } from '@/api/tsyLj.js'
+import { getUserListByAll, addUser, updateUser, deleteUser, getCode, bindPhone, setRealName, bindBankCard, signContract, getMemberInfo, passRealName } from '@/api/tsyLj.js'
 import subUserForm from './form/subUserForm'
 
 export default {
@@ -296,9 +299,9 @@ export default {
         sheet_num: '0'
       }
       this.loading = true
-      getUserList().then(res => {
-        console.log('getUserList---:', res)
-        this.tableData = res.data.fromList.concat(res.data.toList)
+      getUserListByAll().then(res => {
+        console.log('getUserListByAll---:', res)
+        this.tableData = res.data
         for (let i = 0; i < this.tableData.length; i++) {
           if (this.tableData[i].default_status == 0) {
             this.tableData[i].default_status = '合作伙伴'
@@ -568,6 +571,9 @@ export default {
     },
     jump() {
       window.open(this.iframeUrl, '_blank')
+    },
+    manageCode(e) {
+      console.log('manageCode e------:', manageCode)
     }
   }
 }

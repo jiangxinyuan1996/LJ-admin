@@ -3,8 +3,11 @@ import fetch from '@/config/fetch'
 // 获取待分账明细
 export const getPayResult = (data) => fetch('/TSY/home/result/getPayResult', data)
 
-// 获取服务商
+// 获取服务商(区分服务商和合作伙伴)
 export const getUserList = (data) => fetch('/TSY/home/user/getUserList', data)
+
+// 获取全部服务商(不区分)
+export const getUserListByAll = (data) => fetch('/TSY/home/user/getUserListByAll', data)
 
 // 获取分账比例列表
 export const getRuleList = (data) => fetch('/TSY/home/rule/getRuleList', data)
@@ -65,3 +68,12 @@ export const getMemberInfo = (data) => fetch('/TSY/home/tsy/getMemberInfo', data
 
 // 更新会员实名/企业认证状态
 export const passRealName = (data) => fetch('/TSY/home/user/passRealName', data, 'POST')
+
+// 查询对账单明细(合作伙伴)
+export const getStatementByPartner = (data) => fetch('/TSY/home/result/getStatementByPartner', data)
+
+// 查询对账单明细(本公司)
+export const getStatementByServer = (data) => fetch('/TSY/home/result/getStatementByServer', data)
+
+// 账户余额查询
+export const getBalanceById = (data) => fetch('/TSY/home/result/getBalanceById', data)
