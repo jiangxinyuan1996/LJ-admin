@@ -4,7 +4,7 @@
       <div id="buttonBox" style="margin:50px;">
         <span class="demonstration">查询时间 : </span>
         <el-date-picker
-          v-model="value2"
+          v-model="query.start_time"
           size="mini"
           type="datetime"
           placeholder="选择日期时间"
@@ -13,14 +13,28 @@
         />
         <span style="margin-left:10px;margin-right:10px;" class="demonstration">至</span>
         <el-date-picker
-          v-model="value3"
+          v-model="query.end_time"
           size="mini"
           type="datetime"
           placeholder="选择日期时间"
           align="right"
           :picker-options="pickerOptions"
         />
-        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="clickSearch()">
+        <span style="margin-left:15px;" class="demonstration">服务商 : </span>
+        <el-select v-model="subuser2" size="mini" filterable placeholder="请选择">
+          <el-option
+            key="本公司"
+            label="本公司"
+            value="本公司"
+          />
+          <el-option
+            v-for="item in subuser2List"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="search()">
           查询
         </el-button>
         <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="warning" @click="exportCheck()">
@@ -33,6 +47,7 @@
       <el-table
         v-loading="loading"
         show-summary
+        :summary-method="getSummaries"
         :data="tableData"
         size="mini"
         stripe
@@ -41,48 +56,83 @@
         style="margin:20px;margin-left:50px;margin-right:50px;"
       >
         <el-table-column
-          prop="id"
-          align="center"
-          width="170"
-          sortable
-          label="流水号"
-        />
-        <el-table-column
-          prop="type"
+          prop="datetime"
           align="center"
           sortable
           width="130"
-          label="业务类型"
+          label="时间"
         />
         <el-table-column
-          prop="createtime"
+          prop="amount"
           align="center"
           sortable
           width="120"
           show-overflow-tooltip
-          label="时间"
+          label="进账总额"
         />
         <el-table-column
-          prop="account"
+          prop="rule"
           align="center"
           sortable
           width="170"
           show-overflow-tooltip
-          label="金额(元)"
+          label="分账比例"
         />
         <el-table-column
           align="center"
           sortable
-          prop="payer"
+          prop="sub_amount"
           width="150"
-          label="支付方"
+          label="分账金额"
+        />
+        <el-table-column
+          align="center"
+          sortable
+          prop="name"
+          width="150"
+          label="合作伙伴名称"
+        />
+        <el-table-column
+          align="center"
+          prop="income"
+          sortable
+          width="150"
+          label="本公司分账金额"
+        />
+        <el-table-column
+          align="center"
+          prop="wd_amount"
+          sortable
+          width="150"
+          label="提现金额"
+        />
+        <el-table-column
+          align="center"
+          prop="in_amount"
+          sortable
+          width="150"
+          label="转入金额"
+        />
+        <el-table-column
+          align="center"
+          prop="out_amount"
+          sortable
+          width="150"
+          label="转出金额"
         />
         <el-table-column
           align="center"
           prop="getter"
           sortable
           width="150"
-          label="收款方"
+          label="未提现账户"
+        />
+        <el-table-column
+          align="center"
+          prop="username"
+          sortable
+          width="150"
+          label="备注"
         />
       </el-table>
       <el-pagination
@@ -99,7 +149,7 @@
 </template>
 
 <script>
-// import { getCheckResult , getUserList} from '@/api/tsyLj.js'
+import { getStatementByPartner, getStatementByServer, getUserList, getBalanceById } from '@/api/tsyLj.js'
 export default {
   name: 'SubVerify',
   data() {
@@ -139,56 +189,133 @@ export default {
       ratios: [],
       subuser2List: [],
       subuser1List: [],
-      loading: true
+      loading: true,
+      query: {
+        start_time: '',
+        end_time: ''
+      },
+      money: 0
     }
   },
   created() {
-    this.init()
+    // this.search()
+    this.query.end_time = new Date()
+    this.query.start_time = new Date() - (3 * 3600 * 24 * 1000)
+    getUserList().then(res => {
+      console.log('getUserList---:', res)
+      const fromList = res.data.fromList
+      const toList = res.data.toList
+      for (let i = 0; i < fromList.length; i++) {
+        const subuser1 = {}
+        subuser1.value = fromList[i].id
+        subuser1.label = fromList[i].nickname
+        this.subuser1List.push(subuser1)
+      }
+
+      for (let i = 0; i < toList.length; i++) {
+        const subuser2 = {}
+        subuser2.value = toList[i].id
+        subuser2.label = toList[i].nickname
+        this.subuser2List.push(subuser2)
+      }
+      this.loading = false
+    })
   },
   methods: {
-    init() {
+    search() {
       this.loading = true
-      this.tableData = [{
-        id: 'A000001',
-        type: '分账',
-        createtime: '2020/6/5  8:30:00',
-        account: '10000',
-        payer: '',
-        getter: '本公司'
-      },
-      {
-        id: 'A000002',
-        type: '调账',
-        createtime: '2020/6/5  8:30:00',
-        account: '-10000',
-        payer: '本公司',
-        getter: '合作伙伴1'
-      },
-      {
-        id: 'A000003',
-        type: '调账',
-        createtime: '2020/6/5  8:30:00',
-        account: '20000',
-        payer: '合作伙伴2',
-        getter: '本公司'
-      },
-      {
-        id: 'A000004',
-        type: '提现',
-        createtime: '2020/6/5  8:30:00',
-        account: '-10000',
-        payer: '',
-        getter: '本公司'
-      }]
-      this.value3 = new Date()
-      this.value2 = new Date() - (3 * 3600 * 24 * 1000)
-      setTimeout(function() {
+      if (this.subuser2 == '' || this.subuser2 == null) {
+        this.$message({
+          type: 'error',
+          message: '请选择分账方'
+        })
         this.loading = false // 改为self
-      }.bind(this), 600)
+      } else if (this.subuser2 != '本公司') {
+        this.query.start_time = this.query.start_time.valueOf()
+        this.query.end_time = this.query.end_time.valueOf()
+        this.query.bizUserId = this.subuser2
+        this.query.limit = this.pageSize
+        this.query.page = this.page
+        getStatementByPartner(this.query).then(res => {
+          console.log('getStatementByPartner res----:', res)
+          this.tableData = res.data
+          this.money = res.amount
+          this.loading = false // 改为self
+        })
+      } else {
+        console.log('==========本公司============')
+        this.query.start_time = this.query.start_time.valueOf()
+        this.query.end_time = this.query.end_time.valueOf()
+        this.query.limit = this.pageSize
+        this.query.page = this.page
+        getStatementByServer(this.query).then(res => {
+          console.log('getStatementByPartner res----:', res)
+          this.tableData = res.data
+          this.money = res.amount
+          this.loading = false // 改为self
+        })
+      }
     },
     exportCheck() {
       console.log('exportCheck')
-      window.location.href = 'mould/对账单导出模板.xlsx'
+      this.search()
+      import('@/vendor/Export2Excel').then(excel => {
+        // 表格的表头列表
+        console.log('Export2Excel')
+        const tHeader = ['时间', '进账总额', '分账比例', '分账金额', '合作伙伴名称', '本公司分账金额', '提现金额(元)', '转入金额', '转出金额(元)', '备注']
+        // 与表头相对应的数据里边的字段
+        const filterVal = ['datetime', 'amount', 'rule', 'sub_amount', 'name', 'income', 'wd_amount', 'in_amount', 'out_amount', 'username']
+        const list = this.tableData
+        const data = this.formatJson(filterVal, list)
+
+        data.push(['未提现余额', this.money])
+        console.log('Export data', data)
+        // 这里还是使用export_json_to_excel方法比较好，方便操作数据
+        excel.export_json_to_excel(tHeader, data, '对账单导出数据')
+      })
+    },
+    changePage() {
+      console.log('changePage')
+    },
+    formatJson(filterVal, jsonData) {
+      console.log('formatJson')
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          console.log('v[j]-----:', v[j])
+          return v[j]
+        })
+      )
+    },
+    getSummaries(param) {
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '总价'
+          return
+        } else if (index === 9) {
+          sums[index] = this.money + '元'
+          return
+        } else if (index === 10) {
+          return
+        }
+        const values = data.map(item => Number(item[column.property]))
+        if (!values.every(value => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr)
+            if (!isNaN(value)) {
+              return prev + curr
+            } else {
+              return prev
+            }
+          }, 0)
+          sums[index] += ' 元'
+        } else {
+          sums[index] = 'N/A'
+        }
+      })
+
+      return sums
     }
   }
 }

@@ -52,7 +52,7 @@
       <el-form-item label="支行行号" prop="unionBank">
         <el-input v-model="createForm.unionBank" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
-      <el-form-item v-if="state=='create'" label="营业执照" prop="business_license">
+      <!-- <el-form-item v-if="state=='create'" label="营业执照" prop="business_license">
         <el-upload
           ref="imgBroadcastUpload"
           :auto-upload="false"
@@ -65,8 +65,8 @@
         >
           <el-button size="mini" type="primary">点击上传</el-button>
         </el-upload>
-      </el-form-item>
-      <el-form-item v-if="state=='create'" label="银行开户证明"prop="account_opening_permit">
+      </el-form-item> -->
+      <!-- <el-form-item v-if="state=='create'" label="银行开户证明"prop="account_opening_permit">
         <el-upload
           ref="imgBroadcastUpload"
           :auto-upload="false"
@@ -79,8 +79,8 @@
         >
           <el-button size="mini" type="primary">点击上传</el-button>
         </el-upload>
-      </el-form-item>
-      <el-form-item v-if="state=='create'" label="身份证(正)"prop="id_card_f">
+      </el-form-item> -->
+      <!-- <el-form-item v-if="state=='create'" label="身份证(正)"prop="id_card_f">
         <el-upload
           ref="imgBroadcastUpload"
           :auto-upload="false"
@@ -107,7 +107,7 @@
         >
           <el-button size="mini" type="primary">点击上传</el-button>
         </el-upload>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="handleCloseDialog()">取 消</el-button>
@@ -116,7 +116,7 @@
   </div>
 </template>
 <script>
-import bankCodeOptionsConstant from '@/constant/bankCodeList.js'
+import bankCodeOptionsConstant from '@/constant/bank.js'
 import { uploadImgToBase64 } from '@/utils/imgToBase64' // 导入本地图片转base64的方法
 export default {
   props: {
@@ -216,7 +216,8 @@ export default {
   },
   created() {
     this.bankCodeOptions = bankCodeOptionsConstant
-    if (this.dataToModify) {
+    if (this.state == 'update') {
+      console.log('dataToModify-----:', this.dataToModify)
       this.createForm = Object.assign({}, this.dataToModify)
     }
   },
@@ -239,7 +240,7 @@ export default {
       }
 
       await this.submitDialogData('business_license', this.businessLicenseList)
-      await this.submitDialogData('account_opening_permit', this.accountOpeningPermitList)
+      // await this.submitDialogData('account_opening_permit', this.accountOpeningPermitList)
       await this.submitDialogData('id_card_f', this.idCardFList)
       await this.submitDialogData('id_card_b', this.idCardBList)
 
@@ -258,10 +259,10 @@ export default {
       this.$emit('closeDialog')
     },
     businessLicenseChange(file, fileList) {
-      const isLt2M = file.size / 1024 / 1024 < 2 // 上传头像图片大小不能超过 2MB
+      const isLt2M = file.size / 1024 / 1024 < 2 // 上传头像图片大小不能超过 1MB
       if (!isLt2M) {
         this.businessLicenseList = fileList.filter(v => v.uid !== file.uid)
-        this.$message.error('图片选择失败，每张图片大小不能超过 2MB,请重新选择!')
+        this.$message.error('图片选择失败，每张图片大小不能超过 1MB,请重新选择!')
       } else {
         this.businessLicenseList.push(file)
       }
@@ -270,10 +271,10 @@ export default {
       this.businessLicenseList = fileList
     },
     accountOpeningPermitChange(file, fileList) {
-      const isLt2M = file.size / 1024 / 1024 < 2 // 上传头像图片大小不能超过 2MB
+      const isLt2M = file.size / 1024 / 1024 < 2 // 上传头像图片大小不能超过 1MB
       if (!isLt2M) {
         this.accountOpeningPermitList = fileList.filter(v => v.uid !== file.uid)
-        this.$message.error('图片选择失败，每张图片大小不能超过 2MB,请重新选择!')
+        this.$message.error('图片选择失败，每张图片大小不能超过 1MB,请重新选择!')
       } else {
         this.accountOpeningPermitList.push(file)
       }
@@ -283,10 +284,10 @@ export default {
       this.accountOpeningPermitList = fileList
     },
     idCardFChange(file, fileList) {
-      const isLt2M = file.size / 1024 / 1024 < 2 // 上传头像图片大小不能超过 2MB
+      const isLt2M = file.size / 1024 / 1024 < 2 // 上传头像图片大小不能超过 1MB
       if (!isLt2M) {
         this.idCardFList = fileList.filter(v => v.uid !== file.uid)
-        this.$message.error('图片选择失败，每张图片大小不能超过 2MB,请重新选择!')
+        this.$message.error('图片选择失败，每张图片大小不能超过 1MB,请重新选择!')
       } else {
         this.idCardFList.push(file)
       }
@@ -296,10 +297,10 @@ export default {
       this.idCardFList = fileList
     },
     idCardBChange(file, fileList) {
-      const isLt2M = file.size / 1024 / 1024 < 2 // 上传头像图片大小不能超过 2MB
+      const isLt2M = file.size / 1024 / 1024 < 2 // 上传头像图片大小不能超过 1MB
       if (!isLt2M) {
         this.idCardBList = fileList.filter(v => v.uid !== file.uid)
-        this.$message.error('图片选择失败，每张图片大小不能超过 2MB,请重新选择!')
+        this.$message.error('图片选择失败，每张图片大小不能超过 1MB,请重新选择!')
       } else {
         this.idCardBList.push(file)
       }
@@ -314,7 +315,8 @@ export default {
       // 并发 转码轮播图片list => base64
       const filePromises = imgList.map(async file => {
         const response = await uploadImgToBase64(file.raw)
-        return response.result.replace(/.*;base64,/, '') // 去掉data:image/jpeg;base64,
+        // return response.result.replace(/.*;base64,/, '') // 去掉data:image/jpeg;base64,
+        return response.result // 去掉data:image/jpeg;base64,
       })
       // 按次序输出 base64图片
       for (const textPromise of filePromises) {

@@ -14,12 +14,28 @@
       width="30%"
     >
       <el-steps :active="active" finish-status="success">
-        <el-step title="绑定手机" />
         <el-step title="企业信息认证" />
+        <el-step title="等待认证" />
+        <el-step title="绑定手机" />
         <el-step title="绑定银行卡" />
         <el-step title="电子签约" />
       </el-steps>
-      <div v-if="active==0">
+      <div v-if="active==0" v-loading="activeLoading">
+        <div style="margin-top:15px;">
+          <span style="line-height:15px;">法人姓名 : </span><span>{{ activateObj.name }}</span>
+        </div>
+        <div style="margin-top:15px;">
+          <span style="margin-top:15px;">法人证件号 : </span><span>{{ activateObj.identityno }}</span>
+        </div>
+        <el-button style="margin-top: 15px;" size="mini" @click="checkRealName()">下一步</el-button>
+      </div>
+      <div v-if="active==1" v-loading="activeLoading">
+        <span v-show="!isCheckPass">验证中...</span>
+        <span v-show="isCheckPass">验证通过!</span>
+        </br>
+        <el-button v-show="isCheckPass" style="margin-top: 15px;" size="mini" @click="next()">下一步</el-button>
+      </div>
+      <div v-if="active==2" v-loading="activeLoading">
         <span>手机号 : </span><span>{{ activateObj.phone }}</span>
         <el-button size="mini" class="filter-item" style="margin-left: 10px;margin-top:15px;" type="primary" @click="sendCode()">
           获取验证码
@@ -29,16 +45,8 @@
         </br>
         <el-button style="margin-top: 15px;" size="mini" @click="checkCode()">下一步</el-button>
       </div>
-      <div v-if="active==1">
-        <div style="margin-top:15px;">
-          <span style="line-height:15px;">法人姓名 : </span><span>{{ activateObj.name }}</span>
-        </div>
-        <div style="margin-top:15px;">
-          <span style="margin-top:15px;">法人证件号 : </span><span>{{ activateObj.identityno }}</span>
-        </div>
-        <el-button style="margin-top: 15px;" size="mini" @click="checkRealName()">下一步</el-button>
-      </div>
-      <div v-if="active==2">
+
+      <div v-if="active==3" v-loading="activeLoading">
         <div style="margin-top:15px;">
           <span style="line-height:15px;">姓名 : </span><span>{{ activateObj.name }}</span>
         </div>
@@ -53,7 +61,7 @@
         </div>
         <el-button style="margin-top: 15px;" size="mini" @click="checkBank()">下一步</el-button>
       </div>
-      <div v-if="active==3">
+      <div v-if="active==4" v-loading="activeLoading">
         <!-- <iframe id="iframe" style="width:100%;height:100%" scrolling="yes" :src="iframeUrl" /> -->
         <div style="text-align:center;margin-top:20px"><el-button type="primary" @click="jump()">点击跳转至电子签约页面</el-button></div>
 
@@ -93,7 +101,7 @@
     </el-dialog>
     <div id="searchBox">
       <div id="buttonBox" style="margin:50px;">
-        <span style="margin-right:10px">用户名 : </span><el-input v-model="query.id" size="mini" placeholder="单据流水号" style="width: 15vw;margin-right:15px;" class="filter-item" />
+        <span style="margin-right:10px">用户名 : </span><el-input v-model="query.id" size="mini" placeholder="用户名" style="width: 15vw;margin-right:15px;" class="filter-item" />
         <span style="margin-right:10px">状态 : </span>
         <el-select v-model="query.status" size="mini" clearable style="width: 8vw;" placeholder="请选择">
           <el-option
@@ -143,10 +151,8 @@
           label="状态"
         >
           <template slot-scope="scope">
-            <el-tag v-show="scope.row.status==3" type="success">已激活</el-tag>
-            <el-tag v-show="scope.row.status==2" type="warning">激活中</el-tag>
-            <el-tag v-show="scope.row.status==1" type="danger">未激活</el-tag>
-            <el-tag v-show="scope.row.status==-1" type="info">激活失败</el-tag>
+            <el-tag v-show="scope.row.step==4" type="success">已激活</el-tag>
+            <el-tag v-show="scope.row.step!=4" type="warning">未激活</el-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -182,8 +188,11 @@
 
         <el-table-column label="操作" width="160" align="center">
           <template slot-scope="scope">
-            <el-tooltip v-show="scope.row.status==1" class="item" effect="dark" content="激活" placement="left">
+            <el-tooltip v-if="scope.row.step!=4" class="item" effect="dark" content="激活" placement="left">
               <el-button type="success" icon="el-icon-magic-stick" circle size="mini" @click="activate(scope.row)" />
+            </el-tooltip>
+            <el-tooltip v-if="scope.row.step==4" class="item" effect="dark" content="设置支付密码" placement="left">
+              <el-button type="warning" icon="el-icon-s-goods" circle size="mini" @click="manageCode(scope.row)" />
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="编辑" placement="top">
               <el-button type="primary" icon="el-icon-edit" circle size="mini" @click="modify(scope.row)" />
@@ -209,7 +218,7 @@
 </template>
 
 <script>
-import { getUserList, addUser, updateUser, deleteUser, getCode, bindPhone, setRealName, bindBankCard, signContract } from '@/api/tsyLj.js'
+import { getUserListByAll, addUser, updateUser, deleteUser, getCode, bindPhone, setRealName, bindBankCard, signContract, getMemberInfo, passRealName, setPayPwd } from '@/api/tsyLj.js'
 import subUserForm from './form/subUserForm'
 
 export default {
@@ -275,7 +284,9 @@ export default {
       nextStr: '下一步',
       activateObj: {},
       verifyCode: '',
-      iframeUrl: ''
+      iframeUrl: '',
+      isCheckPass: false,
+      activeLoading: false
     }
   },
   created() {
@@ -288,9 +299,9 @@ export default {
         sheet_num: '0'
       }
       this.loading = true
-      getUserList().then(res => {
-        console.log('getUserList---:', res)
-        this.tableData = res.data.fromList.concat(res.data.toList)
+      getUserListByAll().then(res => {
+        console.log('getUserListByAll---:', res)
+        this.tableData = res.data
         for (let i = 0; i < this.tableData.length; i++) {
           if (this.tableData[i].default_status == 0) {
             this.tableData[i].default_status = '合作伙伴'
@@ -304,10 +315,11 @@ export default {
       })
     },
     activate(e) {
+      console.log('activate e-----:', e)
       this.activateDialogVisible = true
       this.activateObj = e
       this.active = Number(e.step)
-      if (this.active == 3) {
+      if (this.active == 4) {
         const data = {
           bizUserId: this.activateObj.id
         }
@@ -318,6 +330,15 @@ export default {
           // const iframe = document.getElementById('iframe').contentWindow
           // const son = document.getElementById('iframe')
           // son.style.height = 500 + 'px'
+        })
+      } else if (this.active == 1) {
+        this.isCheckPass = false
+        getMemberInfo({ bizUserId: this.activateObj.id }).then(res => {
+          console.log('getMemberInfo res---:', res)
+          console.log('=====', (res.data.status == 2 || res.data.isIdentityChecked == true))
+          if (res.data.status == 2 || res.data.isIdentityChecked == true) {
+            this.isCheckPass = true
+          }
         })
       }
       this.nextStr = '完成'
@@ -367,10 +388,17 @@ export default {
       e.subuser2Account = e.account * subuser2Ratio / 10
     },
     next() {
-      if (this.active == 2) {
+      this.isCheckPass = false
+      if (this.active == 1) {
+        passRealName({ bizUserId: this.activateObj.id }).then(res => {
+          console.log('passRealName res--:', res)
+        })
+        this.active++
+        this.isCheckPass = false
+      } else if (this.active == 3) {
         this.nextStr = '完成'
         this.active++
-      } else if (this.active == 3) {
+      } else if (this.active == 4) {
         this.activateDialogVisible = false
         this.init()
       } else {
@@ -396,10 +424,21 @@ export default {
       console.log('e----:', e)
       addUser(e).then(res => {
         console.log('createVerifyInfo res=======:', res)
-        this.dialogVisible = false
-        this.state = 'init'
-        this.dataToModify = null
-        this.init()
+        if (res.success == 1) {
+          this.$message({
+            type: 'success',
+            message: res.message
+          })
+          this.dialogVisible = false
+          this.state = 'init'
+          this.dataToModify = null
+          this.init()
+        } else {
+          this.$message({
+            type: 'error',
+            message: res.message
+          })
+        }
       })
     },
     updateConfirm(e) {
@@ -458,16 +497,19 @@ export default {
     },
     sendCode() {
       console.log('==========sendCode==========')
+      this.activeLoading = true
       const param = {
         bizUserId: this.activateObj.id,
         phone: this.activateObj.phone
       }
       getCode(param).then(res => {
         console.log('getCode res--:', res)
+        this.activeLoading = false
       })
     },
     checkCode() {
       console.log('==========checkCode==========')
+      this.activeLoading = true
       const param = {
         bizUserId: this.activateObj.id,
         phone: this.activateObj.phone,
@@ -476,10 +518,12 @@ export default {
       bindPhone(param).then(res => {
         console.log('bindPhone res--:', res)
         this.active++
+        this.activeLoading = false
       })
     },
     checkRealName() {
       console.log('==========checkRealName==========')
+      this.activeLoading = true
       const param = {
         bizUserId: this.activateObj.id,
         name: this.activateObj.name,
@@ -488,10 +532,19 @@ export default {
       setRealName(param).then(res => {
         console.log('setRealName res--:', res)
         this.active++
+        getMemberInfo({ bizUserId: this.activateObj.id }).then(res => {
+          console.log('getMemberInfo res---:', res)
+          this.activeLoading = false
+          console.log('=====', (res.data.status == 2 || res.data.isIdentityChecked == true))
+          if (res.data.status == 2 || res.data.isIdentityChecked == true) {
+            this.isCheckPass = true
+          }
+        })
       })
     },
     checkBank() {
       console.log('==========checkBank==========')
+      this.activeLoading = true
       const param = {
         bizUserId: this.activateObj.id,
         name: this.activateObj.name,
@@ -509,7 +562,7 @@ export default {
           console.log('signContract res---:', res)
           this.iframeUrl = res.data.url
           console.log('this.iframeUrl---:', this.iframeUrl)
-
+          this.activeLoading = false
           // const iframe = document.getElementById('iframe').contentWindow
           // const son = document.getElementById('iframe')
           // son.style.height = 500 + 'px'
@@ -518,6 +571,17 @@ export default {
     },
     jump() {
       window.open(this.iframeUrl, '_blank')
+    },
+    manageCode(e) {
+      console.log('manageCode e------:', e)
+      let param = {
+        bizUserId:e.id
+      }
+      setPayPwd(param).then(res=>{
+        console.log('setPayPwd res---:',res);
+        let jumpUrl = res.data.url
+        window.open(jumpUrl, '_blank')
+      })
     }
   }
 }
