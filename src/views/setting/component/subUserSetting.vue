@@ -151,8 +151,8 @@
           label="状态"
         >
           <template slot-scope="scope">
-            <el-tag v-show="scope.row.step==4" type="success">已激活</el-tag>
-            <el-tag v-show="scope.row.step!=4" type="warning">未激活</el-tag>
+            <el-tag v-show="scope.row.step==5" type="success">已激活</el-tag>
+            <el-tag v-show="scope.row.step!=5" type="warning">未激活</el-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -188,10 +188,10 @@
 
         <el-table-column label="操作" width="160" align="center">
           <template slot-scope="scope">
-            <el-tooltip v-if="scope.row.step!=4" class="item" effect="dark" content="激活" placement="left">
+            <el-tooltip v-if="scope.row.step!=5" class="item" effect="dark" content="激活" placement="left">
               <el-button type="success" icon="el-icon-magic-stick" circle size="mini" @click="activate(scope.row)" />
             </el-tooltip>
-            <el-tooltip v-if="scope.row.step==4" class="item" effect="dark" content="设置支付密码" placement="left">
+            <el-tooltip v-if="scope.row.step==5" class="item" effect="dark" content="设置支付密码" placement="left">
               <el-button type="warning" icon="el-icon-s-goods" circle size="mini" @click="manageCode(scope.row)" />
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="编辑" placement="top">
@@ -205,7 +205,7 @@
         </el-table-column>
       </el-table>
       <el-pagination
-        :page-size="10"
+        :page-size="limit"
         :current-page="currentPage"
         layout="prev, pager, next"
         :total="totalCount"
@@ -257,7 +257,7 @@ export default {
       },
       alwaysFalse: false,
       totalCount: 0,
-      pageSize: 10,
+      limit: 10,
       page: 1,
       dataToModify: {},
       tableData: [],
@@ -294,12 +294,14 @@ export default {
   },
   methods: {
     init() {
+      this.query.page = this.page
+      this.query.limit = this.limit
       this.uploadData = {
         flag: '服务商导入模板',
         sheet_num: '0'
       }
       this.loading = true
-      getUserListByAll().then(res => {
+      getUserListByAll(this.query).then(res => {
         console.log('getUserListByAll---:', res)
         this.tableData = res.data
         for (let i = 0; i < this.tableData.length; i++) {
@@ -416,8 +418,9 @@ export default {
       this.state = 'create'
       this.dialogVisible = true
     },
-    changePage() {
-      console.log('changePage')
+    changePage(e) {
+      this.page = e
+      this.init()
     },
     createConfirm(e) {
       console.log('==========createConfirm==========')
@@ -486,7 +489,7 @@ export default {
     },
     downLoadVerifyModule() {
       console.log('downLoadVerifyModule')
-      window.location.href = 'mould/服务商导入模板0611.xlsx'
+      window.location.href = 'mould/服务商导入模板0622.xlsx'
     },
     handleCommand(e) {
       if (e.cmd === 'downLoad') {
@@ -574,12 +577,12 @@ export default {
     },
     manageCode(e) {
       console.log('manageCode e------:', e)
-      let param = {
-        bizUserId:e.id
+      const param = {
+        bizUserId: e.id
       }
-      setPayPwd(param).then(res=>{
-        console.log('setPayPwd res---:',res);
-        let jumpUrl = res.data.url
+      setPayPwd(param).then(res => {
+        console.log('setPayPwd res---:', res)
+        const jumpUrl = res.data.url
         window.open(jumpUrl, '_blank')
       })
     }

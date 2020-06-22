@@ -136,7 +136,7 @@
         />
       </el-table>
       <el-pagination
-        :page-size="50"
+        :page-size="limit"
         :current-page="currentPage"
         layout="prev, pager, next"
         :total="totalCount"
@@ -182,7 +182,7 @@ export default {
       subuser2: '',
       alwaysFalse: false,
       totalCount: 0,
-      pageSize: 10,
+      limit: 50,
       page: 1,
       tableData: [],
       currentPage: 1,
@@ -224,6 +224,8 @@ export default {
   methods: {
     search() {
       this.loading = true
+      this.query.page = this.page
+      this.query.limit = this.limit
       if (this.subuser2 == '' || this.subuser2 == null) {
         this.$message({
           type: 'error',
@@ -234,8 +236,6 @@ export default {
         this.query.start_time = this.query.start_time.valueOf()
         this.query.end_time = this.query.end_time.valueOf()
         this.query.bizUserId = this.subuser2
-        this.query.limit = this.pageSize
-        this.query.page = this.page
         getStatementByPartner(this.query).then(res => {
           console.log('getStatementByPartner res----:', res)
           this.tableData = res.data
@@ -246,8 +246,6 @@ export default {
         console.log('==========本公司============')
         this.query.start_time = this.query.start_time.valueOf()
         this.query.end_time = this.query.end_time.valueOf()
-        this.query.limit = this.pageSize
-        this.query.page = this.page
         getStatementByServer(this.query).then(res => {
           console.log('getStatementByPartner res----:', res)
           this.tableData = res.data
@@ -274,8 +272,9 @@ export default {
         excel.export_json_to_excel(tHeader, data, '对账单导出数据')
       })
     },
-    changePage() {
-      console.log('changePage')
+    changePage(e) {
+      this.page = e
+      this.search()
     },
     formatJson(filterVal, jsonData) {
       console.log('formatJson')

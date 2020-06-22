@@ -86,7 +86,7 @@
           label="流水号"
         />
         <el-table-column
-          prop="create_time"
+          prop="time"
           align="center"
           width="150"
           sortable
@@ -168,7 +168,7 @@
         </el-table-column>
       </el-table>
       <el-pagination
-        :page-size="10"
+        :page-size="limit"
         :current-page="currentPage"
         layout="prev, pager, next"
         :total="totalCount"
@@ -196,7 +196,7 @@ export default {
       },
       alwaysFalse: false,
       totalCount: 0,
-      pageSize: 10,
+      limit: 10,
       page: 1,
       tableData: [],
       currentPage: 1,
@@ -256,9 +256,12 @@ export default {
       })
       this.query.start_time = this.query.start_time.valueOf()
       this.query.end_time = this.query.end_time.valueOf()
+      this.query.page = this.page
+      this.query.limit = this.limit
       getCheckResultDetail(this.query).then(res => {
         console.log('getCheckResultDetail res--:', res)
         this.tableData = res.data
+        this.totalCount = res.count
         setTimeout(function() {
           this.loading = false // 改为self
         }.bind(this), 600)
@@ -272,7 +275,7 @@ export default {
         console.log('Export2Excel')
         const tHeader = ['机器号', '流水号', '时间', '金额(元)', '服务商', '服务商金额(元)', '合作伙伴', '合作伙伴金额(元)', '比例']
         // 与表头相对应的数据里边的字段
-        const filterVal = ['termid', 'bizorderno', 'create_time', 'amount', 'sub1_user_name', 'sub1_account', 'sub2_user_name', 'sub2_account', 'rule']
+        const filterVal = ['termid', 'bizorderno', 'time', 'amount', 'sub1_user_name', 'sub1_account', 'sub2_user_name', 'sub2_account', 'rule']
         const list = this.tableData
         const data = this.formatJson(filterVal, list)
         console.log('Export data', data)
@@ -317,12 +320,12 @@ export default {
             }
             refusedCheckResult({ order_list: bizordernoList }).then(res => {
               console.log('refusedCheckResult res---:', res)
-              if(res.success==0){
+              if (res.success == 0) {
                 this.$message({
                   type: 'error',
                   message: res.message
                 })
-              }else{
+              } else {
                 this.$message({
                   type: 'success',
                   message: res.message
@@ -361,20 +364,19 @@ export default {
             for (let i = 0; i < this.selectionList.length; i++) {
               bizordernoList.push(this.selectionList[i].bizorderno)
             }
-            batchCheckResultByNo({order_list:bizordernoList}).then(res=>{
-              console.log('batchCheckResultByNo res--:',res);
-              if(res.success==0){
+            batchCheckResultByNo({ order_list: bizordernoList }).then(res => {
+              console.log('batchCheckResultByNo res--:', res)
+              if (res.success == 0) {
                 this.$message({
                   type: 'error',
                   message: res.message
                 })
-              }else{
+              } else {
                 this.$message({
                   type: 'success',
                   message: res.message
                 })
               }
-
             })
             done()
             setTimeout(() => {
@@ -386,8 +388,9 @@ export default {
         }
       })
     },
-    changePage() {
-      console.log('changePage')
+    changePage(e) {
+      this.page = e
+      this.init()
     },
     refuse(e) {
       console.log('==========refuse===========')
@@ -408,12 +411,12 @@ export default {
             bizordernoList.push(e.bizorderno)
             refusedCheckResult({ order_list: bizordernoList }).then(res => {
               console.log('refusedCheckResult res---:', res)
-              if(res.success==0){
+              if (res.success == 0) {
                 this.$message({
                   type: 'error',
                   message: res.message
                 })
-              }else{
+              } else {
                 this.$message({
                   type: 'success',
                   message: res.message
@@ -464,14 +467,14 @@ export default {
             instance.confirmButtonText = '执行中...'
             const bizordernoList = []
             bizordernoList.push(e.bizorderno)
-            batchCheckResultByNo({order_list:bizordernoList}).then(res=>{
-              console.log('batchCheckResultByNo res--:',res);
-              if(res.success==0){
+            batchCheckResultByNo({ order_list: bizordernoList }).then(res => {
+              console.log('batchCheckResultByNo res--:', res)
+              if (res.success == 0) {
                 this.$message({
                   type: 'error',
                   message: res.message
                 })
-              }else{
+              } else {
                 this.$message({
                   type: 'success',
                   message: res.message
