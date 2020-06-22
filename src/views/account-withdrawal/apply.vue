@@ -29,6 +29,7 @@
         <el-select
           v-model="listQuery.userid"
           filterable
+          clearable
           size="mini"
           placeholder="请输入关键词"
         >
@@ -126,7 +127,7 @@ export default {
       dialogVisible1: false,
       alwaysFalse: false,
       showSearch: true,
-      total: 11,
+      total: 0,
       listLoading: false,
       list: [
         {
@@ -171,9 +172,10 @@ export default {
     handleFilter() {
       this.listLoading = true
       // console.log('handlefilter')
-      getWithdrawalList({userid:this.listQuery.userid}).then(res => {
+      getWithdrawalList({userid:this.listQuery.userid,page:this.listQuery.page,limit:this.listQuery.limit}).then(res => {
         if (res.success === 1) {
           this.tableData = res.data
+          this.total=Number(res.count)
           this.listLoading = false
         } else {
           this.listLoading = false
@@ -214,6 +216,7 @@ export default {
       // console.log(`当前页: ${val}`)
       this.listQuery.page = val
       this.handleFilter()
+      this.listQuery.page=1
       // 页码切换分页调用请求传值
     },
     handleSizeChange(val) {

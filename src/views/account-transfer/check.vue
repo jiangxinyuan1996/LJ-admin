@@ -41,6 +41,7 @@
         <span style="margin-right:15px">转出方:</span>
         <el-select
             v-model="listQuery.from_user_id"
+            clearable
             filterable
             placeholder="请输入关键词"
             size="mini"
@@ -54,6 +55,7 @@
         </el-select>
         <span style="margin:0 15px">转入方:</span>
         <el-select
+            clearable
             v-model="listQuery.to_user_id"
             filterable
             placeholder="请输入关键词"
@@ -72,6 +74,7 @@
         </el-select> -->
         <span style="margin:0 18px;padding-left:5px;">日期:</span>
         <el-date-picker
+          clearable
           v-model="start_time"
           size="mini"
           style="width:13%"
@@ -82,6 +85,7 @@
         />
         <span style="margin-right:15px;margin-left:15px;">至</span>
         <el-date-picker
+          clearable
           v-model="end_time"
           size="mini"
           style="width:13%"
@@ -198,7 +202,7 @@ export default {
       dialogVisible:false,
       alwaysFalse: false,
       showSearch: true,
-      total: 11,
+      total: 0,
       listLoading: false,
       list: [],
       // 查询及分页参数
@@ -395,6 +399,7 @@ export default {
         if(res.success===1){
           this.listLoading=false
           this.tableData=res.data
+          this.total=Number(res.count)
           for(let i=0;i<this.tableData.length;i++){
               this.tableData[i].amount=Number(this.tableData[i].amount)
             }
@@ -411,6 +416,7 @@ export default {
       // console.log(`当前页: ${val}`)
       this.listQuery.page = val
       this.handleFilter()
+      this.listQuery.page=1
       // 页码切换分页调用请求传值
     },
     handleSizeChange(val) {

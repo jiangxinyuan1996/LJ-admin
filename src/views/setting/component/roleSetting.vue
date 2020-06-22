@@ -96,7 +96,6 @@
               v-loading="loading"
               :data="workerData"
               stripe
-              height="500"
               style="width:100%"
             >
               <el-table-column
@@ -134,6 +133,18 @@
                 </template>
               </el-table-column>
             </el-table>
+             <!-- 分页 -->
+            <el-pagination
+              style="margin-top:20px;"
+              :small="true"
+              :current-page="query.page"
+              :page-sizes="[5,10]"
+              :page-size="10"
+              layout="total, sizes, prev, pager, next"
+              :total="total"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+            />
           </div>
 </template>
 <script>
@@ -170,6 +181,7 @@ export default {
       loading: false,
       rolestatus: '',
       radio: 0,
+      total:0,
       fromList: [],
       toList: [],
       createRoles: {
@@ -183,7 +195,9 @@ export default {
         userid: ''
       },
       query: {
-        nickname: ''
+        nickname: '',
+        page:1,
+        limit:10
       },
       workerData: [],
       rolelist: [],
@@ -354,15 +368,30 @@ export default {
         }
       })
     },
+    handleCurrentChange(val) {
+      // console.log(`当前页: ${val}`)
+      this.query.page = val
+      this.getUser()
+      this.query.page=1
+      // 页码切换分页调用请求传值
+    },
+    handleSizeChange(val) {
+      // console.log(`每页 ${val} 条`)
+      this.query.limit = val
+      // console.log(this.listQuery.limit)
+      this.getUser()
+    },
     resetForm(formName) {
       this.$refs[formName].resetFields()
     },
     getUser() {
       console.log('获取角色列表')
-      this.listLoading = true
+      this.loading = true
       getPeopleList(this.query).then(res => {
-        this.listLoading = false
+        if(res.success===1){
+        this.loading = false
         this.workerData = JSON.parse(JSON.stringify(res.data))
+        this.total=Number(res.count)
         for (let i = 0; i < res.data.length; i++) {
           this.workerData[i].roleList = res.data[i].roleList.map(item => {
             return item.remark
@@ -371,7 +400,13 @@ export default {
             return item.role_id
           }).join(',')
         }
-        console.log(res.data)
+        }else{
+          this.loading=false
+          this.$message({
+            message:res.message,
+            type:'error'
+          })
+        }
       })
     }
   }

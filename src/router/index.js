@@ -158,6 +158,7 @@ export const asyncRoutes = [
   {
     path: '/subaccount',
     component: Layout,
+    name:'分账明细',
     children: [
       {
         path: 'index',
@@ -170,7 +171,7 @@ export const asyncRoutes = [
   {
     path: '/subverify',
     component: Layout,
-    name: 'subverify',
+    name: '分账复核',
     meta: { title: '分账复核', icon: 'eye-open', affix: true, roles:['机构管理员','分账复核员']},
     children: [
       // {
@@ -182,7 +183,7 @@ export const asyncRoutes = [
       {
         path: 'list',
         component: () => import('@/views/sub-verify/list'),
-        name: 'list',
+        name: '复核明细',
         meta: { title: '复核明细', affix: true }
       },
       {
@@ -197,25 +198,25 @@ export const asyncRoutes = [
   {
     path: '/withdrawal',
     component: Layout,
-    name: 'accountwithdrawal',
+    name: '提现',
     meta: { title: '提现', icon: 'money',roles:['机构管理员','操作员','提现复核员'] },
     children: [
       {
         path: 'withdrawal_apply',
         component: () => import('@/views/account-withdrawal/apply'),
-        name: 'withdrawal_apply',
+        name: '提现申请',
         meta: { title: '提现申请', roles: ['机构管理员','操作员'] }
       },
       {
         path: 'withdrawal_check',
         component: () => import('@/views/account-withdrawal/check'),
-        name: 'withdrawal_check',
+        name: '提现复核',
         meta: { title: '提现复核', roles: ['机构管理员','提现复核员'] }
       },
       {
         path: 'test',
         component: () => import('@/views/account-withdrawal/test'),
-        name: 'test',
+        name: '测试',
         meta: { title: '测试', roles: ['机构管理员'] },
         hidden:true
       }
@@ -224,19 +225,19 @@ export const asyncRoutes = [
   {
     path: '/transfer',
     component: Layout,
-    name: 'accounttransfer',
+    name: '调账',
     meta: { title: '调账', icon: 'user', roles:['机构管理员','操作员','提现复核员']},
     children: [
       {
         path: 'transfer_apply',
         component: () => import('@/views/account-transfer/apply'),
-        name: 'transfer_apply',
+        name: '调账申请',
         meta: { title: '调账申请', roles: ['机构管理员', '操作员'] }
       },
       {
         path: 'transfer_check',
         component: () => import('@/views/account-transfer/check'),
-        name: 'transfer_check',
+        name: '调账复核',
         meta: { title: '调账复核', roles: ['机构管理员', '提现复核员'] }
       }
     ]
@@ -244,12 +245,12 @@ export const asyncRoutes = [
   {
     path: '/setting',
     component: Layout,
-    name: 'setting',
+    name: '参数配置',
     children: [
       {
         path: 'index/:page',
         component: () => import('@/views/setting/index'),
-        name: 'setting',
+        name: '参数配置',
         meta: { title: '参数配置', icon: 'list', roles: ['机构管理员'] }
       }
     ]
