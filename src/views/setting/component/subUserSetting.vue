@@ -218,7 +218,7 @@
 </template>
 
 <script>
-import { getUserListByAll, addUser, updateUser, deleteUser, getCode, bindPhone, setRealName, bindBankCard, signContract, getMemberInfo, passRealName } from '@/api/tsyLj.js'
+import { getUserListByAll, addUser, updateUser, deleteUser, getCode, bindPhone, setRealName, bindBankCard, signContract, getMemberInfo, passRealName, setPayPwd } from '@/api/tsyLj.js'
 import subUserForm from './form/subUserForm'
 
 export default {
@@ -573,7 +573,15 @@ export default {
       window.open(this.iframeUrl, '_blank')
     },
     manageCode(e) {
-      console.log('manageCode e------:', manageCode)
+      console.log('manageCode e------:', e)
+      let param = {
+        bizUserId:e.id
+      }
+      setPayPwd(param).then(res=>{
+        console.log('setPayPwd res---:',res);
+        let jumpUrl = res.data.url
+        window.open(jumpUrl, '_blank')
+      })
     }
   }
 }

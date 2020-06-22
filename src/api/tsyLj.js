@@ -77,3 +77,6 @@ export const getStatementByServer = (data) => fetch('/TSY/home/result/getStateme
 
 // 账户余额查询
 export const getBalanceById = (data) => fetch('/TSY/home/result/getBalanceById', data)
+
+//设置交易密码
+export const setPayPwd = (data) => fetch('/TSY/home/tsy/setPayPwd', data, 'POST')

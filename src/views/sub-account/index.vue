@@ -197,7 +197,9 @@ export default {
         trxid: '',
         termid: '',
         start_time: '',
-        end_time: ''
+        end_time: '',
+        page: 1,
+        limit:1
       },
       alwaysFalse: false,
       totalCount: 0,
@@ -225,10 +227,13 @@ export default {
   methods: {
     init() {
       this.loading = true
+      this.query.page = this.page
       this.query.start_time = this.query.start_time.valueOf()
       this.query.end_time = this.query.end_time.valueOf()
       getPayResult(this.query).then(res => {
         console.log('getPayResult res---:', res)
+        this.totalCount = parseInt(res.count)
+        console.log('this.totalCount----:',this.totalCount);
         this.tableData = res.data
       })
       getUserList().then(res => {
@@ -266,8 +271,9 @@ export default {
         }
       })
     },
-    changePage() {
-      console.log('changePage')
+    changePage(e){
+      this.page = e
+      this.search()
     },
     exportCheck() {
       getPayResult(this.query).then(res => {
