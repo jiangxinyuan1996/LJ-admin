@@ -3,7 +3,7 @@
     <div id="searchBox">
       <div id="buttonBox" style="margin:50px;">
         <span style="margin-right:10px">操作人 : </span>
-        <el-select v-model="name" size="mini" placeholder="请选择">
+        <el-select v-model="query.userid" size="mini" placeholder="请选择">
           <el-option
             v-for="item in nameoptions"
             :key="item.value"
@@ -13,15 +13,26 @@
         </el-select>
         <span style="margin-right:10px;margin-left:10px;" class="demonstration">操作时间 : </span>
         <el-date-picker
-          v-model="createtime"
+          v-model="query.start_time"
           size="mini"
           type="datetime"
           placeholder="选择日期时间"
           align="right"
           :picker-options="pickerOptions"
+          :clearable="alwaysFalse"
+        />
+        <span>至</span>
+        <el-date-picker
+          v-model="query.end_time"
+          size="mini"
+          type="datetime"
+          placeholder="选择日期时间"
+          align="right"
+          :picker-options="pickerOptions"
+          :clearable="alwaysFalse"
         />
         <span style="margin-right:10px;margin-left:10px;">操作类型 : </span>
-        <el-select v-model="status" size="mini" placeholder="请选择">
+        <el-select v-model="query.type" size="mini" placeholder="请选择">
           <el-option
             v-for="item in statusoptions"
             :key="item.value"
@@ -29,7 +40,7 @@
             :value="item.value"
           />
         </el-select>
-        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="clickSearch()">
+        <el-button size="mini" class="filter-item" style="margin-left: 10px;" type="primary" @click="init()">
           查询
         </el-button>
       </div>
@@ -44,25 +55,25 @@
         style="margin:20px;margin-left:50px;margin-right:50px;"
       >
         <el-table-column
-          prop="name"
+          prop="admin_name"
           align="center"
           width="120"
           label="操作人"
         />
         <el-table-column
-          prop="createtime"
+          prop="time"
           align="center"
           width="170"
           label="操作时间"
         />
         <el-table-column
-          prop="status"
+          prop="type"
           align="center"
           width="110"
           label="操作类型"
         />
         <el-table-column
-          prop="operationDetail"
+          prop="content"
           align="center"
           width="400"
           show-overflow-tooltip
@@ -70,7 +81,7 @@
         />
       </el-table>
       <el-pagination
-        :page-size="10"
+        :page-size="query.limit"
         :current-page="currentPage"
         layout="prev, pager, next"
         :total="totalCount"
@@ -83,6 +94,7 @@
 </template>
 
 <script>
+import {getLog,getPeopleList} from '@/api/tsyLj.js'
 export default {
   name: 'OperationLog',
   data() {
@@ -109,174 +121,79 @@ export default {
           }
         }]
       },
-      nameoptions: [{
-        label: '张三',
-        value: '张三'
-      }, {
-        label: '李四',
-        value: '李四'
-      }],
-      status: '',
-      statusoptions: [{
-        label: '提交',
-        value: '提交'
-      }, {
-        label: '复核',
-        value: '复核'
-      }, {
-        label: '提现',
-        value: '提现'
-      }, {
-        label: '调账',
-        value: '调账'
-      }],
-      createtime: '',
+      nameoptions: [],
+      statusoptions:[
+        {
+          label:'分账',
+          value:'分账'
+        },{
+          label:'分账复核',
+          value:'分账复核'
+        },{
+          label:'调账申请',
+          value:'调账申请'
+        },{
+          label:'提现申请',
+          value:'提现申请'
+        },{
+          label:'调账复核',
+          value:'调账复核'
+        },{
+          label:'提现复核',
+          value:'提现复核'
+        },{
+          label:'参数配置',
+          value:'参数配置'
+        },
+      ],
       alwaysFalse: false,
       totalCount: 0,
-      pageSize: 10,
-      page: 1,
-      tableData: [
-        {
-          name: '张三',
-          createtime: '2020-05-26 15:02:35',
-          status: '提交',
-          operationDetail: '提交了流水号为A1000001的单据'
-        }, {
-          name: '张三',
-          createtime: '2020-05-26 15:02:35',
-          status: '复核',
-          operationDetail: '复核了(2020-05-27 15:00:00至2020-05-28 19:00:00) (张三与李四)的单据'
-        }, {
-          name: '李四',
-          createtime: '2020-05-26 15:02:35',
-          status: '提现',
-          operationDetail: '向李四的账户提现100元'
-        }, {
-          name: '李四',
-          createtime: '2020-05-26 15:02:35',
-          status: '调账',
-          operationDetail: '由张三向李四调账100元'
-        }
-      ],
+      tableData: [],
       currentPage: 1,
-      ratios: [{
-        value: '10:0',
-        label: '10:0'
-      }, {
-        value: '5:5',
-        label: '5:5'
-      }, {
-        value: '3:7',
-        label: '3:7'
-      }],
-      subuser2List: [
-        {
-          value: '合作伙伴1',
-          label: '合作伙伴1'
-        },
-        {
-          value: '合作伙伴2',
-          label: '合作伙伴2'
-        },
-        {
-          value: '合作伙伴3',
-          label: '合作伙伴3'
-        }
-      ],
-      subuser1List: [{
-        value: '1',
-        label: '本公司'
-      }]
-    }
-  },
-  created() {
-    for (let i = 0; i < this.tableData.length; i++) {
-      if (this.tableData[i].ratio != '' && this.tableData[i].ratio != null) {
-        const subuser1Ratio = this.tableData[i].ratio.split(':')[0]
-        const subuser2Ratio = this.tableData[i].ratio.split(':')[1]
-        this.tableData[i].subuser1Account = this.tableData[i].account * subuser1Ratio / 10
-        this.tableData[i].subuser2Account = this.tableData[i].account * subuser2Ratio / 10
+      query:{
+        start_time:'',
+        end_time:'',
+        userid:'',
+        type:'',
+        limit: 10,
+        page: 1
       }
     }
   },
-  methods: {
-    changeRatio(e) {
-      console.log('changeRatio e---:', e)
-      const subuser1Ratio = e.ratio.split(':')[0]
-      const subuser2Ratio = e.ratio.split(':')[1]
-      e.subuser1Account = e.account * subuser1Ratio / 10
-      e.subuser2Account = e.account * subuser2Ratio / 10
-    },
-    commit(e) {
-      // this.$confirm(
-      //   h('p', null, [
-      //       h('span', null, '内容可以是 '),
-      //       h('i', { style: 'color: teal' }, 'VNode')
-      //     ]),
-      //   // `将以${e.ratio}的比例分给${e.subuser1} ${e.subuser1Account}元<br>分给${e.subuser2} ${e.subuser2Account}元, 是否继续?`,
-      //   '提示', {
-      //   confirmButtonText: '确定',
-      //   cancelButtonText: '取消',
-      //   type: 'warning'
-      // }).then(() => {
-      //   console.log('========提交========')
-      //   this.$message({
-      //     type: 'success',
-      //     message: '提交成功!'
-      //   })
-      // }).catch(() => {
-      //   this.$message({
-      //     type: 'info',
-      //     message: '已取消删除'
-      //   })
-      // })
-
-      const h = this.$createElement
-      this.$msgbox({
-        title: '信息确认',
-        message: h('p', null, [
-          h('span', { style: 'color: rgb(238,120,0)' }, `${e.account}`),
-          h('span', null, `元`),
-          h('br', null, ''),
-          h('span', null, `将以`),
-          h('span', { style: 'color: rgb(250,190,0)' }, `${e.ratio}`),
-          h('span', null, `的比例`),
-          h('br', null, ''),
-          h('span', null, `分给 `),
-          h('span', { style: 'color: rgb(0,113,190)' }, `${e.subuser1} `),
-          h('span', { style: 'color: rgb(238,120,0)' }, `${e.subuser1Account}`),
-          h('span', null, `元`),
-          h('br', null, ''),
-          h('span', null, `分给 `),
-          h('span', { style: 'color: rgb(0,113,190)' }, `${e.subuser2} `),
-          h('span', { style: 'color: rgb(238,120,0)' }, `${e.subuser2Account}`),
-          h('span', null, `元`),
-          h('br', null, ''),
-          h('span', null, `是否提交?`)
-        ]),
-        showCancelButton: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        beforeClose: (action, instance, done) => {
-          if (action === 'confirm') {
-            instance.confirmButtonLoading = true
-            instance.confirmButtonText = '执行中...'
-            setTimeout(() => {
-              done()
-              setTimeout(() => {
-                instance.confirmButtonLoading = false
-              }, 300)
-            }, 3000)
-          } else {
-            done()
-          }
+  created() {
+    getPeopleList().then(res=>{
+      console.log('getPeopleList res----:',res);
+      if(res.data){
+        for(let i=0;i<res.data.length;i++){
+          let obj = {}
+          obj.label = res.data[i].nickname
+          obj.value = res.data[i].admin_id
+          this.nameoptions.push(obj)
         }
-      }).then(action => {
-        this.$message({
-          type: 'info',
-          message: 'action: ' + action
-        })
+      }
+    })
+    this.init()
+  },
+  methods: {
+    init(){
+      if(this.query.start_time){
+        this.query.start_time = this.query.start_time.valueOf()
+      }
+      if(this.query.end_time){
+        this.query.end_time = this.query.end_time.valueOf()
+      }
+      getLog(this.query).then(res=>{
+        console.log('getLog res---:',res);
+        if(res.data){
+          this.tableData = res.data
+        }else{
+          this.tableData =[]
+        }
       })
+    },
+    changePage(e) {
+      this.query.page = e
+      this.init()
     }
   }
 }
