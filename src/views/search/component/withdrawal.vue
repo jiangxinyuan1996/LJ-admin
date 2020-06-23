@@ -10,6 +10,7 @@
           filterable
           placeholder="请输入关键词"
           size="mini"
+          style="marginBottom:10px"
         >
           <el-option
             v-for="item in list"
@@ -20,10 +21,11 @@
         </el-select>
         <span style="margin:0 18px;padding-left:5px;">日期:</span>
         <el-date-picker
+        
           clearable
           v-model="start_time"
           size="mini"
-          style="width:13%"
+          style="width:13%;marginBottom:10px"
           type="date"
           value-format="timestamp"
           @change="startchange"
@@ -33,7 +35,7 @@
         <el-date-picker
           clearable
           v-model="end_time"
-          style="width:13%"
+          style="width:13%;marginBottom:10px"
           size="mini"
           type="date"
           value-format="timestamp"
@@ -46,7 +48,7 @@
           clearable
           v-model="listQuery.status"
           filterable
-          style="width:10%"
+          style="width:10%;marginBottom:10px"
           placeholder="请选择状态"
           size="mini"
         >
@@ -75,7 +77,7 @@
       :summary-method="getSummaries"
       border
       highlight-current-row
-      style="width: 100%;margin-left:50px"
+      style="width: 94%;margin:0 3%"
       @selection-change="handleSelectionChange"
     >
     <el-table-column

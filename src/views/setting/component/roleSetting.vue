@@ -274,6 +274,7 @@ export default {
           const delRole = { admin_id: e.group.row.admin_id }
           delPeople(delRole).then(res => {
             if (res.success === 1) {
+              this.getUser()
               this.$message({
                 message: res.message,
                 type: 'success'

@@ -50,6 +50,7 @@
       <div v-if="showSearch" id="searchBox" style="margin:40px">
         <span style="margin-right:15px">用户名:</span>
         <el-select
+          style="marginBottom:10px"
           v-model="listQuery.userid"
           filterable
           clearable
@@ -68,7 +69,7 @@
           v-model="start_time"
           clearable
           size="mini"
-          style="width:13%"
+          style="width:13%;marginBottom:10px"
           type="date"
           value-format="timestamp"
           placeholder="选择日期"
@@ -79,7 +80,7 @@
           clearable
           v-model="end_time"
           size="mini"
-          style="width:13%"
+          style="width:13%;marginBottom:10px"
           type="date"
           value-format="timestamp"
           placeholder="选择日期"
@@ -105,7 +106,7 @@
       :summary-method="getSummaries"
       border
       highlight-current-row
-      style="width: 100%;margin-left:40px"
+      style="width: 94%;margin:0 3%"
       @selection-change="handleSelectionChange"
     >
     <el-table-column

@@ -136,7 +136,7 @@
         size="mini"
         stripe
         border
-        style="margin:20px;margin-left:50px;margin-right:50px;"
+        style="width:90%;margin:0 5%"
       >
         <el-table-column
           prop="nickname"
