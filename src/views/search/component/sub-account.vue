@@ -123,7 +123,7 @@
         />
       </el-table>
       <el-pagination
-        :page-size="10"
+        :page-size="limit"
         :current-page="currentPage"
         layout="prev, pager, next"
         :total="totalCount"
@@ -181,11 +181,13 @@ export default {
         trxid: '',
         start_time: '',
         end_time: '',
-        status: ''
+        status: '',
+        limit: 10,
+        page: 1
       },
       alwaysFalse: false,
       totalCount: 0,
-      pageSize: 10,
+      limit: 10,
       page: 1,
       tableData: [],
       currentPage: 1,
@@ -204,19 +206,21 @@ export default {
     init() {
       this.query.start_time = this.query.start_time.valueOf()
       this.query.end_time = this.query.end_time.valueOf()
+      this.query.page = this.page
+      this.query.limit = this.limit
       getSubResult(this.query).then(res => {
         console.log('getSubResult res--:', res)
         this.tableData = res.data
         for (var i = 0; i < this.tableData.length; i++) {
           switch (this.tableData[i].status) {
-            case "0":this.tableData[i].status = "未分账"
-              break;
-              case "1":this.tableData[i].status = "待复核"
-                break;
-                case "2":this.tableData[i].status = "处理中"
-                  break;
-                  case "3":this.tableData[i].status = "已分账"
-                    break;
+            case '0':this.tableData[i].status = '未分账'
+              break
+            case '1':this.tableData[i].status = '待复核'
+              break
+            case '2':this.tableData[i].status = '处理中'
+              break
+            case '3':this.tableData[i].status = '已分账'
+              break
           }
         }
       })
@@ -229,42 +233,43 @@ export default {
         this.tableData = res.data
         for (var i = 0; i < this.tableData.length; i++) {
           switch (this.tableData[i].status) {
-          case "0":this.tableData[i].status = "未分账"
-            break;
-          case "1":this.tableData[i].status = "待复核"
-            break;
-          case "2":this.tableData[i].status = "处理中"
-            break;
-          case "3":this.tableData[i].status = "已分账"
-            break;
+            case '0':this.tableData[i].status = '未分账'
+              break
+            case '1':this.tableData[i].status = '待复核'
+              break
+            case '2':this.tableData[i].status = '处理中'
+              break
+            case '3':this.tableData[i].status = '已分账'
+              break
           }
         }
-        console.log('this.tableData---:',this.tableData);
-        import("@/vendor/Export2Excel").then(excel => {
-          //表格的表头列表
-          console.log('Export2Excel');
-          const tHeader = [ "机器号","流水号","时间","金额(元)","状态","服务商","服务商金额(元)","合作伙伴","合作伙伴金额(元)","比例"];
-          //与表头相对应的数据里边的字段
-          const filterVal = ['termid','trxid','paytime','amount','status','sub1_user_name','sub1_account','sub2_user_name','sub2_account','rule'  ];
-          const list = this.tableData;
-          const data = this.formatJson(filterVal, list);
-          console.log('Export data',data);
-          //这里还是使用export_json_to_excel方法比较好，方便操作数据
-          excel.export_json_to_excel(tHeader,data,'分账明细导出数据');
-        });
+        console.log('this.tableData---:', this.tableData)
+        import('@/vendor/Export2Excel').then(excel => {
+          // 表格的表头列表
+          console.log('Export2Excel')
+          const tHeader = ['机器号', '流水号', '时间', '金额(元)', '状态', '服务商', '服务商金额(元)', '合作伙伴', '合作伙伴金额(元)', '比例']
+          // 与表头相对应的数据里边的字段
+          const filterVal = ['termid', 'trxid', 'paytime', 'amount', 'status', 'sub1_user_name', 'sub1_account', 'sub2_user_name', 'sub2_account', 'rule']
+          const list = this.tableData
+          const data = this.formatJson(filterVal, list)
+          console.log('Export data', data)
+          // 这里还是使用export_json_to_excel方法比较好，方便操作数据
+          excel.export_json_to_excel(tHeader, data, '分账明细导出数据')
+        })
       })
     },
-    formatJson(filterVal,jsonData){
-      console.log('formatJson');
-      return jsonData.map(v=>
-        filterVal.map(j=>{
-        console.log('v[j]-----:',v[j]);
-        return v[j]
+    formatJson(filterVal, jsonData) {
+      console.log('formatJson')
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          console.log('v[j]-----:', v[j])
+          return v[j]
         })
-      );
+      )
     },
-    changePage() {
-      console.log(changePage)
+    changePage(e) {
+      this.page = e
+      this.init()
     }
   }
 }

@@ -80,3 +80,9 @@ export const getBalanceById = (data) => fetch('/TSY/home/result/getBalanceById',
 
 //设置交易密码
 export const setPayPwd = (data) => fetch('/TSY/home/tsy/setPayPwd', data, 'POST')
+
+//获取管理人员列表
+export const getPeopleList = (data) => fetch('/TSY/home/admin/getAdminList', data)
+
+//日志查询
+export const getLog = (data) => fetch('/TSY/home/result/getLog', data)

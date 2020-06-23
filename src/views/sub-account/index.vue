@@ -153,7 +153,7 @@
       </el-dialog>
 
       <el-pagination
-        :page-size="10"
+        :page-size="query.limit"
         :current-page="currentPage"
         layout="prev, pager, next"
         :total="totalCount"
@@ -199,7 +199,7 @@ export default {
         start_time: '',
         end_time: '',
         page: 1,
-        limit:1
+        limit: 10
       },
       alwaysFalse: false,
       totalCount: 0,
@@ -233,7 +233,7 @@ export default {
       getPayResult(this.query).then(res => {
         console.log('getPayResult res---:', res)
         this.totalCount = parseInt(res.count)
-        console.log('this.totalCount----:',this.totalCount);
+        console.log('this.totalCount----:', this.totalCount)
         this.tableData = res.data
       })
       getUserList().then(res => {
@@ -271,9 +271,9 @@ export default {
         }
       })
     },
-    changePage(e){
+    changePage(e) {
       this.page = e
-      this.search()
+      this.init()
     },
     exportCheck() {
       getPayResult(this.query).then(res => {
