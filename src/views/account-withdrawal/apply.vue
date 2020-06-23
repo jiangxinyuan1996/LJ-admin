@@ -66,7 +66,7 @@
       />
       <el-table-column
         prop="balance.allAmount"
-        label="可提现金额(元)"
+        label="可提现金额(分)"
         sortable
         align="center"
         width="150"

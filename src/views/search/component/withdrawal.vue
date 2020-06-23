@@ -143,7 +143,7 @@
       /> -->
       <el-table-column
         prop="amount"
-        label="金额(元)"
+        label="金额(分)"
         sortable
         align="center"
         width="150"
@@ -262,7 +262,7 @@ export default {
         import("@/vendor/Export2Excel").then(excel => {
           //表格的表头列表
           console.log('Export2Excel');
-          const tHeader = [ "流水号","状态","用户名","银行户名","日期","账号","金额(元)"];
+          const tHeader = [ "流水号","状态","用户名","银行户名","日期","账号","金额(分)"];
           //与表头相对应的数据里边的字段
           const filterVal = ['bizorderno','status','nickname','name','time','card_no','amount'];
           const list = this.tableData;

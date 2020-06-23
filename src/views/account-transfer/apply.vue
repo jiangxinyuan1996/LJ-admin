@@ -42,7 +42,7 @@
         </el-select>
         </el-form-item>
         <el-form-item label="账户余额:">
-          <span style="color:blue">{{amount}}</span><span> 元</span>
+          <span style="color:blue">{{amount}}</span><span> 分</span>
         </el-form-item>
          <el-form-item
             label="转入方"
@@ -52,7 +52,7 @@
          <el-select
             v-model="numberValidateForm.inputer"
             filterable
-            placeholder="请输入关键词"   
+            placeholder="请输入关键词"
             >
             <el-option
             v-for="item in list"
@@ -121,7 +121,7 @@ import { getUserList } from '@/api/tsyLj'
         this.list=[...res.data.fromList,...res.data.toList]
         // console.log(res.data)
       })
-      
+
     },
     methods: {
       change(){

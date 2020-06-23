@@ -69,7 +69,7 @@
           prop="amount"
           align="center"
           width="110"
-          label="金额(元)"
+          label="金额(分)"
         />
         <el-table-column
           prop="subuser1"
@@ -285,7 +285,7 @@ export default {
       import('@/vendor/Export2Excel').then(excel => {
         // 表格的表头列表
         console.log('Export2Excel')
-        const tHeader = ['机器号', '流水号', '时间', '金额(元)', '状态', '服务商', '服务商金额(元)', '合作伙伴', '合作伙伴金额(元)', '比例']
+        const tHeader = ['机器号', '流水号', '时间', '金额(分)', '状态', '服务商', '服务商金额(分)', '合作伙伴', '合作伙伴金额(分)', '比例']
         // 与表头相对应的数据里边的字段
         const filterVal = ['termid', 'trxid', 'paytime', 'amount', 'status', 'sub1_user_name', 'sub1_account', 'sub2_user_name', 'sub2_account', 'rule']
         const list = this.tableData

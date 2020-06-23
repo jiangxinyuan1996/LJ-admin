@@ -158,7 +158,7 @@
       />
       <el-table-column
         prop="amount"
-        label="提现金额(元)"
+        label="提现金额(分)"
         sortable
         align="center"
         width="150"

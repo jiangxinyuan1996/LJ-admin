@@ -307,6 +307,7 @@ export default {
       this.loading = true
       getUserListByAll(this.query).then(res => {
         console.log('getUserListByAll---:', res)
+        this.totalCount = parseInt(res.count)
         if (res.data) {
           this.tableData = res.data
         } else {

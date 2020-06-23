@@ -155,7 +155,7 @@
       />
        <el-table-column
         prop="amount"
-        label="金额(元)"
+        label="金额(分)"
         sortable
         align="center"
         width="150"
