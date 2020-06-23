@@ -37,8 +37,8 @@
       </div>
       <div v-if="active==2" v-loading="activeLoading">
         <span>手机号 : </span><span>{{ activateObj.phone }}</span>
-        <el-button size="mini" class="filter-item" style="margin-left: 10px;margin-top:15px;" type="primary" @click="sendCode()">
-          获取验证码
+        <el-button size="mini" :disabled="showSendCode" class="filter-item" style="margin-left: 10px;margin-top:15px;" type="primary" @click="sendCode()">
+          {{ sendCodeInfo }}
         </el-button>
         </br>
         <span>验证码 : </span><el-input v-model="verifyCode" size="mini" style="width:160px;margin-top:15px;" placeholder="请输入验证码" />
@@ -256,6 +256,7 @@ export default {
         id: ''
       },
       alwaysFalse: false,
+      showSendCode: false,
       totalCount: 0,
       limit: 10,
       page: 1,
@@ -286,7 +287,10 @@ export default {
       verifyCode: '',
       iframeUrl: '',
       isCheckPass: false,
-      activeLoading: false
+      activeLoading: false,
+      sendCodeInfo: '获取验证码',
+      countDownTime: 60,
+      countDown: null
     }
   },
   created() {
@@ -303,9 +307,9 @@ export default {
       this.loading = true
       getUserListByAll(this.query).then(res => {
         console.log('getUserListByAll---:', res)
-        if(res.data){
+        if (res.data) {
           this.tableData = res.data
-        }else{
+        } else {
           this.tableData = []
         }
 
@@ -506,6 +510,7 @@ export default {
     sendCode() {
       console.log('==========sendCode==========')
       this.activeLoading = true
+      this.showSendCode = true
       const param = {
         bizUserId: this.activateObj.id,
         phone: this.activateObj.phone
@@ -514,6 +519,21 @@ export default {
         console.log('getCode res--:', res)
         this.activeLoading = false
       })
+
+      this.countDown = setInterval(this.count, 1000)
+    },
+    count() {
+      this.countDownTime--
+      console.log('this.countDownTime--:', this.countDownTime)
+
+      if (this.countDownTime == 0) {
+        clearInterval(this.countDown)
+        this.countDownTime = 60,
+        this.showSendCode = false
+        this.sendCodeInfo = '获取验证码'
+      } else {
+        this.sendCodeInfo = '获取验证码(' + this.countDownTime + ')秒后重试'
+      }
     },
     checkCode() {
       console.log('==========checkCode==========')
