@@ -73,6 +73,7 @@ export default {
       this.chart.setOption({
         xAxis: {
           axisLabel: {
+            interval:1,
             rotate: 60
           },
           data: data.date,
