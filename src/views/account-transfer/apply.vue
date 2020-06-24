@@ -30,6 +30,7 @@
          <el-select
             v-model="numberValidateForm.outputer"
             filterable
+            clearable
             placeholder="请输入关键词"
             @change="change"
             >
@@ -52,6 +53,7 @@
          <el-select
             v-model="numberValidateForm.inputer"
             filterable
+            clearable
             placeholder="请输入关键词"
             >
             <el-option
@@ -155,7 +157,14 @@ import { getUserList } from '@/api/tsyLj'
         submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.dialogVisible=true
+            if(this.amount>=Number(this.numberValidateForm.money)){
+              this.dialogVisible=true
+            }else{
+              this.$message({
+                message:'调账金额不能大于转出方账户余额',
+                type:'warning'
+              })
+            }
           } else {
               this.$message({
                 message: '请填写必要信息',

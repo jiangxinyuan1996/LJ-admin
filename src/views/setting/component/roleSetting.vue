@@ -47,16 +47,6 @@
             <el-checkbox  v-for="item in rolelist" v-model="createRoles.role_arr"  :key="item.role_id" :label="item.role_id" name="type" @change="changeClear">{{ item.remark }}</el-checkbox>
           <!-- </el-checkbox-group> -->
         </el-form-item>
-        <!-- <el-form-item label="选择角色" prop="roles">
-          <el-select v-model="createRoles.roles" placeholder="请选择角色">
-            <el-option
-              v-for="item in rolelist"
-              :key="item.role_id"
-              :label="item.remark"
-              :value="item.role_id"
-            />
-          </el-select>
-        </el-form-item> -->
         <el-form-item  label="选择所属机构" v-if="createRoles.role_arr.join('').includes('RI1005')">
           <el-radio-group  v-model="radio"  @change="changeClear1">
             <el-radio :label="1">服务商</el-radio>
@@ -217,13 +207,11 @@ export default {
   mounted() {
     this.getUser()
     getRoleList().then(res => {
-      console.log(res)
       this.rolelist = res.data
     })
     getUserList().then(res => {
       this.fromList = res.data.fromList
       this.toList = res.data.toList
-      console.log(this.fromList)
     })
   },
   methods: {
@@ -263,8 +251,6 @@ export default {
         this.createRoles.role_arr=e.group.idList.split(',')
         this.createRoles.userid=e.group.userInfo.userid
         this.radio=parseInt(e.group.userInfo.default_status)
-        console.log(this.radio)
-        console.log(e.group)
       } else if (e.cmd === 'remove') {
         this.$confirm('此操作将删除数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
@@ -296,11 +282,9 @@ export default {
       }
     },
     downLoadVerifyModule() {
-      console.log('downLoadVerifyModule')
       window.location.href = '/mould/需求接口列表-0410.xlsx'
     },
     submitForm(formName) {
-      console.log(this.createRoles)
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // if (this.rolestatus === 'create') {
@@ -339,7 +323,6 @@ export default {
               //   this.createRoles.userid = ''
               // }
               updatePeople({ admin_id: this.admin_id, role_arr: this.createRoles.role_arr, userid: this.createRoles.userid,post_name:this.createRoles.post_name}).then(res => {
-                console.log(res)
                 if (res.success === 1) {
                   this.$message({
                     message: res.message,
@@ -386,7 +369,6 @@ export default {
       this.$refs[formName].resetFields()
     },
     getUser() {
-      console.log('获取角色列表')
       this.loading = true
       getPeopleList(this.query).then(res => {
         if(res.success===1){

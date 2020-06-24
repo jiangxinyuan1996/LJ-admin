@@ -91,6 +91,7 @@ export default {
       for (let i = 0; i < withdrawArr.expectedData.length; i++) {
         this.withdraw += Number(withdrawArr.expectedData[i])
       }
+      console.log(this.pay,this.sub,this.withdraw)
     }
   }
 }

@@ -190,13 +190,12 @@
   </div>
 </template>
 <script>
-import waves from '@/directive/waves'
 import permission from '@/directive/permission/index.js'
 import checkPermission from '@/utils/permission'
 import { getTransferList,submitTransfer,refuseTransfer } from '@/api/tsyaccount'
 import { getUserList } from '@/api/tsyLj'
 export default {
-  directives: { waves,permission },
+  directives: { permission },
   data() {
     return {
       jumpUrl: '',
@@ -220,18 +219,6 @@ export default {
       },
       // 修改列表参数
       temp: {},
-      rules: {
-        business_code: [{ required: true, message: '必填项', trigger: 'blur' }],
-        bank_code: [{ required: true, message: '必填项', trigger: 'blur' }],
-        account_type: [{ required: true, message: '必填项', trigger: 'blur' }],
-        account_no: [{ required: true, message: '必填项', trigger: 'blur' }],
-        account_name: [{ required: true, message: '必填项', trigger: 'blur' }],
-        amount: [{ required: true, message: '必填项', trigger: 'blur' }],
-        id: [{ required: true, message: '必填项', trigger: 'blur' }],
-        id_type: [{ required: true, message: '必填项', trigger: 'blur' }],
-        tel: [{ required: true, message: '必填项', trigger: 'blur' }],
-        sub_data: [{ required: true, message: '必填项', trigger: 'blur' }]
-      },
       tableData: [],
       dialogFormVisible: false,
       multipleSelection: [],
@@ -262,7 +249,6 @@ export default {
   mounted(){
     getUserList().then(res=>{
         this.list=[...res.data.fromList,...res.data.toList]
-        // console.log(res.data)
     })
     this.handleFilter()
   },
@@ -296,7 +282,6 @@ export default {
         });
     },
     refuseList(){
-      console.log('==========refuse===========')
       const h = this.$createElement
       this.$msgbox({
         title: '信息确认',
@@ -326,7 +311,6 @@ export default {
             order_list.push(this.multipleSelection[i].bizorderno)
           }
           refuseTransfer({order_list}).then(res=>{
-            console.log('批量驳回',res)
             if(res.success===1){
               this.$message({
                 type: 'success',
@@ -343,7 +327,6 @@ export default {
       })
     },
     checkList(){
-        console.log('==========refuse===========')
         const h = this.$createElement
         this.$msgbox({
           title: '信息确认',
@@ -424,12 +407,10 @@ export default {
     handleSizeChange(val) {
       // console.log(`每页 ${val} 条`)
       this.listQuery.limit = val
-      // console.log(this.listQuery.limit)
       this.handleFilter()
     },
     handleSelectionChange(val) {
       this.isShow = true
-      //   console.log(val)
       this.multipleSelection = val
       if (val.length === 0) {
         this.isShow = false
@@ -451,7 +432,7 @@ export default {
     submit() {
       submitTransfer({bizOrderNo:this.temp.bizorderno}).then(res=>{
         if(res.success===1){
-          let callback = window.open(res.data.url)
+      let callback = window.open(res.data.url)
           console.log('callback',callback)
           this.$message({
                 message:res.message,

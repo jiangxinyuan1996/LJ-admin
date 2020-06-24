@@ -138,7 +138,7 @@
       <el-table-column
          prop="name"
          label="银行户名"
-          sortable
+         sortable
          align="center"
          width="100"
        />
