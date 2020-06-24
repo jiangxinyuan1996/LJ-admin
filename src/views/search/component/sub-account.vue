@@ -81,11 +81,18 @@
         />
         <el-table-column
           prop="status"
-          align="center"
-          width="110"
           label="状态"
           sortable
-        />
+          align="center"
+          width="110"
+        >
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.status=='已分账'" slot="reference" type="success">{{ scope.row.status }}</el-tag>
+            <el-tag v-if="scope.row.status=='待复核'" slot="reference" type="warning">{{ scope.row.status }}</el-tag>
+            <el-tag v-if="scope.row.status=='未分账'" slot="reference" type="info">{{ scope.row.status }}</el-tag>
+            <el-tag v-if="scope.row.status=='进行中'" slot="reference">{{ scope.row.status }}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="sub1_user_name"
           align="center"

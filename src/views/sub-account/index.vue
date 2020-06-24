@@ -396,6 +396,7 @@ export default {
                 this.jumpForm = res.data
                 this.jumpUrl = res.data.url
                 window.open(this.jumpUrl, '_blank')
+                this.init()
                 this.$message({
                   type: 'success',
                   message: res.message

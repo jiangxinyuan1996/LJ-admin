@@ -376,6 +376,7 @@ export default {
                   type: 'success',
                   message: res.message
                 })
+                this.init()
               }
             })
             done()
@@ -479,6 +480,7 @@ export default {
                   type: 'success',
                   message: res.message
                 })
+                this.init()
               }
             })
             setTimeout(() => {
