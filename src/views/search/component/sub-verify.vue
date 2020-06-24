@@ -71,7 +71,7 @@
           align="center"
           sortable
           width="130"
-          label="分账金额(分)"
+          label="分账金额(元)"
         />
         <el-table-column
           prop="tosubuser"
@@ -87,7 +87,7 @@
           sortable
           width="170"
           show-overflow-tooltip
-          label="被分账金额(分)"
+          label="被分账金额(元)"
         />
         <el-table-column
           align="center"

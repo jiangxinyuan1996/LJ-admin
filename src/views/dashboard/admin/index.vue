@@ -45,6 +45,7 @@ export default {
   methods: {
     init() {
       getHomeList().then(res => {
+        console.log('getHomeList res---:', res)
         this.lineChartData = {
           newVisitis: {
             expectedData: [],
@@ -64,7 +65,7 @@ export default {
         const day = now.getDate()
         const dateList = []
         const dataList = []
-        for (let i = 1; i <= 17; i++) {
+        for (let i = 1; i <= day; i++) {
           let date = ''
           if (now.getMonth() < 9) {
             date = now.getFullYear() + '-0' + (now.getMonth() + 1)
@@ -101,6 +102,7 @@ export default {
           for (let j = 0; j < dateList.length; j++) {
             if (dateList[j] == res.data.pay[i].date) {
               this.lineChartData.newVisitis.expectedData[j] = Number(res.data.pay[i].amount)
+              console.log('Number---:', Number(res.data.pay[i].amount))
               break
             }
           }

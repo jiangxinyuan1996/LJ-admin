@@ -52,7 +52,7 @@
         size="mini"
         stripe
         border
-        style="margin:20px;margin-left:50px;margin-right:50px;"
+        style="margin:20px;margin-left:50px;margin-right:50px;width:80vw"
       >
         <el-table-column
           prop="admin_name"
@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import {getLog,getPeopleList} from '@/api/tsyLj.js'
+import { getLog, getPeopleList } from '@/api/tsyLj.js'
 export default {
   name: 'OperationLog',
   data() {
@@ -122,50 +122,50 @@ export default {
         }]
       },
       nameoptions: [],
-      statusoptions:[
+      statusoptions: [
         {
-          label:'分账',
-          value:'分账'
-        },{
-          label:'分账复核',
-          value:'分账复核'
-        },{
-          label:'调账申请',
-          value:'调账申请'
-        },{
-          label:'提现申请',
-          value:'提现申请'
-        },{
-          label:'调账复核',
-          value:'调账复核'
-        },{
-          label:'提现复核',
-          value:'提现复核'
-        },{
-          label:'参数配置',
-          value:'参数配置'
-        },
+          label: '分账',
+          value: '分账'
+        }, {
+          label: '分账复核',
+          value: '分账复核'
+        }, {
+          label: '调账申请',
+          value: '调账申请'
+        }, {
+          label: '提现申请',
+          value: '提现申请'
+        }, {
+          label: '调账复核',
+          value: '调账复核'
+        }, {
+          label: '提现复核',
+          value: '提现复核'
+        }, {
+          label: '参数配置',
+          value: '参数配置'
+        }
       ],
       alwaysFalse: false,
       totalCount: 0,
       tableData: [],
       currentPage: 1,
-      query:{
-        start_time:'',
-        end_time:'',
-        userid:'',
-        type:'',
+      query: {
+        start_time: '',
+        end_time: '',
+        userid: '',
+        type: '',
         limit: 10,
         page: 1
       }
     }
   },
   created() {
-    getPeopleList().then(res=>{
-      console.log('getPeopleList res----:',res);
-      if(res.data){
-        for(let i=0;i<res.data.length;i++){
-          let obj = {}
+    getPeopleList().then(res => {
+      console.log('getPeopleList res----:', res)
+      if (res.data) {
+        for (let i = 0; i < res.data.length; i++) {
+          const obj = {}
           obj.label = res.data[i].nickname
           obj.value = res.data[i].admin_id
           this.nameoptions.push(obj)
@@ -175,19 +175,19 @@ export default {
     this.init()
   },
   methods: {
-    init(){
-      if(this.query.start_time){
+    init() {
+      if (this.query.start_time) {
         this.query.start_time = this.query.start_time.valueOf()
       }
-      if(this.query.end_time){
+      if (this.query.end_time) {
         this.query.end_time = this.query.end_time.valueOf()
       }
-      getLog(this.query).then(res=>{
-        console.log('getLog res---:',res);
-        if(res.data){
+      getLog(this.query).then(res => {
+        console.log('getLog res---:', res)
+        if (res.data) {
           this.tableData = res.data
-        }else{
-          this.tableData =[]
+        } else {
+          this.tableData = []
         }
       })
     },

@@ -53,7 +53,7 @@
         stripe
         sortable
         border
-        style="margin:20px;margin-left:50px;margin-right:50px;"
+        style="margin:20px;margin-left:50px;margin-right:50px;width:80vw"
       >
         <el-table-column
           prop="datetime"
@@ -260,7 +260,7 @@ export default {
       import('@/vendor/Export2Excel').then(excel => {
         // 表格的表头列表
         console.log('Export2Excel')
-        const tHeader = ['时间', '进账总额', '分账比例', '分账金额', '合作伙伴名称', '本公司分账金额', '提现金额(分)', '转入金额', '转出金额(分)', '备注']
+        const tHeader = ['时间', '进账总额', '分账比例', '分账金额', '合作伙伴名称', '本公司分账金额', '提现金额(元)', '转入金额', '转出金额(元)', '备注']
         // 与表头相对应的数据里边的字段
         const filterVal = ['datetime', 'amount', 'rule', 'sub_amount', 'name', 'income', 'wd_amount', 'in_amount', 'out_amount', 'username']
         const list = this.tableData

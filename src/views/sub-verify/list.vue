@@ -64,12 +64,12 @@
         stripe
         border
         show-summary
-        style="margin:20px;margin-left:50px;margin-right:50px;"
+        style="margin:20px;margin-left:50px;margin-right:50px;width:80vw"
         @selection-change="handleSelectionChange"
       >
         <el-table-column
           type="selection"
-          width="55"
+          width="50"
         />
         <el-table-column
           sortable
@@ -97,7 +97,7 @@
           align="center"
           width="100"
           sortable
-          label="金额(分)"
+          label="金额(元)"
         />
         <el-table-column
           prop="sub1_user_name"
@@ -150,7 +150,7 @@
         <el-table-column
           align="center"
           prop="rule"
-          width="150"
+          width="100"
           sortable
           label="比例"
         />
@@ -273,7 +273,7 @@ export default {
       import('@/vendor/Export2Excel').then(excel => {
         // 表格的表头列表
         console.log('Export2Excel')
-        const tHeader = ['机器号', '流水号', '时间', '金额(分)', '服务商', '服务商金额(分)', '合作伙伴', '合作伙伴金额(分)', '比例']
+        const tHeader = ['机器号', '流水号', '时间', '金额(元)', '服务商', '服务商金额(元)', '合作伙伴', '合作伙伴金额(元)', '比例']
         // 与表头相对应的数据里边的字段
         const filterVal = ['termid', 'bizorderno', 'time', 'amount', 'sub1_user_name', 'sub1_account', 'sub2_user_name', 'sub2_account', 'rule']
         const list = this.tableData
@@ -376,6 +376,7 @@ export default {
                   type: 'success',
                   message: res.message
                 })
+                this.init()
               }
             })
             done()
@@ -479,6 +480,7 @@ export default {
                   type: 'success',
                   message: res.message
                 })
+                this.init()
               }
             })
             setTimeout(() => {

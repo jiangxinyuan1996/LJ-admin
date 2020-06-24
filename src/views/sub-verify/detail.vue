@@ -35,7 +35,7 @@
           align="center"
           width="100"
           sortable
-          label="金额(分)"
+          label="金额(元)"
         />
         <el-table-column
           prop="subuser1"
