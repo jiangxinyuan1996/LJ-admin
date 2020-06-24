@@ -137,21 +137,12 @@
         width="160"
       />
       <el-table-column
-<<<<<<< HEAD
          prop="name"
          label="银行户名"
          sortable
          align="center"
          width="100"
        />
-=======
-        prop="name"
-        label="银行户名"
-        sortable
-        align="center"
-        width="100"
-      />
->>>>>>> eecc6a458c92ce164981d04ad47d00f8899f78e2
       <el-table-column
         prop="card_no"
         label="账号"

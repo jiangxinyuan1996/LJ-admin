@@ -28,12 +28,6 @@
         prop="outputer"
         :rules="[{ required: true, message: '请选择转出方', trigger: 'change' }]"
       >
-        <el-select
-          v-model="numberValidateForm.outputer"
-          filterable
-          placeholder="请输入关键词"
-          @change="change"
-        >
          <el-select
             v-model="numberValidateForm.outputer"
             filterable
@@ -57,11 +51,6 @@
         prop="inputer"
         :rules="[{ required: true, message: '请选择转入方', trigger: 'change' }]"
       >
-        <el-select
-          v-model="numberValidateForm.inputer"
-          filterable
-          placeholder="请输入关键词"
-        >
          <el-select
             v-model="numberValidateForm.inputer"
             filterable
