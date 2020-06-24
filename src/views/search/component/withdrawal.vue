@@ -5,8 +5,8 @@
       <div v-if="showSearch" id="searchBox" style="margin:40px">
         <span style="margin-right:15px">用户名:</span>
         <el-select
-          clearable
           v-model="listQuery.userid"
+          clearable
           filterable
           placeholder="请输入关键词"
           size="mini"
@@ -21,32 +21,32 @@
         </el-select>
         <span style="margin:0 18px;padding-left:5px;">日期:</span>
         <el-date-picker
-        
-          clearable
+
           v-model="start_time"
+          clearable
           size="mini"
           style="width:13%;marginBottom:10px"
           type="date"
           value-format="timestamp"
-          @change="startchange"
           placeholder="选择日期"
+          @change="startchange"
         />
         <span style="margin-right:15px;margin-left:15px;">至</span>
         <el-date-picker
-          clearable
           v-model="end_time"
+          clearable
           style="width:13%;marginBottom:10px"
           size="mini"
           type="date"
           value-format="timestamp"
-          @change="endchange"
           placeholder="选择日期"
+          @change="endchange"
         />
 
         <span style="margin:0 15px">状态:</span>
         <el-select
-          clearable
           v-model="listQuery.status"
+          clearable
           filterable
           style="width:10%;marginBottom:10px"
           placeholder="请选择状态"
@@ -63,7 +63,7 @@
         <el-button type="primary" size="mini" style="margin-left:15px;" @click="handleFilter">
           查询
         </el-button>
-        <el-button size="mini"  v-permission="['机构管理员','操作员','总查看员','提现复核员','分账复核员']" style="margin-left: 10px;" type="warning" @click="exportCheck()">
+        <el-button v-permission="['机构管理员','操作员','总查看员','提现复核员','分账复核员']" size="mini" style="margin-left: 10px;" type="warning" @click="exportCheck()">
           导出
         </el-button>
       </div>
@@ -80,7 +80,7 @@
       style="width: 94%;margin:0 3%"
       @selection-change="handleSelectionChange"
     >
-    <el-table-column
+      <el-table-column
         prop="bizorderno"
         label="流水号"
         sortable
@@ -94,7 +94,7 @@
         align="center"
         width="120"
       >
-      <template slot-scope="scope">
+        <template slot-scope="scope">
           <el-popover
             placement="top-start"
             title="信息"
@@ -114,19 +114,19 @@
         width="140"
       />
       <el-table-column
-         prop="name"
-         label="银行户名"
-         sortable
-         align="center"
-         width="110"
-       />
-       <el-table-column
-         prop="time"
-         label="日期"
-         sortable
-         align="center"
-         width="160"
-       />
+        prop="name"
+        label="银行户名"
+        sortable
+        align="center"
+        width="110"
+      />
+      <el-table-column
+        prop="time"
+        label="日期"
+        sortable
+        align="center"
+        width="160"
+      />
       <el-table-column
         prop="card_no"
         label="账号"
@@ -143,7 +143,7 @@
       /> -->
       <el-table-column
         prop="amount"
-        label="金额(分)"
+        label="金额(元)"
         sortable
         align="center"
         width="150"
@@ -170,7 +170,7 @@ import { getReviewList } from '@/api/tsyaccount'
 import { getUserList } from '@/api/tsyLj'
 
 export default {
-  directives: { waves,permission },
+  directives: { waves, permission },
   data() {
     return {
       isShow: false,
@@ -179,16 +179,16 @@ export default {
       total: 0,
       listLoading: false,
       list: [],
-      start_time:'',
-      end_time:'',
+      start_time: '',
+      end_time: '',
       // 查询及分页参数
       listQuery: {
         page: 1,
         limit: 10,
-        userid:'',
+        userid: '',
         start_time: '',
         end_time: '',
-        status:''
+        status: ''
       },
       temp: {
         status: ''
@@ -220,18 +220,18 @@ export default {
           key: '-1',
           value: '提现失败'
         },
-         {
+        {
           key: '-2',
           value: '被驳回'
         }
       ],
       // mock数据
       tableData: [],
-      status:{
-        '1':'待复核',
-        '2':'提现成功',
-        '-1':'提现失败',
-        '-2':'被驳回'
+      status: {
+        '1': '待复核',
+        '2': '提现成功',
+        '-1': '提现失败',
+        '-2': '被驳回'
       },
       dialogFormVisible: false,
       bankCodeOptions: [],
@@ -240,93 +240,93 @@ export default {
       businessCode: {}
     }
   },
-  mounted(){
-    getUserList().then(res=>{
-      this.list=[...res.data.fromList,...res.data.toList]
+  mounted() {
+    getUserList().then(res => {
+      this.list = [...res.data.fromList, ...res.data.toList]
     })
     this.handleFilter()
   },
-  methods:{
-    //导出
+  methods: {
+    // 导出
     exportCheck() {
       console.log('exportCheck')
       // window.location.href = 'mould/对账单导出模板.xlsx'
       getReviewList(this.listQuery).then(res => {
         console.log('getSubResult res--:', res)
         this.tableData = res.data
-        for(let i=0;i<this.tableData.length;i++){
-              this.tableData[i].amount=Number(this.tableData[i].amount)
-            this.tableData[i].status=this.status[this.tableData[i].status]
-            }
-        console.log('this.tableData---:',this.tableData);
-        import("@/vendor/Export2Excel").then(excel => {
-          //表格的表头列表
-          console.log('Export2Excel');
-          const tHeader = [ "流水号","状态","用户名","银行户名","日期","账号","金额(分)"];
-          //与表头相对应的数据里边的字段
-          const filterVal = ['bizorderno','status','nickname','name','time','card_no','amount'];
-          const list = this.tableData;
-          const data = this.formatJson(filterVal, list);
-          console.log('Export data',data);
-          //这里还是使用export_json_to_excel方法比较好，方便操作数据
-          excel.export_json_to_excel(tHeader,data,'提现导出数据');
-        });
+        for (let i = 0; i < this.tableData.length; i++) {
+          this.tableData[i].amount = Number(this.tableData[i].amount)
+          this.tableData[i].status = this.status[this.tableData[i].status]
+        }
+        console.log('this.tableData---:', this.tableData)
+        import('@/vendor/Export2Excel').then(excel => {
+          // 表格的表头列表
+          console.log('Export2Excel')
+          const tHeader = ['流水号', '状态', '用户名', '银行户名', '日期', '账号', '金额(元)']
+          // 与表头相对应的数据里边的字段
+          const filterVal = ['bizorderno', 'status', 'nickname', 'name', 'time', 'card_no', 'amount']
+          const list = this.tableData
+          const data = this.formatJson(filterVal, list)
+          console.log('Export data', data)
+          // 这里还是使用export_json_to_excel方法比较好，方便操作数据
+          excel.export_json_to_excel(tHeader, data, '提现导出数据')
+        })
       })
     },
-    formatJson(filterVal,jsonData){
-      console.log('formatJson');
-      return jsonData.map(v=>
-        filterVal.map(j=>{
-        console.log('v[j]-----:',v[j]);
-        return v[j]
+    formatJson(filterVal, jsonData) {
+      console.log('formatJson')
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          console.log('v[j]-----:', v[j])
+          return v[j]
         })
-      );
+      )
     },
-     startchange(e){
-      if(e==null){
-        this.start_time=''
+    startchange(e) {
+      if (e == null) {
+        this.start_time = ''
       }
     },
-    endchange(e){
-      if(e==null){
-        this.end_time=''
+    endchange(e) {
+      if (e == null) {
+        this.end_time = ''
       }
     },
-      handleFilter(){
-        this.listLoading=true
-        if(this.start_time!==null&&this.start_time!==''){
-          this.listQuery.start_time=this.start_time
-        }else{
-          this.listQuery.start_time=''
-        }
-        if(this.end_time!==null&&this.end_time!==''){
-          this.listQuery.end_time=this.end_time- (-1 * 3600 * 24 * 1000)
-        }else{
-          this.listQuery.end_time=''
-        }
-        getReviewList(this.listQuery).then(res=>{
-          if(res.success===1){
-            this.listLoading=false
-            this.tableData=res.data
-            this.total=Number(res.count)
-            for(let i=0;i<this.tableData.length;i++){
-              this.tableData[i].amount=Number(this.tableData[i].amount)
-            this.tableData[i].status=this.status[this.tableData[i].status]
-            }
-          }else{
-            this.listLoading=false
-            this.$message({
-              message:res.message,
-              type:'error'
-            })
+    handleFilter() {
+      this.listLoading = true
+      if (this.start_time !== null && this.start_time !== '') {
+        this.listQuery.start_time = this.start_time
+      } else {
+        this.listQuery.start_time = ''
+      }
+      if (this.end_time !== null && this.end_time !== '') {
+        this.listQuery.end_time = this.end_time - (-1 * 3600 * 24 * 1000)
+      } else {
+        this.listQuery.end_time = ''
+      }
+      getReviewList(this.listQuery).then(res => {
+        if (res.success === 1) {
+          this.listLoading = false
+          this.tableData = res.data
+          this.total = Number(res.count)
+          for (let i = 0; i < this.tableData.length; i++) {
+            this.tableData[i].amount = Number(this.tableData[i].amount)
+            this.tableData[i].status = this.status[this.tableData[i].status]
           }
-        })
-      },
+        } else {
+          this.listLoading = false
+          this.$message({
+            message: res.message,
+            type: 'error'
+          })
+        }
+      })
+    },
     handleCurrentChange(val) {
       // console.log(`当前页: ${val}`)
       this.listQuery.page = val
       this.handleFilter()
-      this.listQuery.page=1
+      this.listQuery.page = 1
       // 页码切换分页调用请求传值
     },
     handleSizeChange(val) {
@@ -350,30 +350,30 @@ export default {
       this.dialogFormVisible = false
     },
     getSummaries(param) {
-        const { columns, data } = param;
-        const sums = [];
-        columns.forEach((column, index) => {
-          if (index === 0) {
-            sums[index] = '合计';
-            return;
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '合计'
+          return
+        }
+        if (index === 7) {
+          const values = data.map(item => Number(item[column.property]))
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr)
+              if (!isNaN(value)) {
+                return prev + curr
+              } else {
+                return prev
+              }
+            }, 0)
+            sums[index] += ''
+          } else {
+            sums[index] = 'N/A'
           }
-          if(index===7){
-            const values = data.map(item => Number(item[column.property]));
-            if (!values.every(value => isNaN(value))) {
-              sums[index] = values.reduce((prev, curr) => {
-                const value = Number(curr);
-                if (!isNaN(value)) {
-                  return prev + curr;
-                } else {
-                  return prev;
-                }
-              }, 0);
-              sums[index] += '';
-            } else {
-              sums[index] = 'N/A';
-            }
-          }
-        })
+        }
+      })
       return sums
     }
     //

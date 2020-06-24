@@ -9,7 +9,7 @@
           <div class="card-panel-text">
             总进账
           </div>
-          <count-to :start-val="0" :end-val="pay" :duration="2600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="pay" :duration="2600" class="card-panel-num" :decimals="num" />
         </div>
       </div>
     </el-col>
@@ -22,7 +22,7 @@
           <div class="card-panel-text">
             已分账(本公司)
           </div>
-          <count-to :start-val="0" :end-val="sub" :duration="3000" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="sub" :duration="3000" class="card-panel-num" :decimals="num" />
         </div>
       </div>
     </el-col>
@@ -35,7 +35,7 @@
           <div class="card-panel-text">
             已提现(本公司)
           </div>
-          <count-to :start-val="0" :end-val="withdraw" :duration="3200" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="withdraw" :duration="3200" class="card-panel-num" :decimals="num" />
         </div>
       </div>
     </el-col>
@@ -59,7 +59,8 @@ export default {
     return {
       pay: 0,
       sub: 0,
-      withdraw: 0
+      withdraw: 0,
+      num: 2
     }
   },
   watch: {
@@ -84,13 +85,17 @@ export default {
       const withdrawArr = this.data.purchases
       for (let i = 0; i < payArr.expectedData.length; i++) {
         this.pay += Number(payArr.expectedData[i])
+        console.log('payArr.expectedData[i]---:', payArr.expectedData[i])
       }
       for (let i = 0; i < subArr.expectedData.length; i++) {
         this.sub += Number(subArr.expectedData[i])
+        console.log('subArr.expectedData[i]---:', subArr.expectedData[i])
       }
       for (let i = 0; i < withdrawArr.expectedData.length; i++) {
         this.withdraw += Number(withdrawArr.expectedData[i])
+        console.log('withdrawArr.expectedData[i]---:', withdrawArr.expectedData[i])
       }
+      console.log('withdraw---:', this.withdraw)
     }
   }
 }

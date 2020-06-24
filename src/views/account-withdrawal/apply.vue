@@ -11,7 +11,7 @@
           <el-form-item
             label="提现账户名"
           >
-            <span>{{temp.nickname}}</span>
+            <span>{{ temp.nickname }}</span>
           </el-form-item>
           <el-form-item label="金额:" prop="amount">
             <!-- <span style="color: rgb(238, 120, 0);">{{ temp.amount_show }}</span> -->
@@ -66,7 +66,7 @@
       />
       <el-table-column
         prop="balance.allAmount"
-        label="可提现金额(分)"
+        label="可提现金额(元)"
         sortable
         align="center"
         width="150"
@@ -158,7 +158,7 @@ export default {
       },
       // mock数据
       tableData: [],
-      dialogFormVisible: false,
+      dialogFormVisible: false
     }
   },
   mounted() {
@@ -172,10 +172,10 @@ export default {
     handleFilter() {
       this.listLoading = true
       // console.log('handlefilter')
-      getWithdrawalList({userid:this.listQuery.userid,page:this.listQuery.page,limit:this.listQuery.limit}).then(res => {
+      getWithdrawalList({ userid: this.listQuery.userid, page: this.listQuery.page, limit: this.listQuery.limit }).then(res => {
         if (res.success === 1) {
           this.tableData = res.data
-          this.total=Number(res.count)
+          this.total = Number(res.count)
           this.listLoading = false
         } else {
           this.listLoading = false
@@ -216,7 +216,7 @@ export default {
       // console.log(`当前页: ${val}`)
       this.listQuery.page = val
       this.handleFilter()
-      this.listQuery.page=1
+      this.listQuery.page = 1
       // 页码切换分页调用请求传值
     },
     handleSizeChange(val) {
@@ -243,7 +243,7 @@ export default {
     },
     open(row) {
       this.dialogVisible1 = true
-      this.temp=Object.assign(this.temp,row)
+      this.temp = Object.assign(this.temp, row)
       this.temp.amount = row.balance.allAmount
       this.maxAmount = row.balance.allAmount
     },
