@@ -140,7 +140,13 @@ export default {
             message: res.message,
             type: 'success'
           })
+        }else{
+          this.$message({
+            message: res.message,
+            type: 'error'
+          })
         }
+        this.resetForm('numberValidateForm')
       })
         },
         submitForm(formName) {
