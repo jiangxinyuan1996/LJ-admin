@@ -320,7 +320,7 @@ export default {
       getTrancpwd().then(res => {
         if (res.success === 1) {
           this.dialogVisible1 = true
-          this.temp = { ...row }
+          this.temp = { ...row}
           console.log(this.temp)
         } else {
           this.dialogVisible2 = true
@@ -434,7 +434,7 @@ export default {
     },
     handleDump() {
       this.$router.push({
-        name: 'setting',
+        name: '参数配置',
         params: {
           page: '4'
         }
