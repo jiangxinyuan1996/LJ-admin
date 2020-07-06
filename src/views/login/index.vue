@@ -138,8 +138,8 @@ export default {
       },
       formData:[],
       loginForm: {
-        username: 'dladmin',
-        password: '12345678'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', message:'请输入用户名' }],
