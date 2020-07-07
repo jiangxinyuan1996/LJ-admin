@@ -92,7 +92,7 @@ export const constantRoutes = [
       }
     ]
   },
-  
+
   {
     path: '/search',
     component: Layout,
@@ -172,7 +172,7 @@ export const asyncRoutes = [
     path: '/subverify',
     component: Layout,
     name: '分账复核',
-    meta: { title: '分账复核', icon: 'eye-open', affix: true, roles:['机构管理员','分账复核员']},
+    meta: { title: '分账复核', icon: 'eye-open',  roles:['机构管理员','分账复核员']},
     children: [
       // {
       //   path: 'index',
