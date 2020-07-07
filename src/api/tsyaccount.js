@@ -41,6 +41,8 @@ export const getTransferList = (data) => fetch('/TSY/home/result/getTransferResu
 export const submitTransfer = (data) => fetch('/TSY/home/result/checkTransferResult', data,'POST')
 //调账驳回
 export const refuseTransfer = (data) => fetch('/TSY/home/result/refusedTransferResult', data,'POST')
+//确认支付验证码
+export const payByCode = (data) => fetch('/TSY/home/result/payByCode', data,'POST')
 
 
 

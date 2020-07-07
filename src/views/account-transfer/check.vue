@@ -7,6 +7,17 @@
         width="28%"
         :before-close="handleClose"
       >
+      <el-dialog
+      width="28%"
+      title="确认支付"
+      :visible.sync="innerVisible"
+      append-to-body>
+      <el-input v-model="validateCode" placeholder="请输入验证码"></el-input>
+      <span slot="footer" class="dialog-footer">
+          <el-button @click="innerVisible=false">取 消</el-button>
+          <el-button type="primary" @click="submitCode">确 定</el-button>
+      </span>
+    </el-dialog>
         <el-form ref="form" :model="temp" label-width="90px">
           <el-form-item label="流水号:">
             <span>{{ temp.bizorderno }}</span>
@@ -192,15 +203,17 @@
 <script>
 import permission from '@/directive/permission/index.js'
 import checkPermission from '@/utils/permission'
-import { getTransferList, submitTransfer, refuseTransfer } from '@/api/tsyaccount'
+import { getTransferList, submitTransfer, refuseTransfer,payByCode } from '@/api/tsyaccount'
 import { getUserList } from '@/api/tsyLj'
 export default {
   directives: { permission },
   data() {
     return {
       jumpUrl: '',
+      validateCode:'',
       dialogVisible1: false,
       dialogVisible: false,
+      innerVisible:false,
       alwaysFalse: false,
       showSearch: true,
       total: 0,
@@ -432,10 +445,19 @@ export default {
       console.log(row)
       this.temp = { ...row }
     },
+    submitCode(){
+      payByCode({bizOrderNo:this.temp.bizorderno,code:this.validateCode}).then(res=>{
+        console.log('发送验证码',res)
+      })
+    },
     submit() {
       submitTransfer({bizOrderNo:this.temp.bizorderno}).then(res=>{
         if(res.success===1){
-      let callback = window.open(res.data.url)
+          if(res.data!==undefined){
+            let callback = window.open(res.data.url)
+          }else{
+            this.innerVisible=true
+          }
           console.log('callback',callback)
           this.$message({
             message: res.message,
@@ -476,7 +498,7 @@ export default {
               sums[index] = values.reduce((prev, curr) => {
                 const value = Number(curr);
                 if (!isNaN(value)) {
-                  return (prev*10 + curr*10)/10;
+                  return (prev * 10 + curr * 10) / 10;
                 } else {
                   return prev;
                 }

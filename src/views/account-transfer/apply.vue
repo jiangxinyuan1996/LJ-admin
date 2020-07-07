@@ -70,10 +70,9 @@
         prop="money"
         :rules="[
           { required: true, message: '金额不能为空'},
-          { type: 'number', message: '金额必须为数字值'}
         ]"
       >
-        <el-input v-model.number="numberValidateForm.money" type="age" autocomplete="off" style="width:17%" />
+        <el-input v-model="numberValidateForm.money" type="text" autocomplete="off" style="width:17%" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('numberValidateForm')">提交</el-button>

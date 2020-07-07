@@ -19,20 +19,20 @@
         width="30%"
         :before-close="handleClose"
       >
-        <el-form ref="form" :model="temp" label-width="90px" :rules="rules">
+        <el-form ref="form" :model="temp" label-width="180px" :rules="rules">
           <el-form-item label="流水号:">
             <span>{{ temp.bizorderno }}</span>
           </el-form-item>
           <el-form-item label="分账方姓名:">
             <span>{{ temp.nickname }}</span>
           </el-form-item>
-          <el-form-item label="银行户名:">
+          <el-form-item label="银行户名(企业名称):">
             <span>{{ temp.name }}</span>
           </el-form-item>
           <el-form-item label="账号:">
             <span>{{ temp.card_no }}</span>
           </el-form-item>
-          <el-form-item label="银行:">
+          <el-form-item label="开户行:">
             <span>{{ temp.bank }}</span>
           </el-form-item>
           <el-form-item label="金额:">
@@ -447,16 +447,21 @@ export default {
             if (res.success === 1) {
               this.$message({
                 message: res.message,
-                type: 'success'
+                type: 'success',
+                showClose:true,
+                duration:0
               })
               this.handleFilter()
               this.dialogVisible1 = false
             } else {
               this.$message({
                 message: res.message,
-                type: 'error'
+                type: 'error',
+                showClose:true,
+                duration:0
               })
               this.dialogVisible1 = false
+              this.handleFilter()
             }
           })
         }
