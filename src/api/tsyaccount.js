@@ -26,7 +26,9 @@ export const getReviewList = (data) => fetch('/TSY/home/result/getWithdrawDetail
 //获取提现密码
 export const getTrancpwd = (data) => fetch('/TSY/home/admin/getPayStatus', data)
 //设置提现密码
-export const setPassword = (data) => fetch('/TSY/home/admin/setPayPwd', data,'POST')
+export const setPayPassword = (data) => fetch('/TSY/home/admin/setPayPwd', data,'POST')
+//修改提现密码
+export const updatePayPassword = (data) => fetch('/TSY/home/admin/updatePassword', data,'POST')
 //提现驳回
 export const refuseWithdraw = (data) => fetch('/TSY/home/result/refusedWithdrawResult', data,'POST')
 //提现复核提交
