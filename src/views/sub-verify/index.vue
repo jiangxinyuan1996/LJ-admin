@@ -204,6 +204,10 @@ export default {
       getCheckResult().then(res => {
         console.log('getCheckResult res--:', res)
         this.tableData = res.data
+
+        for(let i=0;i<this.tableData.length;i++){
+          this.tableData[i].amount = this.tableData[i].amount.replace(/,/g, '')
+        }
         setTimeout(function() {
           this.loading = false // 改为self
         }.bind(this), 600)

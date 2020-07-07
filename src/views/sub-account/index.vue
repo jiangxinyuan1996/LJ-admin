@@ -37,6 +37,7 @@
       <el-table
         v-loading="loading"
         show-summary
+        :summary-method="getSummaries"
         :data="tableData"
         size="mini"
         stripe
@@ -419,6 +420,37 @@ export default {
           }
         }
       })
+    },
+    getSummaries(param) {
+        const { columns, data } = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '合计';
+            return;
+          }
+          if (index === 1) {
+            sums[index] = '';
+            return;
+          }
+          if(index===3){
+            const values = data.map(item => Number(item[column.property]));
+            if (!values.every(value => isNaN(value))) {
+              sums[index] = values.reduce((prev, curr) => {
+                const value = Number(curr);
+                if (!isNaN(value)) {
+                  return (prev*10 + curr*10)/10;
+                } else {
+                  return prev;
+                }
+              }, 0);
+              sums[index] += '';
+            } else {
+              sums[index] = 'N/A';
+            }
+        }
+      })
+      return sums
     }
   }
 }
