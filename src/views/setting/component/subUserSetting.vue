@@ -407,9 +407,17 @@ export default {
       if (this.active == 1) {
         passRealName({ bizUserId: this.activateObj.id }).then(res => {
           console.log('passRealName res--:', res)
+          if(res.success==1){
+            this.active++
+            this.isCheckPass = false
+          }else{
+            this.$message({
+              type: 'error',
+              message: res.message
+            })
+          }
         })
-        this.active++
-        this.isCheckPass = false
+
       } else if (this.active == 3) {
         this.nextStr = '完成'
         this.active++
@@ -521,10 +529,18 @@ export default {
       }
       getCode(param).then(res => {
         console.log('getCode res--:', res)
-        this.activeLoading = false
+        if(res.success==1){
+          this.activeLoading = false
+          this.countDown = setInterval(this.count, 1000)
+        }else{
+          this.$message({
+            message: res.message,
+            type: 'error'
+          })
+        }
       })
 
-      this.countDown = setInterval(this.count, 1000)
+
     },
     count() {
       this.countDownTime--
@@ -549,7 +565,14 @@ export default {
       }
       bindPhone(param).then(res => {
         console.log('bindPhone res--:', res)
-        this.active++
+        if(res.success==1){
+          this.active++
+        }else{
+          this.$message({
+            message: res.message,
+            type: 'error'
+          })
+        }
         this.activeLoading = false
       })
     },
@@ -563,15 +586,22 @@ export default {
       }
       setRealName(param).then(res => {
         console.log('setRealName res--:', res)
-        this.active++
-        getMemberInfo({ bizUserId: this.activateObj.id }).then(res => {
-          console.log('getMemberInfo res---:', res)
-          this.activeLoading = false
-          console.log('=====', (res.data.status == 2 || res.data.isIdentityChecked == true))
-          if (res.data.status == 2 || res.data.isIdentityChecked == true) {
-            this.isCheckPass = true
-          }
-        })
+        if(res.success==1){
+          this.active++
+          getMemberInfo({ bizUserId: this.activateObj.id }).then(res => {
+            console.log('getMemberInfo res---:', res)
+            this.activeLoading = false
+            console.log('=====', (res.data.status == 2 || res.data.isIdentityChecked == true))
+            if (res.data.status == 2 || res.data.isIdentityChecked == true) {
+              this.isCheckPass = true
+            }
+          })
+        }else{
+          this.$message({
+            message: res.message,
+            type: 'error'
+          })
+        }
       })
     },
     checkBank() {
@@ -586,19 +616,26 @@ export default {
       }
       bindBankCard(param).then(res => {
         console.log('bindBankCard res--:', res)
-        this.active++
-        const data = {
-          bizUserId: this.activateObj.id
+        if(res.success==1){
+          this.active++
+          const data = {
+            bizUserId: this.activateObj.id
+          }
+          signContract(data).then(res => {
+            console.log('signContract res---:', res)
+            this.iframeUrl = res.data.url
+            console.log('this.iframeUrl---:', this.iframeUrl)
+            this.activeLoading = false
+            // const iframe = document.getElementById('iframe').contentWindow
+            // const son = document.getElementById('iframe')
+            // son.style.height = 500 + 'px'
+          })
+        }else{
+          this.$message({
+            message: res.message,
+            type: 'error'
+          })
         }
-        signContract(data).then(res => {
-          console.log('signContract res---:', res)
-          this.iframeUrl = res.data.url
-          console.log('this.iframeUrl---:', this.iframeUrl)
-          this.activeLoading = false
-          // const iframe = document.getElementById('iframe').contentWindow
-          // const son = document.getElementById('iframe')
-          // son.style.height = 500 + 'px'
-        })
       })
     },
     jump() {
