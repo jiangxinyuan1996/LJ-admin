@@ -121,7 +121,6 @@ export default {
   mounted() {
     getUserList().then(res => {
       this.list = [...res.data.fromList, ...res.data.toList]
-      // console.log(res.data)
     })
   },
   methods: {
@@ -148,6 +147,7 @@ export default {
         }
         this.loading=false
         this.resetForm('numberValidateForm')
+          this.amount = 0
         })
       },
       submitForm(formName) {
@@ -169,7 +169,6 @@ export default {
             console.log('error submit!!');
             return false;
           }
-          this.amount = 0
       })
     },
     resetForm(formName) {

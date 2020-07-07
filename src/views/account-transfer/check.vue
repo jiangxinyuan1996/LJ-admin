@@ -11,10 +11,11 @@
       width="28%"
       title="确认支付"
       :visible.sync="innerVisible"
+        :before-close="cancal"
       append-to-body>
       <el-input v-model="validateCode" placeholder="请输入验证码"></el-input>
       <span slot="footer" class="dialog-footer">
-          <el-button @click="innerVisible=false">取 消</el-button>
+          <el-button @click="cancal">取 消</el-button>
           <el-button type="primary" :loading="loading" @click="submitCode">确 定</el-button>
       </span>
     </el-dialog>
@@ -269,6 +270,27 @@ export default {
   },
   methods: {
     checkPermission,
+    cancal(){
+      this.$confirm('进行取消操作需重新发起调账申请, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '取消成功!请重新申请调账'
+          });
+          this.innerVisible=false
+          this.dialogVisible1=false
+          this.handleFilter()
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '请输入验证码'
+          });
+        })
+    },
     refuse(row) {
       this.$confirm('是否确认驳回这条数据?', '提示', {
         confirmButtonText: '确定',
@@ -402,8 +424,10 @@ export default {
           this.listLoading = false
           this.tableData = res.data
           this.total = Number(res.count)
-          for (let i = 0; i < this.tableData.length; i++) {
-            this.tableData[i].amount = Number(this.tableData[i].amount)
+          if(this.tableData!==undefined){
+            for (let i = 0; i < this.tableData.length; i++) {
+              this.tableData[i].amount = Number(this.tableData[i].amount)
+          }
           }
         } else {
           this.$message({
@@ -449,9 +473,21 @@ export default {
     submitCode(){
       payByCode({bizOrderNo:this.temp.bizorderno,code:this.validateCode}).then(res=>{
         console.log('发送验证码',res)
+        if(res.success===1){
+          this.$message({
+            message: res.message,
+            type: 'success'
+          })
+        }else{
+          this.$message({
+            message: res.message,
+            type: 'error'
+          })
+        }
         this.innerVisible=false
         this.dialogVisible1=false
         this.loading=false
+        this.handleFilter()
       })
     },
     submit() {

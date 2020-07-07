@@ -61,7 +61,22 @@
           placeholder="选择日期"
           @change="endchange"
         />
-
+        <span style="margin:0 15px">状态:</span>
+        <el-select
+          v-model="listQuery.status"
+          clearable
+          filterable
+          style="width:10%;marginBottom:10px"
+          placeholder="请选择状态"
+          size="mini"
+        >
+          <el-option
+            v-for="item in states"
+            :key="item.key"
+            :label="item.value"
+            :value="item.key"
+          />
+        </el-select>
         <el-button type="primary" size="mini" style="margin-left:15px;" @click="handleFilter">
           查询
         </el-button>
@@ -86,6 +101,25 @@
         align="center"
         width="220"
       />
+      <el-table-column
+        prop="status"
+        label="状态"
+        sortable
+        align="center"
+        width="120"
+      >
+        <template slot-scope="scope">
+          <el-popover
+            placement="top-start"
+            title="信息"
+            width="200"
+            trigger="hover"
+            :content="scope.row.errormsg"
+          >
+            <el-tag slot="reference" :type="scope.row.status==='待复核'?'warning':scope.row.status==='调账成功'?'success':'danger'">{{ scope.row.status }}</el-tag>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column
         prop="from_user_name"
         label="转出方"
@@ -165,7 +199,8 @@ export default {
         from_user_id: '',
         to_user_id: '',
         start_time: '',
-        end_time: ''
+        end_time: '',
+        status:''
       },
       // 修改列表参数
       temp: {},
@@ -182,6 +217,25 @@ export default {
         sub_data: [{ required: true, message: '必填项', trigger: 'blur' }]
       },
       tableData: [],
+       states: [
+        {
+          key: '1',
+          value: '待复核'
+        },
+        {
+          key: '2',
+          value: '调账成功'
+        },
+        {
+          key: '-1',
+          value: '调账失败'
+        }
+      ],
+      status: {
+        '1': '待复核',
+        '2': '调账成功',
+        '-1': '调账失败'
+      },
       dialogFormVisible: false,
       multipleSelection: [],
       bankCodeOptions: [],
@@ -247,6 +301,7 @@ export default {
           this.total = Number(res.count|0)
           for (let i = 0; i < this.tableData.length; i++) {
             this.tableData[i].amount = Number(this.tableData[i].amount)
+            this.tableData[i].status = this.status[this.tableData[i].status]
           }
         } else {
           this.$message({
