@@ -30,8 +30,8 @@
         <el-input v-model="createForm.bank_phone" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
       <el-divider />
-      <el-form-item label="银行名称" prop="bank" style="margin-top:0;display: inline-block;">
-        <el-select v-model="createForm.bank" :disabled="state=='update'" filterable clearable placeholder="请选择">
+      <el-form-item label="银行名称" prop="parentbank" style="margin-top:0;display: inline-block;">
+        <el-select v-model="createForm.parentbank" :disabled="state=='update'" filterable clearable placeholder="请选择">
           <el-option
             v-for="item in bankCodeOptions"
             :key="item.key"
@@ -40,17 +40,17 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="企业名称" prop="companyName">
-        <el-input v-model="createForm.companyName" :disabled="state=='update'" style="width:15vw;" />
+      <el-form-item label="企业名称" prop="companyname">
+        <el-input v-model="createForm.companyname" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
-      <el-form-item label="统一社会信用" prop="uniCredit">
-        <el-input v-model="createForm.uniCredit" :disabled="state=='update'" style="width:15vw;" />
+      <el-form-item label="统一社会信用" prop="unicredit">
+        <el-input v-model="createForm.unicredit" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
-      <el-form-item label="开户行支行" prop="subbranch">
-        <el-input v-model="createForm.subbranch" :disabled="state=='update'" style="width:15vw;" />
+      <el-form-item label="开户行支行" prop="bank">
+        <el-input v-model="createForm.bank" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
-      <el-form-item label="支行行号" prop="unionBank">
-        <el-input v-model="createForm.unionBank" :disabled="state=='update'" style="width:15vw;" />
+      <el-form-item label="支行行号" prop="unionbank">
+        <el-input v-model="createForm.unionbank" :disabled="state=='update'" style="width:15vw;" />
       </el-form-item>
       <!-- <el-form-item v-if="state=='create'" label="营业执照" prop="business_license">
         <el-upload
@@ -139,10 +139,10 @@ export default {
         card_no: '',
         phone: '',
         bank_phone: '',
-        companyName: '',
-        uniCredit: '',
-        subbranch: '',
-        unionBank: ''
+        companyname: '',
+        unicredit: '',
+        parentbank: '',
+        unionbank: ''
       },
       rules: {
         nickname: [
@@ -206,12 +206,16 @@ export default {
           card_no: '',
           phone: '',
           bank_phone: '',
-          companyName: '',
-          uniCredit: '',
-          subbranch: '',
-          unionBank: ''
+          companyname: '',
+          unicredit: '',
+          parentbank: '',
+          unionbank: ''
         }
       }
+    },
+    dataToModify(val, oldVal) {
+      console.log('11111dataToModify')
+      this.createForm = Object.assign({}, this.dataToModify)
     }
   },
   created() {

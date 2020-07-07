@@ -399,7 +399,7 @@ export default {
                 this.init()
                 this.$message({
                   type: 'success',
-                  message: res.message
+                  message: '操作成功'
                 })
               } else {
                 this.$message({
