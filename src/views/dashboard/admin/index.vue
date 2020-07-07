@@ -101,8 +101,10 @@ export default {
         for (let i = 0; i < res.data.pay.length; i++) {
           for (let j = 0; j < dateList.length; j++) {
             if (dateList[j] == res.data.pay[i].date) {
-              this.lineChartData.newVisitis.expectedData[j] = Number(res.data.pay[i].amount)
-              console.log('Number---:', Number(res.data.pay[i].amount))
+              let numStr = res.data.pay[i].amount.replaceAll(',','')
+              console.log('numStr----:',numStr);
+              this.lineChartData.newVisitis.expectedData[j] = Number(numStr)
+              console.log('Number---:', Number(numStr))
               break
             }
           }
@@ -111,7 +113,8 @@ export default {
         for (let i = 0; i < res.data.sub.length; i++) {
           for (let j = 0; j < dateList.length; j++) {
             if (dateList[j] == res.data.sub[i].date) {
-              this.lineChartData.messages.expectedData[j] = Number(res.data.sub[i].amount)
+              let numStr = res.data.sub[i].amount.replaceAll(',','')
+              this.lineChartData.messages.expectedData[j] = Number(numStr)
               break
             }
           }
@@ -120,7 +123,8 @@ export default {
         for (let i = 0; i < res.data.withdraw.length; i++) {
           for (let j = 0; j < dateList.length; j++) {
             if (dateList[j] == res.data.withdraw[i].date) {
-              this.lineChartData.purchases.expectedData[j] = Number(res.data.withdraw[i].amount)
+              let numStr = res.data.withdraw[i].amount.replaceAll(',','')
+              this.lineChartData.purchases.expectedData[j] = Number(numStr)
               break
             }
           }
