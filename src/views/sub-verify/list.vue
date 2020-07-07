@@ -269,19 +269,27 @@ export default {
     },
     exportCheck() {
       console.log('exportCheck')
-      // window.location.href = 'mould/对账单导出模板.xlsx'
-      import('@/vendor/Export2Excel').then(excel => {
-        // 表格的表头列表
-        console.log('Export2Excel')
-        const tHeader = ['机器号', '流水号', '时间', '金额(元)', '服务商', '服务商金额(元)', '合作伙伴', '合作伙伴金额(元)', '比例']
-        // 与表头相对应的数据里边的字段
-        const filterVal = ['termid', 'bizorderno', 'time', 'amount', 'sub1_user_name', 'sub1_account', 'sub2_user_name', 'sub2_account', 'rule']
-        const list = this.tableData
-        const data = this.formatJson(filterVal, list)
-        console.log('Export data', data)
-        // 这里还是使用export_json_to_excel方法比较好，方便操作数据
-        excel.export_json_to_excel(tHeader, data, '待复核明细导出数据')
+
+      let param = Object.assign({}, this.query)
+      param.option = 'export'
+      getCheckResultDetail(param).then(res => {
+        console.log('getCheckResultDetail res--:', res)
+        let exportList = res.data
+
+        import('@/vendor/Export2Excel').then(excel => {
+          // 表格的表头列表
+          console.log('Export2Excel')
+          const tHeader = ['机器号', '流水号', '时间', '金额(元)', '服务商', '服务商金额(元)', '合作伙伴', '合作伙伴金额(元)', '比例']
+          // 与表头相对应的数据里边的字段
+          const filterVal = ['termid', 'bizorderno', 'time', 'amount', 'sub1_user_name', 'sub1_account', 'sub2_user_name', 'sub2_account', 'rule']
+          const list = exportList
+          const data = this.formatJson(filterVal, list)
+          console.log('Export data', data)
+          // 这里还是使用export_json_to_excel方法比较好，方便操作数据
+          excel.export_json_to_excel(tHeader, data, '待复核明细导出数据')
+        })
       })
+
     },
     formatJson(filterVal, jsonData) {
       console.log('formatJson')
