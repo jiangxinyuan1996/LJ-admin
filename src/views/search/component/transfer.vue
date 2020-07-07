@@ -165,7 +165,7 @@
       style="margin-top:20px;"
       :small="true"
       :current-page="listQuery.page"
-      :page-sizes="[5,10]"
+      :page-sizes="[10]"
       :page-size="10"
       layout="total, sizes, prev, pager, next"
       :total="total"

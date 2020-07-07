@@ -77,7 +77,7 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-    <span style="margin-right:15px">姓名:</span><el-input size="mini" v-model="query.nickname" placeholder="姓名" style="width: 200px;margin-right:15px" class="filter-item" />
+    <span style="margin-right:15px;fontSize:13px">姓名:</span><el-input size="mini" v-model="query.nickname" placeholder="姓名" style="width: 200px;margin-right:15px" class="filter-item" />
             <el-button class="filter-item" style="margin-left: 10px;" size="mini" type="primary" icon="el-icon-search" @click="getUser">
               查询
             </el-button>

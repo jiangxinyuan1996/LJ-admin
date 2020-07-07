@@ -154,7 +154,7 @@
       style="margin-top:20px"
       :small="true"
       :current-page="listQuery.page"
-      :page-sizes="[5,10]"
+      :page-sizes="[10]"
       :page-size="10"
       layout="total, sizes, prev, pager, next"
       :total="total"
@@ -256,12 +256,12 @@ export default {
     exportCheck() {
       console.log('exportCheck')
       // window.location.href = 'mould/对账单导出模板.xlsx'
-      getReviewList(this.listQuery).then(res => {
+      getReviewList({...this.listQuery,option:'export'}).then(res => {
         console.log('getSubResult res--:', res)
-        this.tableData = res.data
-        for (let i = 0; i < this.tableData.length; i++) {
-          this.tableData[i].amount = Number(this.tableData[i].amount)
-          this.tableData[i].status = this.status[this.tableData[i].status]
+        // this.tableData = res.data
+        for (let i = 0; i < res.data.length; i++) {
+          res.data[i].amount = Number(res.data[i].amount)
+          res.data[i].status = this.status[res.data[i].status]
         }
         console.log('this.tableData---:', this.tableData)
         import('@/vendor/Export2Excel').then(excel => {
@@ -270,7 +270,7 @@ export default {
           const tHeader = ['流水号', '状态', '用户名', '银行户名', '日期', '账号', '金额(元)']
           // 与表头相对应的数据里边的字段
           const filterVal = ['bizorderno', 'status', 'nickname', 'name', 'time', 'card_no', 'amount']
-          const list = this.tableData
+          const list = res.data
           const data = this.formatJson(filterVal, list)
           console.log('Export data', data)
           // 这里还是使用export_json_to_excel方法比较好，方便操作数据

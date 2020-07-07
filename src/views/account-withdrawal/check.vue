@@ -26,7 +26,7 @@
           <el-form-item label="分账方姓名:">
             <span>{{ temp.nickname }}</span>
           </el-form-item>
-          <el-form-item label="银行户名(企业名称):">
+          <el-form-item label="银行户名:">
             <span>{{ temp.name }}</span>
           </el-form-item>
           <el-form-item label="账号:">
@@ -141,7 +141,7 @@
          label="银行户名"
          sortable
          align="center"
-         width="100"
+         width="140"
        />
       <el-table-column
         prop="card_no"
@@ -184,7 +184,7 @@
       style="margin-top:20px;"
       :small="true"
       :current-page="listQuery.page"
-      :page-sizes="[5,10]"
+      :page-sizes="[10]"
       :page-size="10"
       layout="total, sizes, prev, pager, next"
       :total="total"
@@ -277,6 +277,11 @@ export default {
           this.total = Number(res.count|0)
           for (let i = 0; i < this.tableData.length; i++) {
             this.tableData[i].amount = Number(this.tableData[i].amount)
+            if(this.tableData[i].companyname==null){
+              this.tableData[i].name=this.tableData[i].name
+              }else{
+                this.tableData[i].name=this.tableData[i].companyname
+              }
           }
         } else {
           this.listLoading = false
