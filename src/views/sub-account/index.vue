@@ -235,6 +235,10 @@ export default {
         this.totalCount = parseInt(res.count)
         console.log('this.totalCount----:', this.totalCount)
         this.tableData = res.data
+
+        for (let i = 0; i < this.tableData.length; i++) {
+          this.tableData[i].amount = this.tableData[i].amount.replace(/,/g, '')
+        }
       })
       getUserList().then(res => {
         console.log('getUserList---:', res)
@@ -389,14 +393,13 @@ export default {
             instance.confirmButtonText = '执行中...'
             const param = e
             console.log('param---', param)
-
             submitSubResult(param).then(res => {
               console.log('submitSubResult res---:', res)
               if (res.success === 1) {
                 this.jumpForm = res.data
                 this.jumpUrl = res.data.url
-                window.open(this.jumpUrl, '_blank')
                 this.init()
+                window.open(this.jumpUrl, '_blank')
                 this.$message({
                   type: 'success',
                   message: '操作成功'
