@@ -217,12 +217,17 @@ export default {
         {
           key: '-1',
           value: '调账失败'
+        },
+        {
+          key:'-2',
+          value:'被驳回'
         }
       ],
       status: {
         '1': '待复核',
         '2': '调账成功',
-        '-1': '调账失败'
+        '-1': '调账失败',
+        '-2':'被驳回'
       },
       dialogFormVisible: false,
       multipleSelection: [],
