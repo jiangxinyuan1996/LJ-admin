@@ -184,8 +184,10 @@ export default {
       }
       getLog(this.query).then(res => {
         console.log('getLog res---:', res)
+        this.totalCount = parseInt(res.count)
         if (res.data) {
           this.tableData = res.data
+
         } else {
           this.tableData = []
         }

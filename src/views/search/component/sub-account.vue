@@ -218,6 +218,7 @@ export default {
       this.query.limit = this.limit
       getSubResult(this.query).then(res => {
         console.log('getSubResult res--:', res)
+        this.totalCount = parseInt(res.count)
         this.tableData = res.data
         for (var i = 0; i < this.tableData.length; i++) {
           this.tableData[i].amount = this.tableData[i].amount.replace(/,/g, '')
