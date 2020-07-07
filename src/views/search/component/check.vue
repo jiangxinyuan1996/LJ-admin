@@ -257,28 +257,81 @@ export default {
     },
     exportCheck() {
       console.log('exportCheck')
-      this.search()
-      import('@/vendor/Export2Excel').then(excel => {
-        // 表格的表头列表
-        console.log('Export2Excel')
-        const tHeader = ['时间', '进账总额', '分账比例', '分账金额', '合作伙伴名称', '本公司分账金额', '提现金额(元)', '转入金额', '转出金额(元)', '备注']
-        // 与表头相对应的数据里边的字段
-        const filterVal = ['datetime', 'amount', 'rule', 'sub_amount', 'name', 'income', 'wd_amount', 'in_amount', 'out_amount', 'username']
-        const list = this.tableData
-        const data = this.formatJson(filterVal, list)
 
-        data.push(['未提现余额', this.money])
-        console.log('Export data', data)
-        // 这里还是使用export_json_to_excel方法比较好，方便操作数据
-        excel.export_json_to_excel(tHeader, data, '对账单导出数据')
-      })
+
+
+      this.loading = true
+      this.query.page = this.page
+      this.query.limit = this.limit
+      let param = Object.assign({}, this.query)
+      param.option = 'export'
+      if (this.subuser2 == '' || this.subuser2 == null) {
+        this.$message({
+          type: 'error',
+          message: '请选择分账方'
+        })
+        this.loading = false // 改为self
+      } else if (this.subuser2 != '本公司') {
+        this.query.start_time = this.query.start_time.valueOf()
+        this.query.end_time = this.query.end_time.valueOf()
+        this.query.bizUserId = this.subuser2
+        getStatementByPartner(param).then(res => {
+          console.log('getStatementByPartner res----:', res)
+          let exportRes = res.data
+          this.money = res.amount
+          this.loading = false // 改为self
+          import('@/vendor/Export2Excel').then(excel => {
+            // 表格的表头列表
+            console.log('Export2Excel')
+            const tHeader = ['时间', '进账总额', '分账比例', '分账金额', '合作伙伴名称', '本公司分账金额', '提现金额(元)', '转入金额', '转出金额(元)', '备注']
+            // 与表头相对应的数据里边的字段
+            const filterVal = ['datetime', 'amount', 'rule', 'sub_amount', 'name', 'income', 'wd_amount', 'in_amount', 'out_amount', 'username']
+            const list = exportRes
+            const data = this.formatJson(filterVal, list)
+
+            data.push(['未提现余额', this.money])
+            console.log('Export data', data)
+            // 这里还是使用export_json_to_excel方法比较好，方便操作数据
+            excel.export_json_to_excel(tHeader, data, '对账单导出数据')
+          })
+        })
+      } else {
+        console.log('==========本公司============')
+        this.query.start_time = this.query.start_time.valueOf()
+        this.query.end_time = this.query.end_time.valueOf()
+        getStatementByServer(param).then(res => {
+          console.log('getStatementByPartner res----:', res)
+          let exportRes = res.data
+          this.money = res.amount
+          this.loading = false // 改为self
+        })
+        import('@/vendor/Export2Excel').then(excel => {
+          // 表格的表头列表
+          console.log('Export2Excel')
+          const tHeader = ['时间', '进账总额', '分账比例', '分账金额', '合作伙伴名称', '本公司分账金额', '提现金额(元)', '转入金额', '转出金额(元)', '备注']
+          // 与表头相对应的数据里边的字段
+          const filterVal = ['datetime', 'amount', 'rule', 'sub_amount', 'name', 'income', 'wd_amount', 'in_amount', 'out_amount', 'username']
+          const list = exportRes
+          const data = this.formatJson(filterVal, list)
+
+          data.push(['未提现余额', this.money])
+          console.log('Export data', data)
+          // 这里还是使用export_json_to_excel方法比较好，方便操作数据
+          excel.export_json_to_excel(tHeader, data, '对账单导出数据')
+        })
+      }
+
+
+
+
+
     },
     changePage(e) {
       this.page = e
       this.search()
     },
     formatJson(filterVal, jsonData) {
-      console.log('formatJson')
+      console.log('formatJson',jsonData)
       return jsonData.map(v =>
         filterVal.map(j => {
           console.log('v[j]-----:', v[j])
