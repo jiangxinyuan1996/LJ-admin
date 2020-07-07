@@ -194,6 +194,9 @@
             <el-tooltip v-if="scope.row.step==5" class="item" effect="dark" content="设置支付密码" placement="left">
               <el-button type="warning" icon="el-icon-s-goods" circle size="mini" @click="manageCode(scope.row)" />
             </el-tooltip>
+            <!-- <el-tooltip v-if="scope.row.step==5" class="item" effect="dark" content="修改支付密码" placement="top">
+              <el-button type="message" icon="el-icon-s-goods" circle size="mini" @click="manageCode(scope.row)" />
+            </el-tooltip> -->
             <el-tooltip class="item" effect="dark" content="编辑" placement="top">
               <el-button type="primary" icon="el-icon-edit" circle size="mini" @click="modify(scope.row)" />
             </el-tooltip>
