@@ -102,7 +102,7 @@
             trigger="hover"
             :content="scope.row.errormsg"
           >
-            <el-tag slot="reference" :type="scope.row.status==='待复核'?'info':scope.row.status==='提现成功'?'success':'danger'">{{ scope.row.status }}</el-tag>
+            <el-tag slot="reference" :type="scope.row.status==='待复核'?'warning':scope.row.status==='提现成功'?'success':'danger'">{{ scope.row.status }}</el-tag>
           </el-popover>
         </template>
       </el-table-column>
