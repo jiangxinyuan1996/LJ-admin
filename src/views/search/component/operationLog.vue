@@ -1,9 +1,9 @@
 <template>
   <div id="sub-account">
     <div id="searchBox">
-      <div id="buttonBox" style="margin:50px;">
+      <div id="buttonBox" style="margin:40px;">
         <span style="margin-right:10px">操作人 : </span>
-        <el-select v-model="query.userid" size="mini" placeholder="请选择">
+        <el-select v-model="query.userid" style="margin-top:10px;margin-bottom:10px;" size="mini" placeholder="请选择">
           <el-option
             v-for="item in nameoptions"
             :key="item.value"
@@ -184,8 +184,10 @@ export default {
       }
       getLog(this.query).then(res => {
         console.log('getLog res---:', res)
+        this.totalCount = parseInt(res.count)
         if (res.data) {
           this.tableData = res.data
+
         } else {
           this.tableData = []
         }

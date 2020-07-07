@@ -1,8 +1,8 @@
 <template>
   <div id="sub-amount">
     <div id="searchBox">
-      <div id="buttonBox" style="margin:50px;">
-        <span style="margin-right:10px">机器号 : </span><el-input v-model="query.termid" size="mini" placeholder="机器号" style="width: 10vw;margin-right:15px;" class="filter-item" />
+      <div id="buttonBox" style="margin:40px;">
+        <span style="margin-top:10px;margin-bottom:10px;margin-right:10px">机器号 : </span><el-input v-model="query.termid" size="mini" placeholder="机器号" style="width: 10vw;margin-right:15px;margin-top:10px;margin-bottom:10px;" class="filter-item" />
         <span style="margin-right:10px">单据流水号 : </span><el-input v-model="query.trxid" size="mini" placeholder="单据流水号" style="width: 15vw;margin-right:15px;" class="filter-item" />
         <span class="demonstration">单据时间 : </span>
         <el-date-picker
@@ -37,6 +37,7 @@
       <el-table
         v-loading="loading"
         show-summary
+        :summary-method="getSummaries"
         :data="tableData"
         size="mini"
         stripe
@@ -235,6 +236,10 @@ export default {
         this.totalCount = parseInt(res.count)
         console.log('this.totalCount----:', this.totalCount)
         this.tableData = res.data
+
+        for (let i = 0; i < this.tableData.length; i++) {
+          this.tableData[i].amount = this.tableData[i].amount.replace(/,/g, '')
+        }
       })
       getUserList().then(res => {
         console.log('getUserList---:', res)
@@ -389,14 +394,13 @@ export default {
             instance.confirmButtonText = '执行中...'
             const param = e
             console.log('param---', param)
-
             submitSubResult(param).then(res => {
               console.log('submitSubResult res---:', res)
               if (res.success === 1) {
                 this.jumpForm = res.data
                 this.jumpUrl = res.data.url
-                window.open(this.jumpUrl, '_blank')
                 this.init()
+                window.open(this.jumpUrl, '_blank')
                 this.$message({
                   type: 'success',
                   message: '操作成功'
@@ -416,6 +420,37 @@ export default {
           }
         }
       })
+    },
+    getSummaries(param) {
+        const { columns, data } = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '合计';
+            return;
+          }
+          if (index === 1) {
+            sums[index] = '';
+            return;
+          }
+          if(index===3){
+            const values = data.map(item => Number(item[column.property]));
+            if (!values.every(value => isNaN(value))) {
+              sums[index] = values.reduce((prev, curr) => {
+                const value = Number(curr);
+                if (!isNaN(value)) {
+                  return (prev*10 + curr*10)/10;
+                } else {
+                  return prev;
+                }
+              }, 0);
+              sums[index] += '';
+            } else {
+              sums[index] = 'N/A';
+            }
+        }
+      })
+      return sums
     }
   }
 }

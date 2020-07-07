@@ -1,8 +1,8 @@
 <template>
   <div id="sub-account">
     <div id="searchBox">
-      <div id="buttonBox" style="margin:50px;">
-        <span style="margin-right:10px">机器号 : </span><el-input v-model="query.termid" size="mini" placeholder="机器号" style="width: 8vw;margin-right:5px;" class="filter-item" />
+      <div id="buttonBox" style="margin:40px;">
+        <span style="margin-right:10px;margin-top:10px;margin-bottom:10px;">机器号 : </span><el-input v-model="query.termid" size="mini" placeholder="机器号" style="width: 8vw;margin-right:5px;margin-top:10px;margin-bottom:10px;" class="filter-item" />
         <span style="margin-right:10px">流水号 : </span><el-input v-model="query.trxid" size="mini" placeholder="单据流水号" style="width: 12vw;margin-right:15px;" class="filter-item" />
         <span class="demonstration">时间 : </span>
         <el-date-picker
@@ -45,6 +45,7 @@
     <div id="dataForm">
       <el-table
         show-summary
+        :summary-method="getSummaries"
         :data="tableData"
         size="mini"
         stripe
@@ -217,8 +218,10 @@ export default {
       this.query.limit = this.limit
       getSubResult(this.query).then(res => {
         console.log('getSubResult res--:', res)
+        this.totalCount = parseInt(res.count)
         this.tableData = res.data
         for (var i = 0; i < this.tableData.length; i++) {
+          this.tableData[i].amount = this.tableData[i].amount.replace(/,/g, '')
           switch (this.tableData[i].status) {
             case '0':this.tableData[i].status = '未分账'
               break
@@ -231,6 +234,37 @@ export default {
           }
         }
       })
+    },
+    getSummaries(param) {
+        const { columns, data } = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '合计';
+            return;
+          }
+          if (index === 1) {
+            sums[index] = '';
+            return;
+          }
+          if(index===3){
+            const values = data.map(item => Number(item[column.property]));
+            if (!values.every(value => isNaN(value))) {
+              sums[index] = values.reduce((prev, curr) => {
+                const value = Number(curr);
+                if (!isNaN(value)) {
+                  return (prev*10 + curr*10)/10;
+                } else {
+                  return prev;
+                }
+              }, 0);
+              sums[index] += '';
+            } else {
+              sums[index] = 'N/A';
+            }
+        }
+      })
+      return sums
     },
     exportCheck() {
       console.log('exportCheck')
