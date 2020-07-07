@@ -204,18 +204,6 @@ export default {
       },
       // 修改列表参数
       temp: {},
-      rules: {
-        business_code: [{ required: true, message: '必填项', trigger: 'blur' }],
-        bank_code: [{ required: true, message: '必填项', trigger: 'blur' }],
-        account_type: [{ required: true, message: '必填项', trigger: 'blur' }],
-        account_no: [{ required: true, message: '必填项', trigger: 'blur' }],
-        account_name: [{ required: true, message: '必填项', trigger: 'blur' }],
-        amount: [{ required: true, message: '必填项', trigger: 'blur' }],
-        id: [{ required: true, message: '必填项', trigger: 'blur' }],
-        id_type: [{ required: true, message: '必填项', trigger: 'blur' }],
-        tel: [{ required: true, message: '必填项', trigger: 'blur' }],
-        sub_data: [{ required: true, message: '必填项', trigger: 'blur' }]
-      },
       tableData: [],
        states: [
         {
@@ -345,7 +333,7 @@ export default {
             sums[index] = '合计';
             return;
           }
-          if(index===4){
+          if(index===5){
             const values = data.map(item => Number(item[column.property]));
             if (!values.every(value => isNaN(value))) {
               sums[index] = values.reduce((prev, curr) => {
