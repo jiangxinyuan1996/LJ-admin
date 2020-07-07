@@ -102,7 +102,7 @@
             trigger="hover"
             :content="scope.row.errormsg"
           >
-            <el-tag slot="reference" :type="scope.row.status==='待复核'?'warning':scope.row.status==='提现成功'?'success':'danger'">{{ scope.row.status }}</el-tag>
+            <el-tag slot="reference" :type="scope.row.status==='待复核'?'warning':scope.row.status==='提现成功'?'success':scope.row.status==='处理中'?'':'danger'">{{ scope.row.status }}</el-tag>
           </el-popover>
         </template>
       </el-table-column>
@@ -217,6 +217,10 @@ export default {
           value: '提现成功'
         },
         {
+          key: '3',
+          value: '处理中'
+        },
+        {
           key: '-1',
           value: '提现失败'
         },
@@ -230,6 +234,7 @@ export default {
       status: {
         '1': '待复核',
         '2': '提现成功',
+        '3':'处理中',
         '-1': '提现失败',
         '-2': '被驳回'
       },
@@ -308,7 +313,7 @@ export default {
         if (res.success === 1) {
           this.listLoading = false
           this.tableData = res.data
-          this.total = Number(res.count)
+          this.total = Number(res.count|0)
           for (let i = 0; i < this.tableData.length; i++) {
             this.tableData[i].amount = Number(this.tableData[i].amount)
             this.tableData[i].status = this.status[this.tableData[i].status]
@@ -363,7 +368,7 @@ export default {
               sums[index] = values.reduce((prev, curr) => {
                 const value = Number(curr);
                 if (!isNaN(value)) {
-                  return (prev*10 + curr*10)/10;
+                  return (prev*100 + curr*100)/100;
                 } else {
                   return prev;
                 }

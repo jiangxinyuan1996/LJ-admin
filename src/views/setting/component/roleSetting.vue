@@ -374,7 +374,7 @@ export default {
         if(res.success===1){
         this.loading = false
         this.workerData = JSON.parse(JSON.stringify(res.data))
-        this.total=Number(res.count)
+        this.total=Number(res.count|0)
         for (let i = 0; i < res.data.length; i++) {
           this.workerData[i].roleList = res.data[i].roleList.map(item => {
             return item.remark

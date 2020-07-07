@@ -15,12 +15,12 @@
           </el-form-item>
           <el-form-item label="金额:" prop="amount">
             <!-- <span style="color: rgb(238, 120, 0);">{{ temp.amount_show }}</span> -->
-            <el-input v-model.number="temp.amount" type="text" autocomplete="off" style="width:50%" />
+            <el-input v-model="temp.amount" type="text" autocomplete="off" style="width:50%" />
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+          <el-button type="primary" :loading="loading" @click="submitForm('form')">确 定</el-button>
         </span>
       </el-dialog>
       <!-- 搜索区 -->
@@ -127,6 +127,7 @@ export default {
       dialogVisible1: false,
       alwaysFalse: false,
       showSearch: true,
+      loading:false,
       total: 0,
       listLoading: false,
       list: [
@@ -187,6 +188,7 @@ export default {
       })
     },
     submitForm(formName) {
+      this.loading=true
       this.$refs[formName].validate((valid) => {
         if (valid) {
           addWithdrawal(this.temp).then(res => {
@@ -196,16 +198,17 @@ export default {
                 message: res.message,
                 type: 'success'
               })
-              this.handleFilter()
-              this.dialogVisible1 = false
             } else {
               this.$message({
                 message: res.message,
                 type: 'error'
               })
-              this.dialogVisible1 = false
+              
             }
           })
+          this.dialogVisible1 = false
+          this.loading=false
+          this.handleFilter()
         }
       })
     },
@@ -272,7 +275,7 @@ export default {
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr)
               if (!isNaN(value)) {
-                return prev + curr
+                return (prev*100 + curr*100)/100
               } else {
                 return prev
               }

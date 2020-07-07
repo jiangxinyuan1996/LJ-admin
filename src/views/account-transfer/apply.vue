@@ -19,7 +19,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取 消</el-button>
-        <el-button type="primary" @click="submit">确 定</el-button>
+        <el-button type="primary" :loading="loading" @click="submit">确 定</el-button>
       </span>
     </el-dialog>
     <el-form ref="numberValidateForm" :model="numberValidateForm" label-width="100px" class="demo-ruleForm">
@@ -133,6 +133,7 @@ export default {
     },
     submit() {
       this.dialogVisible = false
+      this.loading=true
       applyTransfer({ from_user_id: this.numberValidateForm.outputer, to_user_id: this.numberValidateForm.inputer, amount: this.numberValidateForm.money }).then(res => {
         if (res.success === 1) {
           this.$message({
@@ -145,10 +146,11 @@ export default {
             type: 'error'
           })
         }
+        this.loading=false
         this.resetForm('numberValidateForm')
-      })
-        },
-        submitForm(formName) {
+        })
+      },
+      submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             if(this.amount>=Number(this.numberValidateForm.money)){

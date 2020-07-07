@@ -296,7 +296,7 @@ export default {
               sums[index] = values.reduce((prev, curr) => {
                 const value = Number(curr);
                 if (!isNaN(value)) {
-                  return (prev*10 + curr*10)/10;
+                  return (prev*100 + curr*100)/100;
                 } else {
                   return prev;
                 }

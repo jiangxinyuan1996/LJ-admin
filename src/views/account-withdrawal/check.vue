@@ -44,7 +44,7 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+          <el-button type="primary" :loading="loading" @click="submitForm('form')">确 定</el-button>
         </span>
       </el-dialog>
       <!-- 搜索区 -->
@@ -208,6 +208,7 @@ export default {
       dialogVisible2: false,
       isShow: false,
       alwaysFalse: false,
+      loading:false,
       showSearch: true,
       start_time: '',
       end_time: '',
@@ -273,7 +274,7 @@ export default {
         if (res.success === 1) {
           this.listLoading = false
           this.tableData = res.data
-          this.total = Number(res.count)
+          this.total = Number(res.count|0)
           for (let i = 0; i < this.tableData.length; i++) {
             this.tableData[i].amount = Number(this.tableData[i].amount)
           }
@@ -441,6 +442,7 @@ export default {
       })
     },
     submitForm(formName) {
+      this.loading=true
       this.$refs[formName].validate((valid) => {
         if (valid) {
           transactionReview({ bizOrderNo: this.temp.bizorderno, payPwd: this.temp.payPwd }).then(res => {
@@ -449,7 +451,6 @@ export default {
                 message: res.message,
                 type: 'success',
                 showClose:true,
-                duration:0
               })
               this.handleFilter()
               this.dialogVisible1 = false
@@ -458,9 +459,9 @@ export default {
                 message: res.message,
                 type: 'error',
                 showClose:true,
-                duration:0
               })
               this.dialogVisible1 = false
+              this.loading=false
               this.handleFilter()
             }
           })
@@ -492,7 +493,7 @@ export default {
               sums[index] = values.reduce((prev, curr) => {
                 const value = Number(curr);
                 if (!isNaN(value)) {
-                  return (prev*10 + curr*10)/10;
+                  return (prev*100 + curr*100)/100;
                 } else {
                   return prev;
                 }
