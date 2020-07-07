@@ -1,10 +1,11 @@
 <template>
   <div id="sub-verify">
     <div id="searchBox">
-      <div id="buttonBox" style="margin:50px;">
+      <div id="buttonBox" style="margin:40px;">
         <span class="demonstration">查询时间 : </span>
         <el-date-picker
           v-model="query.start_time"
+          style="margin-top:10px;margin-bottom:10px;"
           size="mini"
           type="datetime"
           placeholder="选择日期时间"

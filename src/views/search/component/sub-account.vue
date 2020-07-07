@@ -1,8 +1,8 @@
 <template>
   <div id="sub-account">
     <div id="searchBox">
-      <div id="buttonBox" style="margin:50px;">
-        <span style="margin-right:10px">机器号 : </span><el-input v-model="query.termid" size="mini" placeholder="机器号" style="width: 8vw;margin-right:5px;" class="filter-item" />
+      <div id="buttonBox" style="margin:40px;">
+        <span style="margin-right:10px;margin-top:10px;margin-bottom:10px;">机器号 : </span><el-input v-model="query.termid" size="mini" placeholder="机器号" style="width: 8vw;margin-right:5px;margin-top:10px;margin-bottom:10px;" class="filter-item" />
         <span style="margin-right:10px">流水号 : </span><el-input v-model="query.trxid" size="mini" placeholder="单据流水号" style="width: 12vw;margin-right:15px;" class="filter-item" />
         <span class="demonstration">时间 : </span>
         <el-date-picker
