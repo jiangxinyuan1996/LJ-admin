@@ -93,9 +93,9 @@
         <el-button v-show="isShow" size="mini" style="margin-left: 5px;" type="warning" @click="refuseList">
           批量驳回
         </el-button>
-        <!-- <el-button v-show="isShow" size="mini" style="margin-left: 5px;" type="success" @click="checkList">
+        <el-button v-show="isShow" size="mini" style="margin-left: 5px;" :loading="loading" type="success" @click="checkList">
           批量复核
-        </el-button> -->
+        </el-button>
       </div>
     </div>
     <!-- 查询信息表格 -->
@@ -113,7 +113,7 @@
       <el-table-column
         type="selection"
         align="center"
-        width="50"
+        width="60"
       />
       <el-table-column
         prop="bizorderno"
@@ -307,7 +307,7 @@ export default {
     },
     handleSelectionChange(val) {
       this.isShow = true
-      console.log(val)
+      console.log('val--------',val)
       this.multipleSelection = val
       if (val.length === 0) {
         this.isShow = false
@@ -417,8 +417,15 @@ export default {
           h('span', null, `条数据?`)
         ]),
         showCancelButton: true,
+        showInput:true,
+        inputType:'password',
+        inputValue:'',
+        inputPlaceholder:'请输入提现密码',
         confirmButtonText: '确定',
         cancelButtonText: '取消',
+        inputValidator: ()=>{
+          return '输入数据'
+        },
         beforeClose: (action, instance, done) => {
           if (action === 'confirm') {
             instance.confirmButtonLoading = true
@@ -432,10 +439,30 @@ export default {
           }
         }
       }).then(action => {
-        this.$message({
-          type: 'info',
-          message: 'action: ' + action
-        })
+        this.loading=true
+        console.log(action)
+        const order_list = []
+        for (let i = 0; i < this.multipleSelection.length; i++) {
+          order_list.push(this.multipleSelection[i].bizorderno)
+        }
+       transactionReview({ bizOrderNo: order_list, payPwd: action.value }).then(res => {
+         console.log('批量复核---',res)
+         if(res.success===1){
+           this.$message({
+             message:res.message,
+             type:'success',
+             duration:5000
+           })
+         }else{
+           this.$message({
+             message:res.message,
+             type:'error',
+             duration:5000
+           })
+         }
+         this.handleFilter()
+         this.loading=false
+       })
       })
     },
     handleDump() {
@@ -450,7 +477,7 @@ export default {
       this.loading=true
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          transactionReview({ bizOrderNo: this.temp.bizorderno, payPwd: this.temp.payPwd }).then(res => {
+          transactionReview({ bizOrderNo: [this.temp.bizorderno], payPwd: this.temp.payPwd }).then(res => {
             if (res.success === 1) {
               this.$message({
                 message: res.message,
