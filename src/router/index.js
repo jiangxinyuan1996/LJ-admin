@@ -92,7 +92,7 @@ export const constantRoutes = [
       }
     ]
   },
-  
+
   {
     path: '/search',
     component: Layout,
