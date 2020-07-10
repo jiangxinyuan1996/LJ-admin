@@ -164,7 +164,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/sub-account/index'),
         name: '分账明细',
-        meta: { title: '分账明细', icon: 'edit', affix: true,roles:['机构管理员','操作员'] }
+        meta: { title: '分账明细', icon: 'edit',roles:['机构管理员','操作员'] }
       }
     ]
   },
@@ -172,7 +172,7 @@ export const asyncRoutes = [
     path: '/subverify',
     component: Layout,
     name: '分账复核',
-    meta: { title: '分账复核', icon: 'eye-open',  roles:['机构管理员','分账复核员']},
+    meta: { title: '分账复核', icon: 'eye-open', roles:['机构管理员','分账复核员']},
     children: [
       // {
       //   path: 'index',
@@ -184,7 +184,7 @@ export const asyncRoutes = [
         path: 'list',
         component: () => import('@/views/sub-verify/list'),
         name: '复核明细',
-        meta: { title: '复核明细', affix: true }
+        meta: { title: '复核明细' }
       },
       {
         path: 'detail',
