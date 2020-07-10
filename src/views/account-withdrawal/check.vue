@@ -137,12 +137,12 @@
         width="160"
       />
       <el-table-column
-         prop="name"
-         label="银行户名"
-         sortable
-         align="center"
-         width="140"
-       />
+        prop="name"
+        label="银行户名"
+        sortable
+        align="center"
+        width="140"
+      />
       <el-table-column
         prop="card_no"
         label="账号"
@@ -208,7 +208,7 @@ export default {
       dialogVisible2: false,
       isShow: false,
       alwaysFalse: false,
-      loading:false,
+      loading: false,
       showSearch: true,
       start_time: '',
       end_time: '',
@@ -274,14 +274,15 @@ export default {
         if (res.success === 1) {
           this.listLoading = false
           this.tableData = res.data
-          this.total = Number(res.count|0)
+          this.total = Number(res.count | 0)
           for (let i = 0; i < this.tableData.length; i++) {
+            this.tableData[i].amount = this.tableData[i].amount.replace(/,/g, '')
             this.tableData[i].amount = Number(this.tableData[i].amount)
-            if(this.tableData[i].companyname==null){
-              this.tableData[i].name=this.tableData[i].name
-              }else{
-                this.tableData[i].name=this.tableData[i].companyname
-              }
+            if (this.tableData[i].companyname == null) {
+              this.tableData[i].name = this.tableData[i].name
+            } else {
+              this.tableData[i].name = this.tableData[i].companyname
+            }
           }
         } else {
           this.listLoading = false
@@ -326,7 +327,7 @@ export default {
       getTrancpwd().then(res => {
         if (res.success === 1) {
           this.dialogVisible1 = true
-          this.temp = { ...row}
+          this.temp = { ...row }
           console.log(this.temp)
         } else {
           this.dialogVisible2 = true
@@ -447,7 +448,7 @@ export default {
       })
     },
     submitForm(formName) {
-      this.loading=true
+      this.loading = true
       this.$refs[formName].validate((valid) => {
         if (valid) {
           transactionReview({ bizOrderNo: this.temp.bizorderno, payPwd: this.temp.payPwd }).then(res => {
@@ -455,7 +456,7 @@ export default {
               this.$message({
                 message: res.message,
                 type: 'success',
-                showClose:true,
+                showClose: true
               })
               this.handleFilter()
               this.dialogVisible1 = false
@@ -463,10 +464,10 @@ export default {
               this.$message({
                 message: res.message,
                 type: 'error',
-                showClose:true,
+                showClose: true
               })
               this.dialogVisible1 = false
-              this.loading=false
+              this.loading = false
               this.handleFilter()
             }
           })
@@ -485,29 +486,29 @@ export default {
       })
     },
     getSummaries(param) {
-        const { columns, data } = param;
-        const sums = [];
-        columns.forEach((column, index) => {
-          if (index === 0) {
-            sums[index] = '合计';
-            return;
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '合计'
+          return
+        }
+        if (index === 7) {
+          const values = data.map(item => Number(item[column.property]))
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr)
+              if (!isNaN(value)) {
+                return (prev * 100 + curr * 100) / 100
+              } else {
+                return prev
+              }
+            }, 0)
+            sums[index] += ''
+          } else {
+            sums[index] = 'N/A'
           }
-          if(index===7){
-            const values = data.map(item => Number(item[column.property]));
-            if (!values.every(value => isNaN(value))) {
-              sums[index] = values.reduce((prev, curr) => {
-                const value = Number(curr);
-                if (!isNaN(value)) {
-                  return (prev*100 + curr*100)/100;
-                } else {
-                  return prev;
-                }
-              }, 0);
-              sums[index] += '';
-            } else {
-              sums[index] = 'N/A';
-            }
-          }
+        }
       })
       return sums
     }
