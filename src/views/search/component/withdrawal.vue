@@ -234,7 +234,7 @@ export default {
       status: {
         '1': '待复核',
         '2': '提现成功',
-        '3':'处理中',
+        '3': '处理中',
         '-1': '提现失败',
         '-2': '被驳回'
       },
@@ -256,7 +256,7 @@ export default {
     exportCheck() {
       console.log('exportCheck')
       // window.location.href = 'mould/对账单导出模板.xlsx'
-      getReviewList({...this.listQuery,option:'export'}).then(res => {
+      getReviewList({ ...this.listQuery, option: 'export' }).then(res => {
         console.log('getSubResult res--:', res)
         // this.tableData = res.data
         for (let i = 0; i < res.data.length; i++) {
@@ -313,7 +313,10 @@ export default {
         if (res.success === 1) {
           this.listLoading = false
           this.tableData = res.data
-          this.total = Number(res.count|0)
+          for (let i = 0; i < this.tableData.length; i++) {
+            this.tableData[i].amount = this.tableData[i].amount.replace(/,/g, '')
+          }
+          this.total = Number(res.count | 0)
           for (let i = 0; i < this.tableData.length; i++) {
             this.tableData[i].amount = Number(this.tableData[i].amount)
             this.tableData[i].status = this.status[this.tableData[i].status]
@@ -355,28 +358,28 @@ export default {
       this.dialogFormVisible = false
     },
     getSummaries(param) {
-        const { columns, data } = param;
-        const sums = [];
-        columns.forEach((column, index) => {
-          if (index === 0) {
-            sums[index] = '合计';
-            return;
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '合计'
+          return
+        }
+        if (index === 6) {
+          const values = data.map(item => Number(item[column.property]))
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr)
+              if (!isNaN(value)) {
+                return (prev * 100 + curr * 100) / 100
+              } else {
+                return prev
+              }
+            }, 0)
+            sums[index] += ''
+          } else {
+            sums[index] = 'N/A'
           }
-          if(index===6){
-            const values = data.map(item => Number(item[column.property]));
-            if (!values.every(value => isNaN(value))) {
-              sums[index] = values.reduce((prev, curr) => {
-                const value = Number(curr);
-                if (!isNaN(value)) {
-                  return (prev*100 + curr*100)/100;
-                } else {
-                  return prev;
-                }
-              }, 0);
-              sums[index] += '';
-            } else {
-              sums[index] = 'N/A';
-            }
         }
       })
       return sums

@@ -200,12 +200,12 @@ export default {
         to_user_id: '',
         start_time: '',
         end_time: '',
-        status:''
+        status: ''
       },
       // 修改列表参数
       temp: {},
       tableData: [],
-       states: [
+      states: [
         {
           key: '1',
           value: '待复核'
@@ -219,15 +219,15 @@ export default {
           value: '调账失败'
         },
         {
-          key:'-2',
-          value:'被驳回'
+          key: '-2',
+          value: '被驳回'
         }
       ],
       status: {
         '1': '待复核',
         '2': '调账成功',
         '-1': '调账失败',
-        '-2':'被驳回'
+        '-2': '被驳回'
       },
       dialogFormVisible: false,
       multipleSelection: [],
@@ -291,7 +291,10 @@ export default {
         if (res.success === 1) {
           this.listLoading = false
           this.tableData = res.data
-          this.total = Number(res.count|0)
+          for (let i = 0; i < this.tableData.length; i++) {
+            this.tableData[i].amount = this.tableData[i].amount.replace(/,/g, '')
+          }
+          this.total = Number(res.count | 0)
           for (let i = 0; i < this.tableData.length; i++) {
             this.tableData[i].amount = Number(this.tableData[i].amount)
             this.tableData[i].status = this.status[this.tableData[i].status]
@@ -331,29 +334,29 @@ export default {
       // this.handleFilter()
     },
     getSummaries(param) {
-        const { columns, data } = param;
-        const sums = [];
-        columns.forEach((column, index) => {
-          if (index === 0) {
-            sums[index] = '合计';
-            return;
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '合计'
+          return
+        }
+        if (index === 5) {
+          const values = data.map(item => Number(item[column.property]))
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr)
+              if (!isNaN(value)) {
+                return (prev * 100 + curr * 100) / 100
+              } else {
+                return prev
+              }
+            }, 0)
+            sums[index] += ''
+          } else {
+            sums[index] = 'N/A'
           }
-          if(index===5){
-            const values = data.map(item => Number(item[column.property]));
-            if (!values.every(value => isNaN(value))) {
-              sums[index] = values.reduce((prev, curr) => {
-                const value = Number(curr);
-                if (!isNaN(value)) {
-                  return (prev*100 + curr*100)/100;
-                } else {
-                  return prev;
-                }
-              }, 0);
-              sums[index] += '';
-            } else {
-              sums[index] = 'N/A';
-            }
-          }
+        }
       })
       return sums
     }
