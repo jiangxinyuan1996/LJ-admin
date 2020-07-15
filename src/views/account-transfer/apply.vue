@@ -153,9 +153,10 @@ export default {
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            if(this.amount>=Number(this.numberValidateForm.money)){
+            if(Number(this.amount)>=Number(this.numberValidateForm.money)){
               this.dialogVisible=true
             }else{
+              console.log(this.amount>=Number(this.numberValidateForm.money))
               this.$message({
                 message:'调账金额不能大于转出方账户余额',
                 type:'warning'
