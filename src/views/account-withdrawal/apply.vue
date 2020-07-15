@@ -111,7 +111,7 @@ export default {
       if (value.length === 0) {
         callback(new Error('请填写金额'))
       }
-      if (value > this.maxAmount) {
+      if (Number(value) > Number(this.maxAmount)) {
         callback(new Error('提现金额应小于可提现金额'))
       } else {
         callback()
@@ -256,6 +256,7 @@ export default {
     },
     handleClose() {
       this.dialogVisible1 = false
+      this.loading=false
       this.$message({
         message: '提现已取消',
         type: 'info'
