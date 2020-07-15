@@ -240,6 +240,12 @@ export default {
         getStatementByPartner(this.query).then(res => {
           console.log('getStatementByPartner res----:', res)
           this.tableData = res.data
+          for (let i = 0; i < this.tableData.length; i++) {
+            this.tableData[i].amount = this.tableData[i].amount.replace(/,/g, '')
+            this.tableData[i].income = this.tableData[i].income.replace(/,/g, '')
+            this.tableData[i].sub_amount = this.tableData[i].sub_amount.replace(/,/g, '')
+            this.tableData[i].wd_amount = this.tableData[i].wd_amount.replace(/,/g, '')
+          }
           this.money = res.amount
           this.loading = false // 改为self
         })
@@ -248,8 +254,17 @@ export default {
         this.query.start_time = this.query.start_time.valueOf()
         this.query.end_time = this.query.end_time.valueOf()
         getStatementByServer(this.query).then(res => {
-          console.log('getStatementByPartner res----:', res)
+          console.log('getStatementByServer res----:', res)
           this.tableData = res.data
+          for (let i = 0; i < this.tableData.length; i++) {
+            this.tableData[i].amount = this.tableData[i].amount.replace(/,/g, '')
+            this.tableData[i].income = this.tableData[i].income.replace(/,/g, '')
+            this.tableData[i].sub_amount = this.tableData[i].sub_amount.replace(/,/g, '')
+            this.tableData[i].wd_amount = this.tableData[i].wd_amount.replace(/,/g, '')
+          }
+          for (let i = 0; i < this.tableData.length; i++) {
+            this.tableData[i].amount = this.tableData[i].amount.replace(/,/g, '')
+          }
           this.money = res.amount
           this.loading = false // 改为self
         })
@@ -258,12 +273,10 @@ export default {
     exportCheck() {
       console.log('exportCheck')
 
-
-
       this.loading = true
       this.query.page = this.page
       this.query.limit = this.limit
-      let param = Object.assign({}, this.query)
+      const param = Object.assign({}, this.query)
       param.option = 'export'
       if (this.subuser2 == '' || this.subuser2 == null) {
         this.$message({
@@ -277,7 +290,7 @@ export default {
         this.query.bizUserId = this.subuser2
         getStatementByPartner(param).then(res => {
           console.log('getStatementByPartner res----:', res)
-          let exportRes = res.data
+          const exportRes = res.data
           this.money = res.amount
           this.loading = false // 改为self
           import('@/vendor/Export2Excel').then(excel => {
@@ -301,7 +314,7 @@ export default {
         this.query.end_time = this.query.end_time.valueOf()
         getStatementByServer(param).then(res => {
           console.log('getStatementByPartner res----:', res)
-          let exportRes = res.data
+          const exportRes = res.data
           this.money = res.amount
           this.loading = false // 改为self
         })
@@ -320,18 +333,13 @@ export default {
           excel.export_json_to_excel(tHeader, data, '对账单导出数据')
         })
       }
-
-
-
-
-
     },
     changePage(e) {
       this.page = e
       this.search()
     },
     formatJson(filterVal, jsonData) {
-      console.log('formatJson',jsonData)
+      console.log('formatJson', jsonData)
       return jsonData.map(v =>
         filterVal.map(j => {
           console.log('v[j]-----:', v[j])
@@ -350,6 +358,10 @@ export default {
           sums[index] = this.money + '元'
           return
         } else if (index === 10) {
+          return
+        } else if (index === 2) {
+          return
+        } else if (index === 4) {
           return
         }
         const values = data.map(item => Number(item[column.property]))

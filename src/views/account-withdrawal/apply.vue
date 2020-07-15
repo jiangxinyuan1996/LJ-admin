@@ -127,7 +127,7 @@ export default {
       dialogVisible1: false,
       alwaysFalse: false,
       showSearch: true,
-      loading:false,
+      loading: false,
       total: 0,
       listLoading: false,
       list: [
@@ -188,27 +188,35 @@ export default {
       })
     },
     submitForm(formName) {
-      this.loading=true
+      this.loading = true
       this.$refs[formName].validate((valid) => {
+        console.log('this.temp.amount<=0---:', this.temp.amount <= 0)
         if (valid) {
-          addWithdrawal(this.temp).then(res => {
-            console.log(res)
-            if (res.success === 1) {
-              this.$message({
-                message: res.message,
-                type: 'success'
-              })
-            } else {
-              this.$message({
-                message: res.message,
-                type: 'error'
-              })
-              
-            }
-          })
-          this.dialogVisible1 = false
-          this.loading=false
-          this.handleFilter()
+          if (this.temp.amount > 0) {
+            addWithdrawal(this.temp).then(res => {
+              console.log(res)
+              if (res.success === 1) {
+                this.$message({
+                  message: res.message,
+                  type: 'success'
+                })
+              } else {
+                this.$message({
+                  message: res.message,
+                  type: 'error'
+                })
+              }
+            })
+            this.dialogVisible1 = false
+            this.loading = false
+            this.handleFilter()
+          } else {
+            this.loading = false
+            this.$message({
+              message: '提现金额须大于0',
+              type: 'error'
+            })
+          }
         }
       })
     },
@@ -276,7 +284,7 @@ export default {
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr)
               if (!isNaN(value)) {
-                return (prev*100 + curr*100)/100
+                return (prev * 100 + curr * 100) / 100
               } else {
                 return prev
               }

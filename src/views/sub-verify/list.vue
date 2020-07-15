@@ -64,6 +64,7 @@
         stripe
         border
         show-summary
+        :summary-method="getSummaries"
         style="margin:20px;margin-left:50px;margin-right:50px;width:80vw"
         @selection-change="handleSelectionChange"
       >
@@ -233,6 +234,75 @@ export default {
     console.log(this.tableData)
   },
   methods: {
+    getSummaries(param) {
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '合计'
+          return
+        }
+        if (index === 1) {
+          sums[index] = ''
+          return
+        }
+        if (index === 2) {
+          sums[index] = ''
+          return
+        }
+        if (index === 4) {
+          const values = data.map(item => Number(item[column.property]))
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr)
+              if (!isNaN(value)) {
+                return (prev * 10 + curr * 10) / 10
+              } else {
+                return prev
+              }
+            }, 0)
+            sums[index] += ''
+          } else {
+            sums[index] = 'N/A'
+          }
+        }
+
+        if (index === 6) {
+          const values = data.map(item => Number(item[column.property]))
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr)
+              if (!isNaN(value)) {
+                return (prev * 10 + curr * 10) / 10
+              } else {
+                return prev
+              }
+            }, 0)
+            sums[index] += ''
+          } else {
+            sums[index] = 'N/A'
+          }
+        }
+
+        if (index === 8) {
+          const values = data.map(item => Number(item[column.property]))
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr)
+              if (!isNaN(value)) {
+                return (prev * 10 + curr * 10) / 10
+              } else {
+                return prev
+              }
+            }, 0)
+            sums[index] += ''
+          } else {
+            sums[index] = 'N/A'
+          }
+        }
+      })
+      return sums
+    },
     init() {
       getUserList().then(res => {
         console.log('getUserList---:', res)
@@ -261,6 +331,11 @@ export default {
       getCheckResultDetail(this.query).then(res => {
         console.log('getCheckResultDetail res--:', res)
         this.tableData = res.data
+        for (let i = 0; i < this.tableData.length; i++) {
+          this.tableData[i].amount = this.tableData[i].amount.replace(/,/g, '')
+          this.tableData[i].sub1_account = this.tableData[i].sub1_account.replace(/,/g, '')
+          this.tableData[i].sub2_account = this.tableData[i].sub2_account.replace(/,/g, '')
+        }
         this.totalCount = res.count
         setTimeout(function() {
           this.loading = false // 改为self
@@ -270,11 +345,11 @@ export default {
     exportCheck() {
       console.log('exportCheck')
 
-      let param = Object.assign({}, this.query)
+      const param = Object.assign({}, this.query)
       param.option = 'export'
       getCheckResultDetail(param).then(res => {
         console.log('getCheckResultDetail res--:', res)
-        let exportList = res.data
+        const exportList = res.data
 
         import('@/vendor/Export2Excel').then(excel => {
           // 表格的表头列表
@@ -289,7 +364,6 @@ export default {
           excel.export_json_to_excel(tHeader, data, '待复核明细导出数据')
         })
       })
-
     },
     formatJson(filterVal, jsonData) {
       console.log('formatJson')

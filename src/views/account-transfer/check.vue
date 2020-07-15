@@ -7,18 +7,19 @@
         width="28%"
         :before-close="handleClose"
       >
-      <el-dialog
-      width="28%"
-      title="确认支付"
-      :visible.sync="innerVisible"
-        :before-close="cancal"
-      append-to-body>
-      <el-input v-model="validateCode" placeholder="请输入验证码"></el-input>
-      <span slot="footer" class="dialog-footer">
-          <el-button @click="cancal">取 消</el-button>
-          <el-button type="primary" :loading="loading" @click="submitCode">确 定</el-button>
-      </span>
-    </el-dialog>
+        <el-dialog
+          width="28%"
+          title="确认支付"
+          :visible.sync="innerVisible"
+          :before-close="cancal"
+          append-to-body
+        >
+          <el-input v-model="validateCode" placeholder="请输入验证码" />
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="cancal">取 消</el-button>
+            <el-button type="primary" :loading="loading" @click="submitCode">确 定</el-button>
+          </span>
+        </el-dialog>
         <el-form ref="form" :model="temp" label-width="90px">
           <el-form-item label="流水号:">
             <span>{{ temp.bizorderno }}</span>
@@ -204,21 +205,21 @@
 <script>
 import permission from '@/directive/permission/index.js'
 import checkPermission from '@/utils/permission'
-import { getTransferList, submitTransfer, refuseTransfer,payByCode } from '@/api/tsyaccount'
+import { getTransferList, submitTransfer, refuseTransfer, payByCode } from '@/api/tsyaccount'
 import { getUserList } from '@/api/tsyLj'
 export default {
   directives: { permission },
   data() {
     return {
       jumpUrl: '',
-      validateCode:'',
+      validateCode: '',
       dialogVisible1: false,
       dialogVisible: false,
-      innerVisible:false,
+      innerVisible: false,
       alwaysFalse: false,
       showSearch: true,
       total: 0,
-      loading:false,
+      loading: false,
       listLoading: false,
       list: [],
       // 查询及分页参数
@@ -270,26 +271,26 @@ export default {
   },
   methods: {
     checkPermission,
-    cancal(){
+    cancal() {
       this.$confirm('进行取消操作需重新发起调账申请, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-          center: true
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '取消成功!请重新申请调账'
-          });
-          this.innerVisible=false
-          this.dialogVisible1=false
-          this.handleFilter()
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '请输入验证码'
-          });
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '取消成功!请重新申请调账'
         })
+        this.innerVisible = false
+        this.dialogVisible1 = false
+        this.handleFilter()
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '请输入验证码'
+        })
+      })
     },
     refuse(row) {
       this.$confirm('是否确认驳回这条数据?', '提示', {
@@ -318,7 +319,7 @@ export default {
         })
       })
     },
-    refuseList(){
+    refuseList() {
       const h = this.$createElement
       this.$msgbox({
         title: '信息确认',
@@ -424,10 +425,11 @@ export default {
           this.listLoading = false
           this.tableData = res.data
           this.total = Number(res.count)
-          if(this.tableData!==undefined){
+          if (this.tableData !== undefined) {
             for (let i = 0; i < this.tableData.length; i++) {
+              this.tableData[i].amount = this.tableData[i].amount.replace(/,/g, '')
               this.tableData[i].amount = Number(this.tableData[i].amount)
-          }
+            }
           }
         } else {
           this.$message({
@@ -470,38 +472,38 @@ export default {
       console.log(row)
       this.temp = { ...row }
     },
-    submitCode(){
-      payByCode({bizOrderNo:this.temp.bizorderno,code:this.validateCode}).then(res=>{
-        console.log('发送验证码',res)
-        if(res.success===1){
+    submitCode() {
+      payByCode({ bizOrderNo: this.temp.bizorderno, code: this.validateCode }).then(res => {
+        console.log('发送验证码', res)
+        if (res.success === 1) {
           this.$message({
             message: res.message,
             type: 'success'
           })
-        }else{
+        } else {
           this.$message({
             message: res.message,
             type: 'error'
           })
         }
-        this.innerVisible=false
-        this.dialogVisible1=false
-        this.loading=false
+        this.innerVisible = false
+        this.dialogVisible1 = false
+        this.loading = false
         this.handleFilter()
       })
     },
     submit() {
-      this.loading=true
-      submitTransfer({bizOrderNo:this.temp.bizorderno}).then(res=>{
-        if(res.success===1){
-          if(res.data!==undefined){
-            let callback = window.open(res.data.url)
-            this.loading=false
-          }else{
-            this.innerVisible=true
-            this.loading=false
+      this.loading = true
+      submitTransfer({ bizOrderNo: this.temp.bizorderno }).then(res => {
+        if (res.success === 1) {
+          if (res.data !== undefined) {
+            const callback = window.open(res.data.url)
+            this.loading = false
+          } else {
+            this.innerVisible = true
+            this.loading = false
           }
-          console.log('callback',callback)
+          console.log('callback', callback)
           this.$message({
             message: res.message,
             type: 'success'
@@ -513,7 +515,7 @@ export default {
           })
         }
         this.dialogVisible1 = false
-        this.loading=false
+        this.loading = false
         this.handleFilter()
       })
     },
@@ -529,29 +531,29 @@ export default {
       })
     },
     getSummaries(param) {
-        const { columns, data } = param;
-        const sums = [];
-        columns.forEach((column, index) => {
-          if (index === 0) {
-            sums[index] = '合计';
-            return;
+      const { columns, data } = param
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '合计'
+          return
+        }
+        if (index === 5) {
+          const values = data.map(item => Number(item[column.property]))
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr)
+              if (!isNaN(value)) {
+                return (prev * 100 + curr * 100) / 100
+              } else {
+                return prev
+              }
+            }, 0)
+            sums[index] += ''
+          } else {
+            sums[index] = 'N/A'
           }
-          if(index===5){
-            const values = data.map(item => Number(item[column.property]));
-            if (!values.every(value => isNaN(value))) {
-              sums[index] = values.reduce((prev, curr) => {
-                const value = Number(curr);
-                if (!isNaN(value)) {
-                  return (prev * 100 + curr * 100) / 100;
-                } else {
-                  return prev;
-                }
-              }, 0);
-              sums[index] += '';
-            } else {
-              sums[index] = 'N/A';
-            }
-          }
+        }
       })
       return sums
     }
